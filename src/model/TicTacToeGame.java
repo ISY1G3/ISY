@@ -2,17 +2,17 @@ package model;
 
 public class TicTacToeGame {
     //Board
-    private Board board;
+    private Board board; //Bewaart het 3x3 bord
 
     //Players
-    private Player playerX;
-    private Player player0;
+    private Player playerX; //Speler X
+    private Player player0; //Speler 0
 
     //Current Player
-    private Player currentPlayer;
+    private Player currentPlayer; //Bewaart wie aan de beurt is.
 
-    public TicTacToeGame() {
-        board = new Board();
+    public TicTacToeGame() { //Maakt nieuwe bord, de twee spelers en laat X beginnen
+        board = new Board(); 
 
         //Create Players
         playerX = new Player(Board.PLAYER_X_MARKER);
@@ -22,7 +22,7 @@ public class TicTacToeGame {
         currentPlayer = playerX;
     }
 
-    public boolean checkWinner(Player player) {
+    public boolean checkWinner(Player player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
         char playerMarker = player.getMarker();
         char board[][] = this.board.getBoard();
 
@@ -82,26 +82,27 @@ public class TicTacToeGame {
     }
 
     public boolean playerXWon() {
-        return checkWinner(playerX);
+        return checkWinner(playerX); //checkWinner wordt gebruikt voor de juiste speler
     }
 
     public boolean player0Won() {
         return checkWinner(player0);
     }
 
-    public boolean isGameOver() {
+    public boolean isGameOver() { //true als iemand wint of het bord vol is.
         return checkWinner(playerX) || checkWinner(player0) || board.isBoardFull();
     }
 
-    public void changeTurn() {
+    public void changeTurn() { //Wisselt de beurt
         currentPlayer = currentPlayer == playerX? player0 : playerX;
     }
 
-    public void placeMarker(int boxNumber) {
+    public void placeMarker(int boxNumber) { //Zet het teken van de huidige speler op het gekozen vakje.
         board.placeMarker(boxNumber, currentPlayer.getMarker());
+        board.print(); //Print bord in terminal voor controle, kan worden verwijderd.
     }
 
-    public Player getCurrentPlayer() {
+    public Player getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
         return currentPlayer;
     }
 }

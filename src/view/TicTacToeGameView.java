@@ -13,9 +13,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Board;
 
-public class TicTacToeGameView extends VBox {
+public class TicTacToeGameView extends VBox { //View is een verticale container
 
-    private class TicTacToeTile extends Button {
+    private class TicTacToeTile extends Button { //Maakt een tegel en een nummer wordt gegeven 0 t/m 8.
         private int boxNumber;
 
         public TicTacToeTile(int boxNumber) {
@@ -46,11 +46,19 @@ public class TicTacToeGameView extends VBox {
     }
 
     private void setup() {
+        /* Wat setup doet:
+        HorizontalBox wordt aangemaakt voor de titel bovenaan (player turn)
+        GridPane aangemaakt voor het 3x3 speelbord
+        Voor ieder vakje wordt TicTacToeTile gemaakt.
+        Ieder vakje is een klikactie, bij een klik wordt het tegelnummer naar de controller gestuurd 
+        Alle knoppen worden in het grid geplaatst
+        De melding en grid worden aan de ViewBox toegevoegd.*/
+
         //Top Box to show the label
         HBox topBox = new HBox();
         topBox.setAlignment(Pos.CENTER);
         topBox.setPadding(new Insets(10 ));
-        labelMessage = new Label("Player X goes first");
+        labelMessage = new Label("Player X goes first"); //Text boven het bord
         topBox.getChildren().add(labelMessage);
 
         //Grid Box voor the board
@@ -59,7 +67,7 @@ public class TicTacToeGameView extends VBox {
         gridBox.setAlignment(Pos.CENTER);
         gridBox.setHgap(2);
         gridBox.setVgap(2);
-        buttons = new TicTacToeTile[Board.SIZE] [Board.SIZE];
+        buttons = new TicTacToeTile[Board.SIZE] [Board.SIZE]; //3x3 array met vakjes
         int boxNumber = 0;
         for(int i=0; i<Board.SIZE; i++) {
             for(int j=0; j<Board.SIZE; j++) {
@@ -71,7 +79,7 @@ public class TicTacToeGameView extends VBox {
                 buttons[i][j].setOnAction(new EventHandler<ActionEvent>() {
                     @Override 
                     public void handle(ActionEvent arg0) {
-                        ticTacToeController.handleInputFromUser(buttons[ii][jj].getBoxNumber());
+                        ticTacToeController.handleInputFromUser(buttons[ii][jj].getBoxNumber()); //Verwerkt kliks
                     }
                 });
             }
@@ -88,17 +96,17 @@ public class TicTacToeGameView extends VBox {
         getChildren().add(gridBox);
     }
 
-    public void showMessage(String message) {
+    public void showMessage(String message) { //Veranderd text boven het bord
         labelMessage.setText(message);
     }
 
-    public void setMarker(int boxNumber, char marker) {
+    public void setMarker(int boxNumber, char marker) { //Zet X of 0 op bepaalde tegel
         int i = boxNumber/Board.SIZE;
         int j = boxNumber%Board.SIZE;
         buttons[i][j].setMarker(marker);
     }
 
-    public void showGameResult(String gameResult) {
+    public void showGameResult(String gameResult) { //Opent game over popup en sluit de app
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Over!");
         alert.setContentText(gameResult);
