@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TicTacToeGame {
     //Board
     private Board board; //Bewaart het 3x3 bord
@@ -18,7 +21,7 @@ public class TicTacToeGame {
         playerX = new Player(Board.PLAYER_X_MARKER);
         player0 = new Player(Board.PLAYER_0_MARKER);
 
-        //Player X goes first
+        //Player X eerst
         currentPlayer = playerX;
     }
 
@@ -26,7 +29,7 @@ public class TicTacToeGame {
         char playerMarker = player.getMarker();
         char board[][] = this.board.getBoard();
 
-        //Hortizontal Check
+        //check horizontaal
         for (int i=0; i<Board.SIZE; i++) {
             boolean horizontalWin = true;
             for(int j=0; j<Board.SIZE; j++) {
@@ -40,7 +43,7 @@ public class TicTacToeGame {
             }
         }
 
-        //Vertical Check
+        //check verticaal
         for (int j=0; j<Board.SIZE; j++) {
             boolean verticalWin = true;
             for(int i=0; i<Board.SIZE; i++) {
@@ -54,7 +57,7 @@ public class TicTacToeGame {
             }
         }
 
-        //Left Diagonal Check
+        //diagonaal check links
         boolean leftDiagonalWin = true;
         for (int i=0; i<Board.SIZE; i++) {
             if (board[i][i]!=playerMarker) {
@@ -66,7 +69,7 @@ public class TicTacToeGame {
             return true;
         }
 
-        //Right Diagonal Check
+        //diagonaal check rechts
         boolean rightDiagonalWin = true;
         for (int i=0; i<Board.SIZE; i++) {
             int j = Board.SIZE - i - 1;
@@ -104,5 +107,16 @@ public class TicTacToeGame {
 
     public Player getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
         return currentPlayer;
+    }
+
+    // voor de ai om alle moves te krijgen die nog mogelijk zijn
+    public List<Integer> getValidMoves() {
+        List<Integer> validMoves = new ArrayList<>();
+        for (int boxNumber = 0; boxNumber < Board.SIZE * Board.SIZE; boxNumber++) {
+            if (board.isBoxNumberEmpty(boxNumber)) {
+                validMoves.add(boxNumber);
+            }
+        }
+        return validMoves;
     }
 }

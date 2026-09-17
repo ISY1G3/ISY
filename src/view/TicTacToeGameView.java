@@ -20,6 +20,9 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
 
         public TicTacToeTile(int boxNumber) {
             this.boxNumber = boxNumber;
+
+            setPrefSize(120, 120);   // knopgrootte
+            setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         }
 
         public void setMarker(char marker) {
