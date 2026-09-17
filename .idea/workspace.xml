@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7aecec63-f5a5-4709-8fbb-f1c426329c56" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TicTacToe.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ai/AiPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ai/AiPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,16 +44,25 @@
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jordy\Desktop\REPO\ISY\src" />
+      <recent name="C:\Users\jordy\Desktop\REPO\ISY" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="src.Main" />
-      <module name="ISY" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="src.*" />
@@ -83,8 +90,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10315.125" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10315.125" />
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
       </set>
     </attachedChunks>
   </component>
