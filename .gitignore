@@ -1,0 +1,14 @@
+# Java build output
+bin/
+out/
+target/
+*.class
+
+# Eclipse / Java language-server files
+.classpath
+.project
+.settings/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
