@@ -7,6 +7,8 @@ import model.Board;
 import model.GameMode;
 
 public class TicTacToeController {
+    private int scoreP1 = 0;
+    private int scoreP2 = 0;
     //Model
     private TicTacToeGame ticTacToeGame;
 
@@ -101,22 +103,41 @@ public class TicTacToeController {
 
     //zorgt voor het goede resultaat op het scherm bij winst verlies of draw
     private boolean showGameResultIfNeeded() {
+        
 
         if (!ticTacToeGame.isGameOver()) {
             return false;
         }
 
         if (ticTacToeGame.playerXWon()) {
+            scoreP1++;
             ticTacToeGameView.showGameResult("Player X Won!");
+            
         }
         else if (ticTacToeGame.player0Won()) {
+            scoreP2++;
             ticTacToeGameView.showGameResult("Player 0 Won!");
+            
         }
         else {
             ticTacToeGameView.showGameResult("Game Drawn!");
         }
 
         return true;
+    }
+    public int getScoreP1() { //functie voor het bewaren van scorep1 zodat ik die in Tictactoeview kan aanroepen
+        return scoreP1;
+    }
+
+    public int getScoreP2() { //functie voor het bewaren van scorep2 zodat ik die in Tictactoeview kan aanroepen
+        return scoreP2;
+    }
+
+
+    public void resetGame() {
+        ticTacToeGame = new TicTacToeGame();
+        ticTacToeGameView.resetBoard();
+    
     }
 }
 

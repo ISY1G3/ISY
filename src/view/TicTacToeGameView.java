@@ -109,11 +109,22 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
         buttons[i][j].setMarker(marker);
     }
 
-    public void showGameResult(String gameResult) { //Opent game over popup en sluit de app
+    public void showGameResult(String gameResult) { //Opent game over popup en maakt een nieuw potje klaar
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Over!");
         alert.setContentText(gameResult);
         alert.showAndWait();
-        System.exit(0);
+        System.out.println(gameResult);
+        System.out.println(ticTacToeController.getScoreP1() + "- " + ticTacToeController.getScoreP2());
+        ticTacToeController.resetGame();
     }
+    
+    public void resetBoard() { // maakt alle vakjes leeg
+    for (int i = 0; i < Board.SIZE; i++) {
+        for (int j = 0; j < Board.SIZE; j++) {
+            buttons[i][j].setText("");
+            buttons[i][j].setDisable(false);
+        }
+    }
+}
 }
