@@ -9,13 +9,29 @@ import javafx.stage.Stage;
 import model.GameMode;
 import model.TicTacToeGame;
 import view.TicTacToeGameView;
+import view.dev.DeveloperPanel;
 
 public class TicTacToeGameApp extends Application {
 
     @Override
     public void start(Stage stage) {
         showStartScreen(stage);
+        if (Boolean.getBoolean("developerMode")) {
+                showDeveloperPanel(stage);
+        }
     }
+
+    private void showDeveloperPanel(Stage owner) {
+
+        DeveloperPanel developerPanel = new DeveloperPanel();
+
+        Stage developerStage = new Stage();
+        developerStage.initOwner(owner);
+        developerStage.setTitle("Developer Panel");
+        developerStage.setScene(new Scene(developerPanel, 320, 400));
+        developerStage.show();
+		
+	}
 
     private void showStartScreen(Stage stage) {
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
