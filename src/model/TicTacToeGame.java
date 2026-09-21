@@ -2,30 +2,31 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.Player.LocalPlayer;
 
 public class TicTacToeGame {
     //Board
     private Board board; //Bewaart het 3x3 bord
 
     //Players
-    private Player playerX; //Speler X
-    private Player player0; //Speler 0
+    private LocalPlayer playerX; //Speler X
+    private LocalPlayer player0; //Speler 0
 
     //Current Player
-    private Player currentPlayer; //Bewaart wie aan de beurt is.
+    private LocalPlayer currentPlayer; //Bewaart wie aan de beurt is.
 
     public TicTacToeGame() { //Maakt nieuwe bord, de twee spelers en laat X beginnen
         board = new Board(); 
 
         //Create Players
-        playerX = new Player(Board.PLAYER_X_MARKER);
-        player0 = new Player(Board.PLAYER_0_MARKER);
+        playerX = new LocalPlayer(Board.PLAYER_X_MARKER);
+        player0 = new LocalPlayer(Board.PLAYER_0_MARKER);
 
         //Player X eerst
         currentPlayer = playerX;
     }
 
-    public boolean checkWinner(Player player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
+    public boolean checkWinner(LocalPlayer player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
         char playerMarker = player.getMarker();
         char board[][] = this.board.getBoard();
 
@@ -105,7 +106,7 @@ public class TicTacToeGame {
         board.print(); //Print bord in terminal voor controle, kan worden verwijderd.
     }
 
-    public Player getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
+    public LocalPlayer getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
         return currentPlayer;
     }
 
