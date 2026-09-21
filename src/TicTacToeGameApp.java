@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.GameMode;
-import model.TicTacToeGame;
 import view.TicTacToeGameView;
 
 public class TicTacToeGameApp extends Application {
@@ -55,26 +54,18 @@ public class TicTacToeGameApp extends Application {
     }
 
     private void startGame(Stage stage, GameMode gameMode) {
-
-        // Game
-        TicTacToeGame ticTacToeGame =
-                new TicTacToeGame();
-
-        // View
         TicTacToeGameView ticTacToeGameView =
                 new TicTacToeGameView();
 
-        // Controller
         TicTacToeController ticTacToeController =
                 new TicTacToeController();
 
-        ticTacToeController.initModel(ticTacToeGame);
+        // Controller en view koppelen
         ticTacToeController.initView(ticTacToeGameView);
-        ticTacToeController.initGameMode(gameMode);
+        ticTacToeGameView.initController(ticTacToeController);
 
-        ticTacToeGameView.initController(
-                ticTacToeController
-        );
+        // De controller is verantwoordelijk voor het starten van de game.
+        ticTacToeController.startGame(gameMode);
 
         // Speelveld tonen
         stage.setScene(
