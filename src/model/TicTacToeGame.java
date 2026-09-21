@@ -14,6 +14,9 @@ public class TicTacToeGame {
     //Current Player
     private Player currentPlayer; //Bewaart wie aan de beurt is.
 
+    //Game Status
+    private GameStatus gameStatus;
+
     public TicTacToeGame() { //Maakt nieuwe bord, de twee spelers en laat X beginnen
         board = new Board(); 
 
@@ -23,6 +26,9 @@ public class TicTacToeGame {
 
         //Player X eerst
         currentPlayer = playerX;
+
+
+        gameStatus = GameStatus.NOT_STARTED;
     }
 
     public boolean checkWinner(Player player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
