@@ -31,6 +31,33 @@ public class TicTacToeGame {
         gameStatus = GameStatus.NOT_STARTED;
     }
 
+    public void start() {
+        if (gameStatus != GameStatus.NOT_STARTED) {
+            throw new IllegalStateException("Game is al gestart");
+        }
+
+        // X is volgens de huidige spelregel de eerste speler.
+        currentPlayer = playerX;
+        gameStatus = GameStatus.ACTIVE;
+    }
+
+    public void finish() {
+        gameStatus = GameStatus.FINISHED;
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public boolean isActive() {
+        return gameStatus == GameStatus.ACTIVE;
+    }
+
+    public List<Player> getPlayers() {
+        return List.of(playerX, player0);
+    }
+
+
     public boolean checkWinner(Player player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
         char playerMarker = player.getMarker();
         char board[][] = this.board.getBoard();
