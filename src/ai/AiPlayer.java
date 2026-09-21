@@ -5,7 +5,7 @@ import model.TicTacToeGame;
 import java.util.List;
 import java.util.Random;
 
-public class  AiPlayer {
+public class AiPlayer {
 
     private char aiMarker;
     private Random random;

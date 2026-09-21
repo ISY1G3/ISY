@@ -1,4 +1,8 @@
 package model;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
 
     public static final int SIZE = 3; //Bord is 3x3
@@ -72,5 +76,14 @@ public class Board {
         int j = boxNumber%SIZE;
         board[i][j] = marker;
         return true;
+    }
+    public List<Integer> getValidMoves() { //Geeft een lijst van alle vrije vakjes
+        List<Integer> validMoves = new ArrayList<>();
+        for (int i = 0; i < SIZE * SIZE; i++) {
+            if (isBoxNumberEmpty(i)) {
+                validMoves.add(i);
+            }
+        }
+        return validMoves;
     }
 }

@@ -13,13 +13,19 @@ package model.Player;
 
 import java.util.Optional;
 
-abstract class Player {
+public abstract class Player {
     private String name;
     private char marker;
 
-    public Player(char marker, Optional<String> name) {
-        this.name = name.orElse("Unnamed Player");
+
+
+    public Player(char marker) {
         this.marker = marker;
+    }
+
+    public Player(char marker, Optional<String> name) {
+        this.marker = marker;
+        this.name = name.orElse("Player " + marker);
     }
 
     public String getName() {
@@ -30,5 +36,5 @@ abstract class Player {
         return marker;
     }
 
-    public abstract void takeTurn(); // Player is an abstract class, meaning it will never be instantiated directly. Instead, it will be extended by other classes that implement the makeMove() method.
+    public abstract int takeTurn(int move); // Player is an abstract class, meaning it will never be instantiated directly. Instead, it will be extended by other classes that implement the makeMove() method.
 }
