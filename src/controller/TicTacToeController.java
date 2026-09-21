@@ -130,6 +130,8 @@ public class TicTacToeController {
             return false;
         }
 
+        ticTacToeGame.finish();
+
         if (ticTacToeGame.playerXWon()) {
             ticTacToeGameView.showGameResult("Player X Won!");
         }
