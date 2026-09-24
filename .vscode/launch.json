@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Client",
+            "request": "launch",
+            "mainClass": "client.Client",
+            "projectName": "ISY_391e3688"
+        },
+        {
+            "type": "java",
+            "name": "ServerLauncher",
+            "request": "launch",
+            "mainClass": "server.ServerLauncher",
+            "projectName": "ISY_391e3688"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
