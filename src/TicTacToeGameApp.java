@@ -47,6 +47,9 @@ public class TicTacToeGameApp extends Application {
                 playerVsAiButton
         );
 
+        playerVsPlayerButton.setFocusTraversable(false); //Auto Focus disabling
+        playerVsAiButton.setFocusTraversable(false); // Auto focus disabling
+
         menu.setAlignment(Pos.CENTER);
 
         stage.setScene(new Scene(menu, 440, 480));
