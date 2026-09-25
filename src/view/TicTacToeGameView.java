@@ -115,16 +115,11 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
         alert.setContentText(gameResult);
         alert.showAndWait();
         System.out.println(gameResult);
-        System.out.println(ticTacToeController.getScoreP1() + "- " + ticTacToeController.getScoreP2());
+        System.out.println(ticTacToeController.getScoreP1(0) + "- " + ticTacToeController.getScoreP2(0));
         ticTacToeController.resetGame();
     }
     
-    public void resetBoard() { // maakt alle vakjes leeg
-    for (int i = 0; i < Board.SIZE; i++) {
-        for (int j = 0; j < Board.SIZE; j++) {
-            buttons[i][j].setText("");
-            buttons[i][j].setDisable(false);
-        }
-    }
+    
+    
 }
-}
+

@@ -3,10 +3,14 @@ package controller;
 import model.TicTacToeGame;
 import view.TicTacToeGameView;
 import ai.AiPlayer;
+import javafx.stage.Stage;
 import model.Board;
 import model.GameMode;
 
+
+
 public class TicTacToeController {
+
     private int scoreP1 = 0;
     private int scoreP2 = 0;
     //Model
@@ -125,19 +129,32 @@ public class TicTacToeController {
 
         return true;
     }
-    public int getScoreP1() { //functie voor het bewaren van scorep1 zodat ik die in Tictactoeview kan aanroepen
+    public int getScoreP1(int x) { //functie voor het bewaren van scorep1 zodat ik die in Tictactoeview kan aanroepen
+        if (x != 0) // kijken of we een score krijgen van storep1 uit Tictactoegameapp
+            scoreP1 = x;
         return scoreP1;
     }
 
-    public int getScoreP2() { //functie voor het bewaren van scorep2 zodat ik die in Tictactoeview kan aanroepen
+    public int getScoreP2(int x) { //functie voor het bewaren van scorep2 zodat ik die in Tictactoeview kan aanroepen
+        if (x != 0)// kijken of we een score krijgen van storep1 uit Tictactoegameapp
+            scoreP2 = x;
         return scoreP2;
     }
 
 
-    public void resetGame() {
-        ticTacToeGame = new TicTacToeGame();
-        ticTacToeGameView.resetBoard();
-    
-    }
+private Runnable goToMenu;
+
+public void initGoToMenu(Runnable goToMenu) { // goToMenu is eerst niks maar als
+//  TicTacToeController.initGoToMenu(() -> showStartScreen(stage)); wordt aangeroepen dan wordt door this.goToMenu = goToMenu 
+// goToMenu gelijk aan showstartscreen
+    this.goToMenu = goToMenu;
+   
+
+}
+
+public void resetGame() {
+    goToMenu.run();
+}
+
 }
 
