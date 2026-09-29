@@ -7,29 +7,35 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
 
-        //Adres en poort van gameserver
-        String host = "localhost";
+        // Adres en poort van gameserver
+        String host = "localhost";  
         int port = 7789;
 
-        // Maak verbinding
-        Socket socket = new Socket(host, port);
-        System.out.println("Verbonden met server op " + host + ":" + port);
+        // Maak verbinding met server
+        try (
+            Socket socket = new Socket(host, port);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true); // Schrijver om tekst naar server te sturen
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream())); // Lees berichten van de server
+            BufferedReader stdIn = new BufferedReader(
+                new InputStreamReader(System.in)) // Consolue berichten lezer
+        ) {
+            // Server berichten lezen
+            String fromServer;
+            String fromUser;
 
-        // Om berichten NAAR de server te sturen
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
- 
-        // Om berichten VAN de server te ontvangen
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            while ((fromServer = in.readLine()) != null) { // Blijf serverberichten lezen zolang de verbinding open is
+                System.out.println("Server: " + fromServer);
 
-        // Test bericht naar server
-        out.println("test login");
+                if (fromServer.equals("Bye."))
+                    break;
 
-        // Lees server response
-        String response = in.readLine();
-        System.out.println("Server response: " + response);
-
-        // Verbinding afsluiten
-        socket.close();
+                fromUser = stdIn.readLine(); // Wacht op jouw bericht in console
+                if (fromUser != null) {
+                    System.out.println("Client: " + fromUser);
+                    out.println(fromUser);
+                }
+            }
+        }
     }
-
 }

@@ -14,5 +14,6 @@
         "c:\\Java\\javafx-sdk-27\\lib\\jdk.jsobject.jar",
         "c:\\Java\\javafx-sdk-27\\lib\\jfx.incubator.input.jar",
         "c:\\Java\\javafx-sdk-27\\lib\\jfx.incubator.richtext.jar"
-    ]
+    ],
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable"
 }
