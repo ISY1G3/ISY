@@ -25,9 +25,17 @@ public class TicTacToeGame {
         currentPlayer = playerX;
     }
 
-    public boolean checkWinner(Player player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
-        char playerMarker = player.getMarker();
-        char board[][] = this.board.getBoard();
+    // Ik wilde niet opnieuw alle win condities maken
+    // dus nu laat ik de AI via dit stukje de game vragen of iets een winnende positie is
+    // hierdoor is dit stuk code nu herbruikbaar. en niet alleen maar te gebruiken op het originele board.
+    public boolean checkWinner(Player player) {
+        return checkWinner(
+                board.getBoard(),
+                player.getMarker()
+        );
+    }
+
+    public boolean checkWinner(char[][] board, char playerMarker) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
 
         //check horizontaal
         for (int i=0; i<Board.SIZE; i++) {
@@ -118,5 +126,9 @@ public class TicTacToeGame {
             }
         }
         return validMoves;
+    }
+    // dit wordt gebruikt door de AI om het board te vragen van model.Board
+    public char[][] getBoard() {
+        return board.getBoard();
     }
 }
