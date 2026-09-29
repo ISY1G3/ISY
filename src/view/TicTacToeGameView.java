@@ -11,7 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import model.Board;
+import model.GameMode;
 
 public class TicTacToeGameView extends VBox { //View is een verticale container
 
@@ -88,6 +90,27 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             }
         }
 
+
+
+         Button homeButton = new Button("Terug");
+         homeButton.setPrefWidth(50);
+       
+
+        homeButton.setOnAction(event -> {
+           ticTacToeController.resetGame();
+        });
+
+         VBox home = new VBox(
+                
+                homeButton
+                );
+         getChildren().add(home); 
+
+            
+            
+        
+
+
         //Add buttons to gridBox
         for(int i=0; i<Board.SIZE; i++) {
             for(int j=0; j<Board.SIZE; j++) {
@@ -108,6 +131,15 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
         int j = boxNumber%Board.SIZE;
         buttons[i][j].setMarker(marker);
     }
+    
+    
+           
+                
+       
+
+
+
+    
 
     public void showGameResult(String gameResult) { //Opent game over popup en maakt een nieuw potje klaar
         Alert alert = new Alert(AlertType.INFORMATION);
