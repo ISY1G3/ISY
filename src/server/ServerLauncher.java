@@ -2,6 +2,12 @@
 Maar ik vond dit handiger omdat de connectie krijgen problemen gaf 
 Dit wordt verwijderd wanneer de server werkt, nu effe niet verwijderen aub omdat het handig is.*/
 
+/* BELANGRIJK!!!:
+Soms sluit de oude server niet goed af, om dit af te sluiten en opnieuw in een nieuwe terminal starten gebruik de volgende commands:
+netstat -ano | findstr :8081
+taskkill /PID <HIER_DE_PID> /F
+de PID is de laatste getal dat staat recht van "LISTENING" */
+
 package server;
 
 import java.io.BufferedReader;

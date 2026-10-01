@@ -14,5 +14,5 @@ target/
 Thumbs.db
 
 # Gameserver Logs
-.log
 .gz
+gameserver.log
