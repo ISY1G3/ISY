@@ -35,6 +35,8 @@ public class TicTacToeGameApp extends Application {
 
         playerVsPlayerButton.setPrefWidth(200);
         playerVsAiButton.setPrefWidth(200);
+        playerVsPlayerButton.setFocusTraversable(false);
+        playerVsAiButton.setFocusTraversable(false);
 
         playerVsPlayerButton.setOnAction(event -> {
             startGame(stage, GameMode.PLAYER_VS_PLAYER);
@@ -45,12 +47,14 @@ public class TicTacToeGameApp extends Application {
         });
 
         VBox menu = new VBox(
+            
                 20,
                 title,
                 question,
                 playerVsPlayerButton,
                 playerVsAiButton
         );
+        
 
         menu.setAlignment(Pos.CENTER);
 

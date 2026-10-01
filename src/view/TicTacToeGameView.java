@@ -24,6 +24,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             this.boxNumber = boxNumber;
 
             setPrefSize(120, 120);   // knopgrootte
+            setFocusTraversable(false);
             setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         }
 
@@ -94,6 +95,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
 
          Button homeButton = new Button("Terug");
          homeButton.setPrefWidth(50);
+         homeButton.setFocusTraversable(false);
        
 
         homeButton.setOnAction(event -> {
@@ -104,6 +106,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
                 
                 homeButton
                 );
+       
          getChildren().add(home); 
 
             
