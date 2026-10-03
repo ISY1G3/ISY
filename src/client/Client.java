@@ -100,6 +100,16 @@ public class Client implements Runnable {
         }
     }
 
+    public void help(String command) {
+        if (command == null || command.isBlank()) {
+            System.out.println("Command can not be empty.");
+        } else if (command.contains(" ")) {
+            System.out.println("Command can not contain spaces");
+        } else {
+            out.println(command);
+        }
+    }
+   
     private class InputHandler implements Runnable {
         @Override
         public void run() {
@@ -126,7 +136,20 @@ public class Client implements Runnable {
                         } else {
                             login(i[1].trim());
                         }
-                    } else {
+                    } else if (message.equals("/players")) { 
+                        out.println("get playerlist");
+                    } else if (message.equals("/games")) {
+                        out.println("get gamelist");
+                    } else if (message.startsWith("/help")) {
+                        String[] i = message.split(" ", 2);
+
+                        if (i.length < 2) {
+                            out.println("help");
+                        } else {
+                            help(i[1].trim());
+                        }
+                        
+                    } else { 
                         out.println(message);
                     }
                 }
