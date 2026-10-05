@@ -11,13 +11,18 @@ import model.TicTacToeGame;
 import view.TicTacToeGameView;
 
 public class TicTacToeGameApp extends Application {
+     private int storeP1 = 0;
+     private int storeP2 = 0;
+     private TicTacToeController ticTacToeController;
 
     @Override
     public void start(Stage stage) {
         showStartScreen(stage);
     }
 
-    private void showStartScreen(Stage stage) {
+    public void showStartScreen(Stage stage) {
+       
+
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
         Label title = new Label("Tic Tac Toe");
         Label question = new Label("Welke modus wil je spelen?");
@@ -30,6 +35,8 @@ public class TicTacToeGameApp extends Application {
 
         playerVsPlayerButton.setPrefWidth(200);
         playerVsAiButton.setPrefWidth(200);
+        playerVsPlayerButton.setFocusTraversable(false);
+        playerVsAiButton.setFocusTraversable(false);
 
         playerVsPlayerButton.setOnAction(event -> {
             startGame(stage, GameMode.PLAYER_VS_PLAYER);
@@ -40,34 +47,58 @@ public class TicTacToeGameApp extends Application {
         });
 
         VBox menu = new VBox(
+            
                 20,
                 title,
                 question,
                 playerVsPlayerButton,
                 playerVsAiButton
         );
+        
 
         menu.setAlignment(Pos.CENTER);
 
         stage.setScene(new Scene(menu, 440, 480));
         stage.setTitle("Game of TicTacToe");
         stage.show();
+        
     }
+    
 
     private void startGame(Stage stage, GameMode gameMode) {
+        
 
         // Game
         TicTacToeGame ticTacToeGame =
                 new TicTacToeGame();
-
+        
         // View
         TicTacToeGameView ticTacToeGameView =
                 new TicTacToeGameView();
 
         // Controller
-        TicTacToeController ticTacToeController =
-                new TicTacToeController();
+        // Eerst kijken of dit het eerste spel is door te vergelijken met null
+        // als het niet null is stop je de huidige score van het spelletje in storep
+        // dan maak je nieuwe controller aan zodat je een nieuw spel kan starten
+        // nadat het nieuwe spel klaar staat wordt de oude score weer in de score van de controller gestopt
+        if (ticTacToeController == null) {
+            ticTacToeController = new TicTacToeController();
+            }          
+        else {
+             storeP1 = ticTacToeController.getScoreP1(0);
+             storeP2 = ticTacToeController.getScoreP2(0);
+             
 
+            ticTacToeController = new TicTacToeController();
+            ticTacToeController.getScoreP1(storeP1);
+            ticTacToeController.getScoreP2(storeP2);
+        
+            
+
+            }
+            
+                
+        ticTacToeController.initGoToMenu(() -> showStartScreen(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
         ticTacToeController.initModel(ticTacToeGame);
         ticTacToeController.initView(ticTacToeGameView);
         ticTacToeController.initGameMode(gameMode);

@@ -11,7 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import model.Board;
+import model.GameMode;
 
 public class TicTacToeGameView extends VBox { //View is een verticale container
 
@@ -22,6 +24,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             this.boxNumber = boxNumber;
 
             setPrefSize(120, 120);   // knopgrootte
+            setFocusTraversable(false);
             setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         }
 
@@ -88,6 +91,29 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             }
         }
 
+
+
+         Button homeButton = new Button("Terug");
+         homeButton.setPrefWidth(50);
+         homeButton.setFocusTraversable(false);
+       
+
+        homeButton.setOnAction(event -> {
+           ticTacToeController.resetGame();
+        });
+
+         VBox home = new VBox(
+                
+                homeButton
+                );
+       
+         getChildren().add(home); 
+
+            
+            
+        
+
+
         //Add buttons to gridBox
         for(int i=0; i<Board.SIZE; i++) {
             for(int j=0; j<Board.SIZE; j++) {
@@ -108,12 +134,27 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
         int j = boxNumber%Board.SIZE;
         buttons[i][j].setMarker(marker);
     }
+    
+    
+           
+                
+       
 
-    public void showGameResult(String gameResult) { //Opent game over popup en sluit de app
+
+
+    
+
+    public void showGameResult(String gameResult) { //Opent game over popup en maakt een nieuw potje klaar
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Over!");
         alert.setContentText(gameResult);
         alert.showAndWait();
-        System.exit(0);
+        System.out.println(gameResult);
+        System.out.println(ticTacToeController.getScoreP1(0) + "- " + ticTacToeController.getScoreP2(0));
+        ticTacToeController.resetGame();
     }
+    
+    
+    
 }
+
