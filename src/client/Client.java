@@ -38,7 +38,7 @@ public class Client implements Runnable {
             thread.setDaemon(true); // thread stopt automatisch als het programma stopt
             thread.start();
 
-            System.out.println("Game started, use '/quit' to exit.");
+            System.out.println("Game started, use 'quit' to exit or '?' to see other commands to exit.");
 
             String inputMessage;
 
@@ -127,7 +127,7 @@ public class Client implements Runnable {
         public void run() {
             try {
                 BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
-                System.out.println("To login: '/login <yourname>'");
+                System.out.println("To login: 'login <yourname>'");
                 System.out.println("Use '?' to see all available commands.");
 
                 while (!done) {
