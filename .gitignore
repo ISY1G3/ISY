@@ -16,3 +16,6 @@ Thumbs.db
 # Gameserver Logs
 .gz
 gameserver.log
+
+# Launch
+launch.json
