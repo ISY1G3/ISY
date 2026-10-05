@@ -149,6 +149,8 @@ public class Client implements Runnable {
                             help(i[1].trim());
                         }
                         
+                    } else if (message.startsWith("/subscribe")){
+                        //TODO
                     } else { 
                         out.println(message);
                     }
