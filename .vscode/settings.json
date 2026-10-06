@@ -1,6 +1,4 @@
 {
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
     "java.import.maven.enabled": true,
-    "maven.executable.preferMavenWrapper": true,
+    "maven.executable.preferMavenWrapper": true
 }
