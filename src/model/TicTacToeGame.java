@@ -14,6 +14,9 @@ public class TicTacToeGame {
     //Current Player
     private Player currentPlayer; //Bewaart wie aan de beurt is.
 
+    //Game Status
+    private GameStatus gameStatus;
+
     public TicTacToeGame() { //Maakt nieuwe bord, de twee spelers en laat X beginnen
         board = new Board(); 
 
@@ -23,19 +26,43 @@ public class TicTacToeGame {
 
         //Player X eerst
         currentPlayer = playerX;
+
+
+        gameStatus = GameStatus.NOT_STARTED;
     }
 
-    // Ik wilde niet opnieuw alle win condities maken
-    // dus nu laat ik de AI via dit stukje de game vragen of iets een winnende positie is
-    // hierdoor is dit stuk code nu herbruikbaar. en niet alleen maar te gebruiken op het originele board.
+    public void start() {
+        if (gameStatus != GameStatus.NOT_STARTED) {
+            throw new IllegalStateException("Game is al gestart");
+        }
+
+        // X is volgens de huidige spelregel de eerste speler.
+        currentPlayer = playerX;
+        gameStatus = GameStatus.ACTIVE;
+    }
+
+    public void finish() {
+        gameStatus = GameStatus.FINISHED;
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public boolean isActive() {
+        return gameStatus == GameStatus.ACTIVE;
+    }
+
+    public List<Player> getPlayers() {
+        return List.of(playerX, player0);
+    }
+
     public boolean checkWinner(Player player) {
-        return checkWinner(
-                board.getBoard(),
-                player.getMarker()
-        );
+        return checkWinner(board.getBoard(), player.getMarker());
     }
 
-    public boolean checkWinner(char[][] board, char playerMarker) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
+    /** Checks whether the given marker wins on the supplied board state. */
+    public boolean checkWinner(char[][] board, char playerMarker) {
 
         //check horizontaal
         for (int i=0; i<Board.SIZE; i++) {
