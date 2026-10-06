@@ -10,13 +10,18 @@ import model.GameMode;
 import view.TicTacToeGameView;
 
 public class TicTacToeGameApp extends Application {
+    private TicTacToeController ticTacToeController;
 
     @Override
     public void start(Stage stage) {
+        ticTacToeController = new TicTacToeController();
+        ticTacToeController.initGoToMenu(() -> showStartScreen(stage));
         showStartScreen(stage);
     }
 
     private void showStartScreen(Stage stage) {
+
+
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
         Label title = new Label("Tic Tac Toe");
         Label question = new Label("Welke modus wil je spelen?");
@@ -29,6 +34,8 @@ public class TicTacToeGameApp extends Application {
 
         playerVsPlayerButton.setPrefWidth(200);
         playerVsAiButton.setPrefWidth(200);
+        playerVsPlayerButton.setFocusTraversable(false);
+        playerVsAiButton.setFocusTraversable(false);
 
         playerVsPlayerButton.setOnAction(event -> {
             startGame(stage, GameMode.PLAYER_VS_PLAYER);
@@ -46,6 +53,9 @@ public class TicTacToeGameApp extends Application {
                 playerVsAiButton
         );
 
+        playerVsPlayerButton.setFocusTraversable(false); //Auto Focus disabling
+        playerVsAiButton.setFocusTraversable(false); // Auto focus disabling
+
         menu.setAlignment(Pos.CENTER);
 
         stage.setScene(new Scene(menu, 440, 480));
@@ -57,10 +67,8 @@ public class TicTacToeGameApp extends Application {
         TicTacToeGameView ticTacToeGameView =
                 new TicTacToeGameView();
 
-        TicTacToeController ticTacToeController =
-                new TicTacToeController();
-
-        // Controller en view koppelen
+        // The controller owns game creation and initialization; the app wires
+        // the view and selects the requested mode.
         ticTacToeController.initView(ticTacToeGameView);
         ticTacToeGameView.initController(ticTacToeController);
 
