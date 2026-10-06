@@ -15,7 +15,7 @@
       devShells = forAllSystems (system:
         let
           pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-          jdk = pkgs.jdk21.override { enableJavaFX = true; };
+          jdk = pkgs.jdk21;
         in
         {
           default = pkgs.mkShell {
@@ -35,7 +35,7 @@
             shellHook = ''
               echo "Java development shell"
               echo "  Java:   $(java --version 2>&1 | head -n 1)"
-              echo "  JavaFX: included in the JDK"
+              echo "  JavaFX: resolved by Maven from pom.xml"
             '';
           };
         });
