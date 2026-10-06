@@ -14,12 +14,21 @@
     {
       devShells = forAllSystems (system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
           jdk = pkgs.jdk21.override { enableJavaFX = true; };
         in
         {
           default = pkgs.mkShell {
-            packages = [ jdk ];
+            packages = [ 
+            	jdk
+            	pkgs.intellij-idea
+              pkgs.gtk3
+              pkgs.libX11
+              pkgs.libXext
+              pkgs.libXrender
+              pkgs.libXtst
+              pkgs.libXi
+    	      ];
 
             JAVA_HOME = "${jdk}";
 
