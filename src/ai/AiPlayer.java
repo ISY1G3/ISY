@@ -1,27 +1,48 @@
+// klopt voor derde demo
+// zou evt nog kunnen maken dat er maar 1 copy wordt gemaakt en dat er maar wordt gesimuleerd op 1 bord maar dat is onnodige moeite voor nu
+// Debug prints staan er nog kan je zien hoveel punten de AI geeft aan elke positie
+//
+// hoe dit werkt is de AI krijgt 1 veilige copy van het echte bord
+// Minmax maakt voor elke mogelijk zet een nieuwe copy van de huidige gesimuleerde bordsituatie
+// Bijvoorbeeld:
+//
+// Echt bord
+//   v met getBoard() maken we:
+// basis-kopie
+//   - - -
+//   - X -
+//   - - -
+//
+// AI probeert dan verschillende zetten zoals:
+//   0 - -        - 0 -        - - 0
+//   - X -        - X -        - X -
+//   - - -        - - -        - - -
+//
+// Voor ELKE van deze situaties probeert de tegenstander daarna
+// weer alle mogelijke antwoorden:
+//   0 X -        0 - X        0 - -
+//   - X -        - X -        X X -
+//   - - -        - - -        - - -
+//
+// En zo gaat Minimax door totdat iemand wint of het bord vol is.
 package ai;
-// klopt voor derde demo. kan alle mogelijke moves checken voor per beurt en kan kijken tot het eind.
+
 import model.TicTacToeGame;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class  AiPlayer {
 
     private char aiMarker;
     private char opponentMarker;
-    private Random random;
 
-    //bepalen welke karakter de AI is en welke de opponent is
+    //bepalen welke karakter de AI is en welke de opponent is (voor nu is dit nog alleen 0)
     public AiPlayer(char aiMarker) {
         this.aiMarker = aiMarker;
-        this.random = new Random();
 
-        if (aiMarker == '0') {
-            opponentMarker = 'X';
-        } else {
-            opponentMarker = '0';
-        }
+        if (aiMarker == '0') {opponentMarker = 'X';}
+        else {opponentMarker = '0';}
     }
 
     public int chooseMove(TicTacToeGame game) {
@@ -70,7 +91,6 @@ public class  AiPlayer {
             if (score > bestScore) {
                 bestScore = score;
                 bestMove = move;
-
                     //DEBUG
                     System.out.println();
                     System.out.println("Nieuwe beste zet gevonden: " + bestMove + " score: " + bestScore);
@@ -80,8 +100,65 @@ public class  AiPlayer {
             System.out.println();
             System.out.println("AI kiest uiteindelijk zet: " + bestMove + " met score " + bestScore);
             System.out.println();
-
         return bestMove;
+    }
+
+    private int minimax(TicTacToeGame game, char[][] board, boolean maximizingPlayer) {
+
+        // Kijk eerst of dit bord al afgelopen is dus een win of loss
+        int score = evaluateBoard(game, board);
+
+        if (score != 0) {return score;}
+
+        // Vraag geldige zetten op van de meegegeven "gesimuleerde" bord kopie
+        List<Integer> validMoves = getValidMoves(board);
+
+        // Geen winnaar en geen zetten = gelijkspel
+        if (validMoves.isEmpty()) {return 0;}
+
+        // AI is aan de beurt
+        if (maximizingPlayer) {
+            int bestScore = Integer.MIN_VALUE;
+
+            for (int move : validMoves) {
+                // Maak een nieuwe kopie voor deze simulatie (hier wordt dus een nieuwe move op gemaakt)
+                char[][] testBoard = copyBoard(board);
+                // bereken waar op het testboard de mogelijke move is in coords: row en column
+                int row = move / 3;
+                int column = move % 3;
+
+                // ai doet zijn daadwerkelijke move
+                testBoard[row][column] = aiMarker;
+
+                // Nu is tegenstander
+                int currentScore = minimax(game, testBoard, false);
+
+                bestScore = Math.max(bestScore, currentScore);
+            }
+            return bestScore;
+        }
+
+        // Tegenstander is aan de beurt
+        else {
+            int bestScore = Integer.MAX_VALUE;
+
+            for (int move : validMoves) {
+
+                char[][] testBoard = copyBoard(board);
+                // bereken waar op het testboard de mogelijke move is in coords: row en column
+                int row = move / 3;
+                int column = move % 3;
+
+                // Simuleer zet van tegenstander
+                testBoard[row][column] = opponentMarker;
+
+                // Daarna is AI weer aan de beurt
+                int currentScore = minimax(game, testBoard, true);
+
+                bestScore = Math.min(bestScore, currentScore);
+            }
+            return bestScore;
+        }
     }
 
     // op deze copy van het board gaan we testen wat een goede move is
@@ -122,72 +199,4 @@ public class  AiPlayer {
         }
         return validMoves;
     }
-
-    private int minimax(TicTacToeGame game, char[][] board, boolean maximizingPlayer) {
-
-        // Kijk eerst of dit bord al afgelopen is dus een win of loss
-        int score = evaluateBoard(game, board);
-
-        if (score != 0) {
-            return score;
-        }
-
-        // 2. Vraag geldige zetten op van dit "gesimuleerde" bord kopie
-        List<Integer> validMoves = getValidMoves(board);
-
-        // Geen winnaar en geen zetten = gelijkspel
-        if (validMoves.isEmpty()) {
-            return 0;
-        }
-
-        // 3. AI is aan de beurt
-        if (maximizingPlayer) {
-
-            int bestScore = Integer.MIN_VALUE;
-
-            for (int move : validMoves) {
-
-                // Maak een nieuwe kopie voor deze simulatie (hier wordt dus een nieuwe move op gemaakt)
-                char[][] testBoard = copyBoard(board);
-
-                int row = move / 3;
-                int column = move % 3;
-
-                // ai doet zijn daadwerkelijke move
-                testBoard[row][column] = aiMarker;
-
-                // Nu is tegenstander
-                int currentScore = minimax(game, testBoard, false);
-
-                bestScore = Math.max(bestScore, currentScore);
-            }
-
-            return bestScore;
-        }
-
-        // 4. Tegenstander is aan de beurt
-        else {
-
-            int bestScore = Integer.MAX_VALUE;
-
-            for (int move : validMoves) {
-
-                char[][] testBoard = copyBoard(board);
-
-                int row = move / 3;
-                int column = move % 3;
-
-                // Simuleer zet van tegenstander
-                testBoard[row][column] = opponentMarker;
-
-                // Daarna is AI weer aan de beurt
-                int currentScore = minimax(game, testBoard, true);
-
-                bestScore = Math.min(bestScore, currentScore);
-            }
-
-            return bestScore;
-        }
-    }
-
 }
