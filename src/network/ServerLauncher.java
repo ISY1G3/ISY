@@ -8,7 +8,7 @@ netstat -ano | findstr :8081
 taskkill /PID <HIER_DE_PID> /F
 de PID is de laatste getal dat staat recht van "LISTENING" */
 
-package server;
+package network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class ServerLauncher {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         // Pad naar de jar file - PAS DIT AAN naar jouw eigen locatie
-        String jarPath = "src/server/newgameserver-release-V1.jar";
+        String jarPath = "src/network/game/newgameserver-release-V1.jar";
 
         // Bouw het commando op zoals je het ook op de command line zou typen:
         // java -jar newgameserver-release-V1.jar

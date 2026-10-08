@@ -1,8 +1,14 @@
-package client;
+package network;
 
 import java.io.*;
 import java.net.*;
 import java.util.List;
+
+/*
+ (implements ServerListener)
+      connect(host, port), login(name), subscribe(game), challenge(player), accept(nr),
+      sendMove(int), forfeit(), disconnect(), setListener(ServerListener)
+       */
 
 public class Client implements Runnable {
 
