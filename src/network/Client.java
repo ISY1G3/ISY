@@ -8,12 +8,12 @@ import java.util.List;
  (implements ServerListener)
       connect(host, port), login(name), subscribe(game), challenge(player), accept(nr),
       sendMove(int), forfeit(), disconnect(), setListener(ServerListener)
+      we are charlie kirk
        */
 
 public class Client implements Runnable {
 
-    private String host = "127.0.0.1"; // localhost address
-    private int port = 7789; // port nummer van de server
+   
 
     private Socket socket; // de verbinding met de server
     private BufferedReader in; // leest wat de server stuurt
