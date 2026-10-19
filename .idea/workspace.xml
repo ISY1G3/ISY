@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7aecec63-f5a5-4709-8fbb-f1c426329c56" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/model/GameMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TicTacToeGameApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TicTacToeGameApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ai/AiPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ai/AiPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/TicTacToeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/TicTacToeGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/TicTacToeGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/view/TicTacToeGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/TicTacToeGameView.java" afterDir="false" />
-    </list>
+    <list default="true" id="7aecec63-f5a5-4709-8fbb-f1c426329c56" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +19,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2,
@@ -43,12 +39,15 @@
     "Application.Main.executor": "Run",
     "Application.TicTacToe.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "Jordy-AI",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "douwe",
     "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.jshint": "true",
@@ -59,7 +58,8 @@
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "to.speed.mode.migration.done": "true"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -108,8 +108,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10315.125" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10315.125" />
       </set>
     </attachedChunks>
   </component>

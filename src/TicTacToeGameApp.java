@@ -4,16 +4,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.GameMode;
 import model.TicTacToeGame;
 import view.TicTacToeGameView;
+import javafx.scene.image.*;
 
 public class TicTacToeGameApp extends Application {
      private int storeP1 = 0;
      private int storeP2 = 0;
      private TicTacToeController ticTacToeController;
+     private boolean kfocus = false;
 
     @Override
     public void start(Stage stage) {
@@ -23,6 +26,117 @@ public class TicTacToeGameApp extends Application {
     public void showStartScreen(Stage stage) {
        
 
+        //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
+        Label title = new Label("Turn Based Game Client");
+        
+
+        Button Localgame =
+                new Button("Speel local game");
+
+        Localgame.setPrefWidth(200);
+        Localgame.setFocusTraversable(false);
+
+        Localgame.setOnAction(event -> {
+           showGameSelect(stage);
+           System.out.println("werkt");
+        });
+
+        Button Onlinegame =
+                new Button("Speel online game");
+
+        
+        Onlinegame.setPrefWidth(200);
+        
+        Onlinegame.setFocusTraversable(false);
+
+        
+
+        Onlinegame.setOnAction(event -> {
+            startGame(stage, GameMode.PLAYER_VS_AI);
+        });
+        Image foto = new Image("https://e7.pngegg.com/pngimages/193/724/png-clipart-computer-icons-cogs-computer-desktop-wallpaper.png", 20, 20, true, true);
+        
+        Button Settings = 
+            new Button("Settings");
+
+        Settings.setOnAction(event -> {
+            showSettings(stage);
+        });
+        Settings.setGraphic(new ImageView(foto));
+        Settings.setFocusTraversable(false);
+        
+
+        VBox menu = new VBox(
+            
+                20,
+                title,
+                Localgame,
+                Onlinegame,
+                Settings
+                
+        );
+        
+
+        
+
+        menu.setAlignment(Pos.CENTER);
+
+        stage.setScene(new Scene(menu, 440, 480));
+        stage.setTitle("Game of TicTacToe");
+        stage.show();
+        
+    }
+     public void showSettings(Stage stage) {
+       
+
+        //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
+        Label title = new Label("Settings");
+        
+
+
+        
+       
+
+        
+        Button Keyboardfocus = new Button("Keyboardfocus");
+            Keyboardfocus.setOnAction(event -> {
+            if (kfocus == false){
+            kfocus = true;
+            System.out.println("keyboard focus is aan");
+            }
+            else{
+                kfocus = false;
+                System.out.println("keyboard focus is uit");
+            }
+        });
+        
+      
+
+        VBox menu = new VBox(
+            
+                20,
+                title,
+                Keyboardfocus
+
+                
+                
+        );
+        
+
+        
+
+        menu.setAlignment(Pos.CENTER);
+
+        stage.setScene(new Scene(menu, 440, 480));
+        stage.setTitle("Game of TicTacToe");
+        stage.show();
+        
+    }
+
+
+
+    public void showGameSelect(Stage stage){
+        
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
         Label title = new Label("Tic Tac Toe");
         Label question = new Label("Welke modus wil je spelen?");
@@ -46,22 +160,58 @@ public class TicTacToeGameApp extends Application {
             startGame(stage, GameMode.PLAYER_VS_AI);
         });
 
-        VBox menu = new VBox(
+         
+        Button homeButton = new Button("Terug");
+        homeButton.setAlignment(Pos.TOP_LEFT);
+        homeButton.setFocusTraversable(false);
+       
+
+        homeButton.setOnAction(event -> {
+           showStartScreen(stage);
+        });
+
+        
+
+
+        VBox inhoud = new VBox(
             
                 20,
+                
                 title,
                 question,
                 playerVsPlayerButton,
                 playerVsAiButton
         );
+
+        inhoud.setAlignment(Pos.CENTER);
+
+       
+        
+        
+        VBox menu = new VBox(
+            homeButton,
+            inhoud
+            
+        );
+        VBox.setVgrow(inhoud, Priority.ALWAYS);
+
+       
+
+         
         
 
-        menu.setAlignment(Pos.CENTER);
+        
+
+        
+        
+        
+
 
         stage.setScene(new Scene(menu, 440, 480));
         stage.setTitle("Game of TicTacToe");
         stage.show();
-        
+
+
     }
     
 
@@ -98,7 +248,7 @@ public class TicTacToeGameApp extends Application {
             }
             
                 
-        ticTacToeController.initGoToMenu(() -> showStartScreen(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
+        ticTacToeController.initGoToMenu(() -> showGameSelect(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
         ticTacToeController.initModel(ticTacToeGame);
         ticTacToeController.initView(ticTacToeGameView);
         ticTacToeController.initGameMode(gameMode);
