@@ -257,7 +257,6 @@ public class TicTacToeGameApp extends Application {
            showStartScreen(stage);
         });
 
-        VBox menu = new VBox(
         HBox p1 = new HBox(
             20,
             speler1Box,
@@ -321,8 +320,6 @@ public class TicTacToeGameApp extends Application {
 
         );
 
-        playerVsPlayerButton.setFocusTraversable(false); //Auto Focus disabling
-        playerVsAiButton.setFocusTraversable(false); // Auto focus disabling
 
         menu.setAlignment(Pos.CENTER);
         VBox.setVgrow(inhoud, Priority.ALWAYS);
@@ -373,7 +370,6 @@ public class TicTacToeGameApp extends Application {
 
 
         ticTacToeController.initGoToMenu(() -> showGameSelect(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
-        ticTacToeController.initModel(ticTacToeGame);
         ticTacToeController.initView(ticTacToeGameView);
         ticTacToeGameView.initController(ticTacToeController);
 
