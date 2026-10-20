@@ -3,6 +3,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Client",
+            "request": "launch",
+            "mainClass": "network.Client",
+            "projectName": "tic-tac-toe"
+        },
+        {
+            "type": "java",
+            "name": "ClientTest",
+            "request": "launch",
+            "mainClass": "network.ClientTest",
+            "projectName": "tic-tac-toe"
+        },
+        {
+            "type": "java",
             "name": "GameServerTest",
             "request": "launch",
             "mainClass": "network.GameServerTest",

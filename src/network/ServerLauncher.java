@@ -6,7 +6,15 @@ Dit wordt verwijderd wanneer de server werkt, nu effe niet verwijderen aub omdat
 Soms sluit de oude server niet goed af, om dit af te sluiten en opnieuw in een nieuwe terminal starten gebruik de volgende commands:
 netstat -ano | findstr :8081
 taskkill /PID <HIER_DE_PID> /F
-de PID is de laatste getal dat staat recht van "LISTENING" */
+de PID is de laatste getal dat staat recht van "LISTENING" 
+
+To reset admin password: Open new terminal:
+cd src 
+cd network
+cd game
+java -jar newgameserver-release-V1.jar --set-password admin
+java -jar newgameserver-release-V1.jar
+*/
 
 package network;
 
