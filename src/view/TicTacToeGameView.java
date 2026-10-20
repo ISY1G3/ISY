@@ -11,9 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import model.Board;
-import model.GameMode;
 
 public class TicTacToeGameView extends VBox { //View is een verticale container
 
