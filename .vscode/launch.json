@@ -3,6 +3,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "GameServerTest",
+            "request": "launch",
+            "mainClass": "network.GameServerTest",
+            "projectName": "tic-tac-toe"
+        },
+        {
+            "type": "java",
+            "name": "ListenerTest",
+            "request": "launch",
+            "mainClass": "network.ListenerTest",
+            "projectName": "tic-tac-toe"
+        },
+        {
+            "type": "java",
+            "name": "ServerLauncher",
+            "request": "launch",
+            "mainClass": "network.ServerLauncher",
+            "projectName": "tic-tac-toe"
+        },
+        {
+            "type": "java",
+            "name": "Connection",
+            "request": "launch",
+            "mainClass": "network.Connection",
+            "projectName": "tic-tac-toe"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main"

@@ -1,22 +1,163 @@
-2026-09-24 22:42:47.907  INFO 25476 --- [main] nl.hanze.newgameserver.Main              : Starting Main on LAPTOP-F with PID 25476 (C:\Hanze\ISY\src\server\newgameserver-release-V1.jar started by F in C:\Hanze\ISY)
-2026-09-24 22:42:47.910  INFO 25476 --- [main] nl.hanze.newgameserver.Main              : No active profile set, falling back to default profiles: default
-2026-09-24 22:42:49.169  INFO 25476 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
-2026-09-24 22:42:49.183  INFO 25476 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-09-24 22:42:49.186  INFO 25476 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
-2026-09-24 22:42:49.249  INFO 25476 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-09-24 22:42:49.250  INFO 25476 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1263 ms
-2026-09-24 22:42:49.373  INFO 25476 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientInboundChannelExecutor'
-2026-09-24 22:42:49.376  INFO 25476 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientOutboundChannelExecutor'
-2026-09-24 22:42:49.394  INFO 25476 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'messageBrokerTaskScheduler'
-2026-09-24 22:42:49.443  INFO 25476 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'brokerChannelExecutor'
-2026-09-24 22:42:49.651  INFO 25476 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [public/index.html]
-2026-09-24 22:42:49.770  INFO 25476 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
-2026-09-24 22:42:49.771  INFO 25476 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
-2026-09-24 22:42:49.772  INFO 25476 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2026-09-24 22:42:49.772  INFO 25476 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
-2026-09-24 22:42:49.781  INFO 25476 --- [main] nl.hanze.newgameserver.Main              : Started Main in 2.415 seconds (JVM running for 2.877)
-2026-09-24 22:42:49.785  INFO 25476 --- [main] main                                     : gameserver is now listening on port 7789
-2026-09-24 22:43:49.445  INFO 25476 --- [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
-2026-09-24 22:45:40.975  INFO 25476 --- [main] main                                     : new client connected from /127.0.0.1:64155
-2026-09-24 22:45:40.990  INFO 25476 --- [Thread-2] client-thread <not logged in>            : issues command: 'test login'
-2026-09-24 22:45:40.990  INFO 25476 --- [Thread-2] client-thread <not logged in>            : command exception: 'unknown command'
+2026-10-19 09:20:33.456  INFO 11456 --- [main] nl.hanze.newgameserver.Main              : Starting Main on LAPTOP-F with PID 11456 (C:\Users\F\Desktop\Game\ISY\src\network\game\newgameserver-release-V1.jar started by F in C:\Users\F\Desktop\Game\ISY)
+2026-10-19 09:20:33.468  INFO 11456 --- [main] nl.hanze.newgameserver.Main              : No active profile set, falling back to default profiles: default
+2026-10-19 09:20:35.378  INFO 11456 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
+2026-10-19 09:20:35.393  INFO 11456 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-19 09:20:35.395  INFO 11456 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
+2026-10-19 09:20:35.511  INFO 11456 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-19 09:20:35.512  INFO 11456 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1941 ms
+2026-10-19 09:20:35.709  INFO 11456 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientInboundChannelExecutor'
+2026-10-19 09:20:35.713  INFO 11456 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientOutboundChannelExecutor'
+2026-10-19 09:20:35.750  INFO 11456 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'messageBrokerTaskScheduler'
+2026-10-19 09:20:35.814  INFO 11456 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'brokerChannelExecutor'
+2026-10-19 09:20:36.143  INFO 11456 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [public/index.html]
+2026-10-19 09:20:36.351  INFO 11456 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
+2026-10-19 09:20:36.354  INFO 11456 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-10-19 09:20:36.354  INFO 11456 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2026-10-19 09:20:36.355  INFO 11456 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-10-19 09:20:36.371  INFO 11456 --- [main] nl.hanze.newgameserver.Main              : Started Main in 3.74 seconds (JVM running for 4.646)
+2026-10-19 09:20:36.381  INFO 11456 --- [main] main                                     : gameserver is now listening on port 7789
+2026-10-19 09:21:35.823  INFO 11456 --- [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-10-19 09:22:26.848  INFO 8872 --- [main] nl.hanze.newgameserver.Main              : Starting Main on LAPTOP-F with PID 8872 (C:\Users\F\Desktop\Game\ISY\src\network\game\newgameserver-release-V1.jar started by F in C:\Users\F\Desktop\Game\ISY)
+2026-10-19 09:22:26.852  INFO 8872 --- [main] nl.hanze.newgameserver.Main              : No active profile set, falling back to default profiles: default
+2026-10-19 09:22:28.680  INFO 8872 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
+2026-10-19 09:22:28.697  INFO 8872 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-19 09:22:28.698  INFO 8872 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
+2026-10-19 09:22:28.812  INFO 8872 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-19 09:22:28.812  INFO 8872 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1866 ms
+2026-10-19 09:22:29.012  INFO 8872 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientInboundChannelExecutor'
+2026-10-19 09:22:29.015  INFO 8872 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientOutboundChannelExecutor'
+2026-10-19 09:22:29.041  INFO 8872 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'messageBrokerTaskScheduler'
+2026-10-19 09:22:29.114  INFO 8872 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'brokerChannelExecutor'
+2026-10-19 09:22:29.430  INFO 8872 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [public/index.html]
+2026-10-19 09:22:29.595  WARN 8872 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 8081 is already in use
+2026-10-19 09:22:29.596  INFO 8872 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'brokerChannelExecutor'
+2026-10-19 09:22:29.597  INFO 8872 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'messageBrokerTaskScheduler'
+2026-10-19 09:22:29.597  INFO 8872 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'clientOutboundChannelExecutor'
+2026-10-19 09:22:29.598  INFO 8872 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'clientInboundChannelExecutor'
+2026-10-19 09:22:29.604  INFO 8872 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-10-19 09:22:29.619  INFO 8872 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-10-19 09:22:29.622 ERROR 8872 --- [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
+2026-10-19 09:23:00.354  INFO 1820 --- [main] nl.hanze.newgameserver.Main              : Starting Main on LAPTOP-F with PID 1820 (C:\Users\F\Desktop\Game\ISY\src\network\game\newgameserver-release-V1.jar started by F in C:\Users\F\Desktop\Game\ISY)
+2026-10-19 09:23:00.358  INFO 1820 --- [main] nl.hanze.newgameserver.Main              : No active profile set, falling back to default profiles: default
+2026-10-19 09:23:02.325  INFO 1820 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8081 (http)
+2026-10-19 09:23:02.344  INFO 1820 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-19 09:23:02.345  INFO 1820 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.39]
+2026-10-19 09:23:02.473  INFO 1820 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-19 09:23:02.473  INFO 1820 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2014 ms
+2026-10-19 09:23:02.678  INFO 1820 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientInboundChannelExecutor'
+2026-10-19 09:23:02.681  INFO 1820 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientOutboundChannelExecutor'
+2026-10-19 09:23:02.710  INFO 1820 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'messageBrokerTaskScheduler'
+2026-10-19 09:23:02.785  INFO 1820 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'brokerChannelExecutor'
+2026-10-19 09:23:03.075  INFO 1820 --- [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [public/index.html]
+2026-10-19 09:23:03.301  INFO 1820 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8081 (http) with context path ''
+2026-10-19 09:23:03.305  INFO 1820 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-10-19 09:23:03.306  INFO 1820 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2026-10-19 09:23:03.307  INFO 1820 --- [main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-10-19 09:23:03.332  INFO 1820 --- [main] nl.hanze.newgameserver.Main              : Started Main in 3.875 seconds (JVM running for 4.72)
+2026-10-19 09:23:03.342  INFO 1820 --- [main] main                                     : gameserver is now listening on port 7789
+2026-10-19 09:23:05.965  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:62598
+2026-10-19 09:23:05.984  INFO 1820 --- [Thread-2] client-thread <not logged in>            : issues command: 'login test'
+2026-10-19 09:24:02.792  INFO 1820 --- [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-10-19 09:24:29.435  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:53506
+2026-10-19 09:24:29.444  INFO 1820 --- [Thread-3] client-thread <not logged in>            : issues command: 'login test'
+2026-10-19 09:24:29.446  INFO 1820 --- [Thread-3] login-command                            : reviving test from offline player list! Welcome back.
+2026-10-19 09:27:50.649  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:56323
+2026-10-19 09:28:05.183  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:60501
+2026-10-19 09:28:09.789  INFO 1820 --- [Thread-5] client-thread <not logged in>            : issues command: 'login yes'
+2026-10-19 09:28:16.038  INFO 1820 --- [Thread-4] client-thread <not logged in>            : issues command: 'login test'
+2026-10-19 09:28:16.040  INFO 1820 --- [Thread-4] login-command                            : reviving test from offline player list! Welcome back.
+2026-10-19 09:28:18.607  INFO 1820 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-19 09:28:18.608  INFO 1820 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-19 09:28:18.617  INFO 1820 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2026-10-19 09:28:44.407  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: 'subscribe tic-tac-toe'
+2026-10-19 09:29:09.499  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: 'challenge test tic-tac-toe'
+2026-10-19 09:29:09.502  INFO 1820 --- [Thread-5] challenge-manager                        : challenge send from yes to test
+2026-10-19 09:29:23.932  INFO 1820 --- [Thread-4] client-thread test                       : issues command: 'challenge accept 0'
+2026-10-19 09:29:23.935  INFO 1820 --- [Thread-4] challenge-manager                        : challenge accepted test from yes
+2026-10-19 09:29:23.970  INFO 1820 --- [Thread-4] game [1,test,yes]                        : started
+2026-10-19 09:29:33.973  INFO 1820 --- [Timer-0] game [1,test,yes]                        : winner: yes; Turn timelimit reached
+2026-10-19 09:29:47.395  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: 'challenge test tic-tac-toe'
+2026-10-19 09:29:47.396  INFO 1820 --- [Thread-5] challenge-manager                        : challenge send from yes to test
+2026-10-19 09:30:08.182  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: 'challenge accept 1'
+2026-10-19 09:30:08.183  INFO 1820 --- [Thread-5] client-thread yes                        : command exception: 'invalid challenge'
+2026-10-19 09:30:12.773  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: 'challenge accept 1'
+2026-10-19 09:30:12.774  INFO 1820 --- [Thread-5] client-thread yes                        : command exception: 'invalid challenge'
+2026-10-19 09:30:20.051  INFO 1820 --- [Thread-4] client-thread test                       : issues command: 'challenge accept 0challenge accept 1'
+2026-10-19 09:30:20.052  INFO 1820 --- [Thread-4] client-thread test                       : command exception: 'invalid challenge'
+2026-10-19 09:30:26.183  INFO 1820 --- [Thread-4] client-thread test                       : issues command: 'challenge accept 1'
+2026-10-19 09:30:26.184  INFO 1820 --- [Thread-4] challenge-manager                        : challenge accepted test from yes
+2026-10-19 09:30:26.185  INFO 1820 --- [Thread-4] game [2,yes,test]                        : started
+2026-10-19 09:30:36.188  INFO 1820 --- [Timer-1] game [2,yes,test]                        : winner: test; Turn timelimit reached
+2026-10-19 09:30:43.146  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: '?'
+2026-10-19 09:30:43.147  INFO 1820 --- [Thread-5] client-thread yes                        : command exception: 'unknown command'
+2026-10-19 09:30:47.870  INFO 1820 --- [Thread-5] client-thread yes                        : issues command: 'get gamelist'
+2026-10-19 09:30:56.511  WARN 1820 --- [Thread-5] client-thread yes                        : Server exception: Connection reset, disconnecting client
+2026-10-19 09:30:58.770  WARN 1820 --- [Thread-4] client-thread test                       : Server exception: Connection reset, disconnecting client
+2026-10-19 09:31:03.497  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:52269
+2026-10-19 09:31:05.763  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:52274
+2026-10-19 09:31:22.394  INFO 1820 --- [Thread-9] client-thread <not logged in>            : issues command: 'login test'
+2026-10-19 09:31:22.395  INFO 1820 --- [Thread-9] login-command                            : reviving test from offline player list! Welcome back.
+2026-10-19 09:31:26.391  INFO 1820 --- [Thread-10] client-thread <not logged in>            : issues command: 'login test1'
+2026-10-19 09:31:37.845  INFO 1820 --- [Thread-10] client-thread test1                      : issues command: 'get playerlist'
+2026-10-19 09:31:49.431  INFO 1820 --- [Thread-10] client-thread test1                      : issues command: 'challenge test1 tic-tac-toe'
+2026-10-19 09:31:49.432  INFO 1820 --- [Thread-10] client-thread test1                      : command exception: 'player not found'
+2026-10-19 09:42:00.734  WARN 1820 --- [Thread-10] client-thread test1                      : Server exception: Connection reset, disconnecting client
+2026-10-19 09:42:01.563  WARN 1820 --- [Thread-9] client-thread test                       : Server exception: Connection reset, disconnecting client
+2026-10-19 09:42:15.760  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:57346
+2026-10-19 09:42:18.736  INFO 1820 --- [main] main                                     : new client connected from /127.0.0.1:57349
+2026-10-19 09:42:20.920  INFO 1820 --- [Thread-12] client-thread <not logged in>            : issues command: 'login test'
+2026-10-19 09:42:20.922  INFO 1820 --- [Thread-12] login-command                            : reviving test from offline player list! Welcome back.
+2026-10-19 09:42:26.837  INFO 1820 --- [Thread-11] client-thread <not logged in>            : issues command: 'login test1'
+2026-10-19 09:42:26.837  INFO 1820 --- [Thread-11] login-command                            : reviving test1 from offline player list! Welcome back.
+2026-10-19 09:42:29.305  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'get playerlist'
+2026-10-19 09:42:55.304  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'challenge test tic-tac-toe'
+2026-10-19 09:42:55.306  INFO 1820 --- [Thread-11] challenge-manager                        : challenge send from test1 to test
+2026-10-19 09:43:07.021  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'challenge accept 2'
+2026-10-19 09:43:07.022  INFO 1820 --- [Thread-12] challenge-manager                        : challenge accepted test from test1
+2026-10-19 09:43:07.024  INFO 1820 --- [Thread-12] game [3,test,test1]                      : started
+2026-10-19 09:43:14.103  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 1'
+2026-10-19 09:43:22.683  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 4'
+2026-10-19 09:43:30.282  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 2'
+2026-10-19 09:43:33.835  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 5'
+2026-10-19 09:43:43.171  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 3'
+2026-10-19 09:43:50.381  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 7'
+2026-10-19 09:44:00.390  INFO 1820 --- [Timer-8] game [3,test,test1]                      : winner: test1; Turn timelimit reached
+2026-10-19 09:44:01.226  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 3'
+2026-10-19 09:44:01.226  INFO 1820 --- [Thread-12] client-thread test                       : command exception: 'Player is not in a match currently'
+2026-10-19 09:44:15.783  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'challenge test tic-tac-toe'
+2026-10-19 09:44:15.784  INFO 1820 --- [Thread-12] client-thread test                       : command exception: 'player not found'
+2026-10-19 09:44:21.738  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'challenge test1 tic-tac-toe'
+2026-10-19 09:44:21.739  INFO 1820 --- [Thread-12] challenge-manager                        : challenge send from test to test1
+2026-10-19 09:44:26.282  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'challenge accept 3'
+2026-10-19 09:44:26.282  INFO 1820 --- [Thread-11] challenge-manager                        : challenge accepted test1 from test
+2026-10-19 09:44:26.284  INFO 1820 --- [Thread-11] game [4,test1,test]                      : started
+2026-10-19 09:44:30.592  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 1'
+2026-10-19 09:44:30.593  INFO 1820 --- [Thread-12] game [4,test1,test]                      : it's not test's turn
+2026-10-19 09:44:30.594  INFO 1820 --- [Thread-12] client-thread test                       : command exception: 'Not your turn'
+2026-10-19 09:44:33.682  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 1'
+2026-10-19 09:44:41.005  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 5'
+2026-10-19 09:44:44.251  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 0'
+2026-10-19 09:44:48.105  INFO 1820 --- [Thread-12] client-thread test                       : issues command: 'move 7'
+2026-10-19 09:44:51.778  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 0'
+2026-10-19 09:44:51.780  INFO 1820 --- [Thread-11] game [4,test1,test]                      : winner: test; Player did illegal move
+2026-10-19 09:44:56.796  INFO 1820 --- [Thread-11] client-thread test1                      : issues command: 'move 3'
+2026-10-19 09:44:56.797  INFO 1820 --- [Thread-11] client-thread test1                      : command exception: 'Player is not in a match currently'
+2026-10-19 09:45:53.766  WARN 1820 --- [Thread-12] client-thread test                       : Server exception: Connection reset, disconnecting client
+2026-10-19 09:45:54.544  WARN 1820 --- [Thread-11] client-thread test1                      : Server exception: Connection reset, disconnecting client
+2026-10-19 09:54:02.824  INFO 1820 --- [MessageBroker-9] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[1 current WS(1)-HttpStream(0)-HttpPoll(0), 1 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(1)-CONNECTED(1)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 66], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 33], sockJsScheduler[pool size = 16, active threads = 1, queued tasks = 2, completed tasks = 363]
+2026-10-19 10:24:02.904  INFO 1820 --- [MessageBroker-15] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 1 total, 0 closed abnormally (0 connect failure, 0 send limit, 1 transport error)], stompSubProtocol[processed CONNECT(1)-CONNECTED(1)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 69], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 34], sockJsScheduler[pool size = 16, active threads = 1, queued tasks = 1, completed tasks = 741]

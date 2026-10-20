@@ -3,11 +3,8 @@ package controller;
 import model.TicTacToeGame;
 import view.TicTacToeGameView;
 import ai.AiPlayer;
-import javafx.stage.Stage;
 import model.Board;
 import model.GameMode;
-
-
 
 public class TicTacToeController {
 

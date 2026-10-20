@@ -16,6 +16,8 @@ import java.util.function.Consumer;
                                                  - onDisconnect: wordt aangeroepen als de verbinding onverwacht wegvalt
     close()                                      Zet done op true en sluit de socket. Veilig om meerdere keren aan te roepen.
     isConnected()                                Geeft aan of de verbinding nog open is.
+---------Wat deze ook doet
+Ganeserver gebruikt deze om commando's te sturen en serverregels te ontvangen.
  */
 
 public class Connection implements Runnable {
