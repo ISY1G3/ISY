@@ -1,0 +1,50 @@
+
+classDiagram
+    direction LR
+
+    class GameController {
+        +onYourTurn()
+        +onMove()
+        +onResult()
+    }
+
+    class Client {
+        +connect()
+        +login()
+        +sendMove()
+    }
+
+    class GameServer {
+        +login()
+        +move()
+        +handleLine()
+    }
+
+    class Connection {
+        +connect()
+        +send()
+        +close()
+    }
+
+    class ServerListener {
+        <<interface>>
+        +onLoginOk()
+        +onGameList()
+        +onPlayerList()
+        +onMatch()
+        +onYourTurn()
+        +onMove()
+        +onResult()
+        +onChallenge()
+        +onChallengeCancelled()
+        +onError()
+        +onDisconnect()
+    }
+
+    GameController ..|> ServerListener : implements
+    Client ..|> ServerListener : implements
+
+    GameController --> Client : gebruikt
+    Client --> GameServer : maakt en gebruikt
+    GameServer --> Connection : gebruikt
+    GameServer --> ServerListener : belt events

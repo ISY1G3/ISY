@@ -1,0 +1,78 @@
+
+classDiagram
+    direction TB
+
+    class Player {
+        <<abstract>>
+        -String name
+        +askForMove(MoveContext context) void*
+        +getName() String
+    }
+
+    class LocalPlayer {
+        +askForMove(MoveContext context) void
+    }
+
+    class RemotePlayer {
+        +askForMove(MoveContext context) void
+    }
+
+    class AIPlayer {
+        +askForMove(MoveContext context) void
+        -calculateMove(GameState state) Move
+    }
+
+    class MoveContext {
+        <<interface>>
+        +setInputEnabled(boolean enabled) void
+        +getGameState() GameState
+        +submitMove(Move move) void
+    }
+
+    class GameService {
+        -Game currentGame
+        +startTurn() void
+        +submitMove(Move move) void
+        +setInputEnabled(boolean enabled) void
+    }
+
+    class Game {
+        <<interface>>
+        +getCurrentPlayer() Player
+        +getState() GameState
+        +play(Move move) void
+        +isFinished() boolean
+    }
+
+    class GameState {
+        <<interface>>
+    }
+
+    class Move {
+        <<interface>>
+    }
+
+    class GameController {
+        +onCellClicked(int row, int col) void
+        +updateBoard() void
+    }
+
+    class GameClient {
+        +onServerMove(Move move) void
+    }
+
+    Player <|-- LocalPlayer
+    Player <|-- RemotePlayer
+    Player <|-- AIPlayer
+
+    Player ..> MoveContext : requests move
+    GameService ..|> MoveContext
+
+    GameService --> Game
+    Game --> Player
+    Game --> GameState
+
+    GameController --> GameService : local input
+    GameClient --> GameService : remote input
+    RemotePlayer --> GameClient : uses
+    AIPlayer ..> Move : calculates

@@ -1,0 +1,17 @@
+
+sequenceDiagram
+    participant N as TuiNavigator
+    participant C as MainMenuController
+    participant V as MainMenuView
+    participant U as User
+    participant S as SettingsController
+
+    N->>C: Create controller
+    N->>C: show()
+    C->>V: render()
+    V-->>U: Display menu
+    U->>C: Input "2"
+    C->>C: handleInput("2")
+    C->>N: showSettings()
+    N->>S: Create SettingsController
+    N->>S: show()
