@@ -1,11 +1,16 @@
+import java.util.random.RandomGenerator.SplittableGenerator;
+
 import controller.TicTacToeController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.GameMode;
 import model.TicTacToeGame;
@@ -26,18 +31,17 @@ public class TicTacToeGameApp extends Application {
     public void showStartScreen(Stage stage) {
        
 
-        //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
-        Label title = new Label("Turn Based Game Client");
+        
         
 
         Button Localgame =
                 new Button("Speel local game");
 
         Localgame.setPrefWidth(200);
-        Localgame.setFocusTraversable(false);
+        Localgame.setFocusTraversable(kfocus);
 
         Localgame.setOnAction(event -> {
-           showGameSelect(stage);
+           showGamechoice(stage);
            System.out.println("werkt");
         });
 
@@ -47,12 +51,13 @@ public class TicTacToeGameApp extends Application {
         
         Onlinegame.setPrefWidth(200);
         
-        Onlinegame.setFocusTraversable(false);
+        
+        Onlinegame.setFocusTraversable(kfocus);
 
         
 
         Onlinegame.setOnAction(event -> {
-            startGame(stage, GameMode.PLAYER_VS_AI);
+            showGamechoice(stage);
         });
         Image foto = new Image("https://e7.pngegg.com/pngimages/193/724/png-clipart-computer-icons-cogs-computer-desktop-wallpaper.png", 20, 20, true, true);
         
@@ -63,13 +68,13 @@ public class TicTacToeGameApp extends Application {
             showSettings(stage);
         });
         Settings.setGraphic(new ImageView(foto));
-        Settings.setFocusTraversable(false);
+        Settings.setFocusTraversable(kfocus);
         
 
         VBox menu = new VBox(
             
                 20,
-                title,
+                
                 Localgame,
                 Onlinegame,
                 Settings
@@ -91,6 +96,14 @@ public class TicTacToeGameApp extends Application {
 
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
         Label title = new Label("Settings");
+
+        Button terug = new Button("Terug");
+            terug.setOnAction(event -> {
+                showStartScreen(stage);
+
+            }
+
+        );
         
 
 
@@ -108,14 +121,18 @@ public class TicTacToeGameApp extends Application {
                 kfocus = false;
                 System.out.println("keyboard focus is uit");
             }
+            
         });
-        
+        Keyboardfocus.setFocusTraversable(kfocus);
+        terug.setFocusTraversable(kfocus);
+
       
 
         VBox menu = new VBox(
             
                 20,
                 title,
+                terug,
                 Keyboardfocus
 
                 
@@ -133,6 +150,54 @@ public class TicTacToeGameApp extends Application {
         
     }
 
+    public boolean Getkfocus() {
+        return kfocus;
+    }
+
+
+    public void showGamechoice(Stage stage){
+        Label title = 
+            new Label("Tic Tac Toe");
+        Label question = 
+            new Label("Welk spel wil je spelen?");
+
+        Button Tictactoe =
+                new Button("Tic Tac Toe");
+        Tictactoe.setFocusTraversable(kfocus);
+
+        Tictactoe.setOnAction(event ->{
+            showGameSelect(stage);
+        });
+
+        Tictactoe.setFocusTraversable(kfocus);
+
+        Button Terug = 
+            new Button("Terug");
+
+        Terug.setOnAction(event ->{
+            showStartScreen(stage);
+        });
+        Terug.setFocusTraversable(kfocus);
+
+        VBox keuze = new VBox(
+            title,
+            question,
+            Terug,
+            Tictactoe
+        );
+        keuze.setAlignment(Pos.CENTER);
+
+        stage.setScene(new Scene(keuze, 440, 480));
+        stage.setTitle("Game of TicTacToe");
+        stage.show();
+        
+
+
+
+
+    }
+
+
 
 
     public void showGameSelect(Stage stage){
@@ -141,36 +206,92 @@ public class TicTacToeGameApp extends Application {
         Label title = new Label("Tic Tac Toe");
         Label question = new Label("Welke modus wil je spelen?");
 
-        Button playerVsPlayerButton =
-                new Button("Persoon tegen Persoon");
+        
 
-        Button playerVsAiButton =
-                new Button("Persoon tegen AI");
+        
+        ChoiceBox<String> speler1Box = new ChoiceBox<>();
+        speler1Box.getItems().addAll("ai", "speler");
+        speler1Box.setFocusTraversable(kfocus);
 
-        playerVsPlayerButton.setPrefWidth(200);
-        playerVsAiButton.setPrefWidth(200);
-        playerVsPlayerButton.setFocusTraversable(false);
-        playerVsAiButton.setFocusTraversable(false);
+        
 
-        playerVsPlayerButton.setOnAction(event -> {
-            startGame(stage, GameMode.PLAYER_VS_PLAYER);
-        });
+        
+        ChoiceBox<String> speler2Box = new ChoiceBox<>();
+        speler2Box.getItems().addAll("ai", "speler");
+        speler2Box.setFocusTraversable(kfocus);
 
-        playerVsAiButton.setOnAction(event -> {
-            startGame(stage, GameMode.PLAYER_VS_AI);
-        });
+        TextField speler1naam = new TextField("naam speler 1");
 
+        TextField speler2naam = new TextField("naam speler 2");
+        speler1naam.setFocusTraversable(kfocus);
+        speler2naam.setFocusTraversable(kfocus);
+
+
+
+        Button startbutton = new Button("start");
+        startbutton.setFocusTraversable(kfocus);
+        startbutton.setOnAction(event ->{
+            if ("speler".equals(speler1Box.getValue()) && "ai".equals(speler2Box.getValue()) ) {
+                startGame(stage, GameMode.PLAYER_VS_AI);
+
+    
+        }
+        else if("speler".equals(speler1Box.getValue()) && "speler".equals(speler2Box.getValue()) ) {
+                startGame(stage, GameMode.PLAYER_VS_PLAYER);
+
+    
+        }
+
+
+        }
+
+        );
          
         Button homeButton = new Button("Terug");
         homeButton.setAlignment(Pos.TOP_LEFT);
-        homeButton.setFocusTraversable(false);
+        homeButton.setFocusTraversable(kfocus);
        
 
         homeButton.setOnAction(event -> {
            showStartScreen(stage);
         });
 
+        HBox p1 = new HBox(
+            20,
+            speler1Box,
+            speler1naam 
+            
+        );
+        p1.setAlignment(Pos.CENTER);
+
+        HBox p2 = new HBox(
+            20,
+            speler2Box,
+            speler2naam 
+            
+        );
+        p2.setAlignment(Pos.CENTER);
+        // Before the first game there is no controller yet, so use the stored scores. ai code stukje
+        int currentScoreP1 = ticTacToeController == null
+                ? storeP1
+                : ticTacToeController.getScoreP1(0);
+        int currentScoreP2 = ticTacToeController == null
+                ? storeP2
+                : ticTacToeController.getScoreP2(0);
+        Label scoreplayer1 = new Label("Speler 1:" + currentScoreP1);
+        Label scoreplayer2 = new Label("Speler 2: " + currentScoreP2);
         
+        //
+       
+           
+        HBox scoresHBox = new HBox(
+            20,
+            scoreplayer1,
+            scoreplayer2
+        
+        );
+        scoresHBox.setAlignment(Pos.CENTER);
+
 
 
         VBox inhoud = new VBox(
@@ -178,10 +299,14 @@ public class TicTacToeGameApp extends Application {
                 20,
                 
                 title,
+                scoresHBox,
                 question,
-                playerVsPlayerButton,
-                playerVsAiButton
+                p1,
+                p2,
+                startbutton
+                
         );
+        
 
         inhoud.setAlignment(Pos.CENTER);
 

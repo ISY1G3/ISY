@@ -28,6 +28,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         }
 
+
         public void setMarker(char marker) {
             setText("" + marker);
             setDisable(true);
@@ -42,8 +43,10 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
     private TicTacToeTile[][] buttons;
     private TicTacToeController ticTacToeController;
     
+    
     public TicTacToeGameView() {
         super(10);
+       
         setup();
     }
 
