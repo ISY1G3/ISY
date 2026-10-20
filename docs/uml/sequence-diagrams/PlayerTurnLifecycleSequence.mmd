@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant GS as GameService
+    participant P as Current Player
+    participant UI as GUI / TUI
+    participant G as Game
+
+    GS->>P: askForMove(context)
+
+    alt LocalPlayer
+        P->>UI: Enable input
+        Note over UI: Wait for user interaction
+        UI->>GS: submitMove(move)
+    else AIPlayer
+        P->>GS: submitMove(calculatedMove)
+    else RemotePlayer
+        Note over GS: Wait for server event
+        UI->>GS: submitMove(serverMove)
+    end
+
+    GS->>G: play(move)
+    G-->>GS: Updated state
+    GS->>GS: Begin next turn
