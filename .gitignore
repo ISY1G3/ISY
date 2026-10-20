@@ -12,3 +12,7 @@ target/
 # Operating-system files
 .DS_Store
 Thumbs.db
+
+# Gameserver Logs
+.gz
+gameserver.log

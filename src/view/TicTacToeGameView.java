@@ -23,6 +23,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
         public TicTacToeTile(int boxNumber) {
             this.boxNumber = boxNumber;
 
+            setFocusTraversable(false); // Disable auto focus
             setPrefSize(120, 120);   // knopgrootte
             setFocusTraversable(false);
             setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
