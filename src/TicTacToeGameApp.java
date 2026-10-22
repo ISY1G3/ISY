@@ -1,5 +1,7 @@
 import java.util.random.RandomGenerator.SplittableGenerator;
 
+import GUI.controller.Gamechoicecontroller;
+import GUI.controller.Startcontroller;
 import controller.TicTacToeController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -24,12 +26,15 @@ public class TicTacToeGameApp extends Application {
      private boolean kfocus = false;
      private String taalopties = "nl";
      private boolean check = false;
+     private Startcontroller start;
+     
 
     @Override
     public void start(Stage stage) {
+        start = new Startcontroller();
         ticTacToeController = new TicTacToeController();
         ticTacToeController.initGoToMenu(() -> showStartScreen(stage));
-        showStartScreen(stage);
+        start.start(stage);
     }
 
     private void showStartScreen(Stage stage) {
@@ -411,7 +416,7 @@ public class TicTacToeGameApp extends Application {
              storeP1 = ticTacToeController.getScoreP1(0);
              storeP2 = ticTacToeController.getScoreP2(0);
              
-
+            
             ticTacToeController = new TicTacToeController();
             ticTacToeController.getScoreP1(storeP1);
             ticTacToeController.getScoreP2(storeP2);
@@ -421,9 +426,10 @@ public class TicTacToeGameApp extends Application {
             }
             
                 
-        ticTacToeController.initGoToMenu(() -> showGameSelect(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
+        // Koppel beide kanten voordat de controller de game start.
         ticTacToeController.initView(ticTacToeGameView);
         ticTacToeGameView.initController(ticTacToeController);
+        ticTacToeController.initGoToMenu(() -> showGameSelect(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
 
         // De controller is verantwoordelijk voor het starten van de game.
         ticTacToeController.startGame(gameMode);
