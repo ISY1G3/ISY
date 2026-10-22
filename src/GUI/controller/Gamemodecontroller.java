@@ -2,14 +2,11 @@ package GUI.controller;
 
 
 import javafx.scene.control.Label;
-import javafx.scene.control.CheckBox;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import controller.TicTacToeController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.ChoiceBox;
@@ -21,7 +18,7 @@ import view.TicTacToeGameView;
 public class Gamemodecontroller {
     private TicTacToeController TicTacToeController;
     private  Settingscontroller settings;
-    private  Gamechoicecontroller gamechoice;
+   
     private Startcontroller start;
     
 
@@ -29,8 +26,7 @@ public class Gamemodecontroller {
         TicTacToeController = new TicTacToeController();
         start = new Startcontroller();
         settings = new Settingscontroller();
-        gamechoice = new Gamechoicecontroller();
-        
+      
         showGameSelect(stage);
     }
 
