@@ -3,8 +3,8 @@ package model.player;
 import model.TicTacToeGame;
 
 public class LocalPlayer extends Player implements PlayerInterface {
-    public LocalPlayer(String name, char symbol) {
-        super(name, symbol);
+    public LocalPlayer(String name) {
+        super(name);
     }
 
     @Override
