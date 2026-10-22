@@ -8,10 +8,10 @@ public class LocalPlayer extends Player implements PlayerInterface {
     }
 
     @Override
-    public void chooseMove(TicTacToeGame game) {
+    public void askForMove(TicTacToeGame game) {
         // TODO: This needs a proper implementation later. Right now we call the stub on the superclass which throws an error.
         // Implementation should be as follows:
         // GameService.getGameSession.UnlockBoardForLocalPlayer(this)
-        super.chooseMove(game);
+        super.askForMove(game);
     }
 }

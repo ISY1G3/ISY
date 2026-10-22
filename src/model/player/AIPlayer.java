@@ -6,8 +6,8 @@ public class AIPlayer extends Player implements PlayerInterface {
     public AIPlayer(String name) {
         super(name);
     }
-    public void chooseMove(TicTacToeGame game) {
+    public void askForMove(TicTacToeGame game) {
         // todo: plumb the existing AI functionality into here.
-        super.chooseMove(game);
+        super.askForMove(game);
     }
 }
