@@ -13,8 +13,5 @@ abstract public class Player {
     public void setName(String name){
         this.name = name;
     }
-    public void askForMove(TicTacToeGame game) {
-        // This needs to be implemented in subclasses, throw error.
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public abstract void askForMove(TicTacToeGame game);
 }

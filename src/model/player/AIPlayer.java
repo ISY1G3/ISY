@@ -6,8 +6,9 @@ public class AIPlayer extends Player implements PlayerInterface {
     public AIPlayer(String name) {
         super(name);
     }
+    @Override
     public void askForMove(TicTacToeGame game) {
         // todo: plumb the existing AI functionality into here.
-        super.askForMove(game);
+        throw new UnsupportedOperationException("AI move requests are not implemented yet.");
     }
 }

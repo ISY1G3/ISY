@@ -9,9 +9,9 @@ public class LocalPlayer extends Player implements PlayerInterface {
 
     @Override
     public void askForMove(TicTacToeGame game) {
-        // TODO: This needs a proper implementation later. Right now we call the stub on the superclass which throws an error.
+        // TODO: Enable local input when this player is asked for a move.
         // Implementation should be as follows:
         // GameService.getGameSession.UnlockBoardForLocalPlayer(this)
-        super.askForMove(game);
+        throw new UnsupportedOperationException("Local move requests are not implemented yet.");
     }
 }

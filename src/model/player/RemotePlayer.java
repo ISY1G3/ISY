@@ -6,8 +6,9 @@ public class RemotePlayer extends Player implements PlayerInterface {
     public RemotePlayer(String name) {
         super(name);
     }
+    @Override
     public void askForMove(TicTacToeGame game) {
         // TODO: Stub. plumb this to functionality to check for a networked move from the server.
-        super.askForMove(game);
+        throw new UnsupportedOperationException("Remote move requests are not implemented yet.");
     }
 }
