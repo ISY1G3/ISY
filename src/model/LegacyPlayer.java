@@ -1,9 +1,9 @@
 package model;
 
-public class Player {
+public class LegacyPlayer {
     private char marker; //Slaat het teken van de speler op.
 
-    public Player(char marker) { //Draait wanneer je speler aanmaakt en teken aangeeft.
+    public LegacyPlayer(char marker) { //Draait wanneer je speler aanmaakt en teken aangeeft.
         this.marker = marker; //Slaat de teken op in de speler.
     }
 

@@ -8,11 +8,11 @@ public class TicTacToeGame {
     private Board board; //Bewaart het 3x3 bord
 
     //Players
-    private Player playerX; //Speler X
-    private Player player0; //Speler 0
+    private LegacyPlayer legacyPlayerX; //Speler X
+    private LegacyPlayer legacyPlayer0; //Speler 0
 
     //Current Player
-    private Player currentPlayer; //Bewaart wie aan de beurt is.
+    private LegacyPlayer currentLegacyPlayer; //Bewaart wie aan de beurt is.
 
     //Game Status
     private GameStatus gameStatus;
@@ -21,11 +21,11 @@ public class TicTacToeGame {
         board = new Board(); 
 
         //Create Players
-        playerX = new Player(Board.PLAYER_X_MARKER);
-        player0 = new Player(Board.PLAYER_0_MARKER);
+        legacyPlayerX = new LegacyPlayer(Board.PLAYER_X_MARKER);
+        legacyPlayer0 = new LegacyPlayer(Board.PLAYER_0_MARKER);
 
         //Player X eerst
-        currentPlayer = playerX;
+        currentLegacyPlayer = legacyPlayerX;
 
 
         gameStatus = GameStatus.NOT_STARTED;
@@ -37,7 +37,7 @@ public class TicTacToeGame {
         }
 
         // X is volgens de huidige spelregel de eerste speler.
-        currentPlayer = playerX;
+        currentLegacyPlayer = legacyPlayerX;
         gameStatus = GameStatus.ACTIVE;
     }
 
@@ -53,12 +53,12 @@ public class TicTacToeGame {
         return gameStatus == GameStatus.ACTIVE;
     }
 
-    public List<Player> getPlayers() {
-        return List.of(playerX, player0);
+    public List<LegacyPlayer> getPlayers() {
+        return List.of(legacyPlayerX, legacyPlayer0);
     }
 
-    public boolean checkWinner(Player player) {
-        return checkWinner(board.getBoard(), player.getMarker());
+    public boolean checkWinner(LegacyPlayer legacyPlayer) {
+        return checkWinner(board.getBoard(), legacyPlayer.getMarker());
     }
 
     /** Checks whether the given marker wins on the supplied board state. */
@@ -120,28 +120,28 @@ public class TicTacToeGame {
     }
 
     public boolean playerXWon() {
-        return checkWinner(playerX); //checkWinner wordt gebruikt voor de juiste speler
+        return checkWinner(legacyPlayerX); //checkWinner wordt gebruikt voor de juiste speler
     }
 
     public boolean player0Won() {
-        return checkWinner(player0);
+        return checkWinner(legacyPlayer0);
     }
 
     public boolean isGameOver() { //true als iemand wint of het bord vol is.
-        return checkWinner(playerX) || checkWinner(player0) || board.isBoardFull();
+        return checkWinner(legacyPlayerX) || checkWinner(legacyPlayer0) || board.isBoardFull();
     }
 
     public void changeTurn() { //Wisselt de beurt
-        currentPlayer = currentPlayer == playerX? player0 : playerX;
+        currentLegacyPlayer = currentLegacyPlayer == legacyPlayerX ? legacyPlayer0 : legacyPlayerX;
     }
 
     public void placeMarker(int boxNumber) { //Zet het teken van de huidige speler op het gekozen vakje.
-        board.placeMarker(boxNumber, currentPlayer.getMarker());
+        board.placeMarker(boxNumber, currentLegacyPlayer.getMarker());
         board.print(); //Print bord in terminal voor controle, kan worden verwijderd.
     }
 
-    public Player getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
-        return currentPlayer;
+    public LegacyPlayer getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
+        return currentLegacyPlayer;
     }
 
     // voor de ai om alle moves te krijgen die nog mogelijk zijn
