@@ -1,6 +1,6 @@
 package model.player;
 
-import model.TicTacToeGame;
+import model.MoveContext;
 
 abstract public class Player {
     private String name;
@@ -13,5 +13,5 @@ abstract public class Player {
     public void setName(String name){
         this.name = name;
     }
-    public abstract void askForMove(TicTacToeGame game);
+    public abstract void askForMove(MoveContext context);
 }

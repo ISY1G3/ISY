@@ -1,6 +1,6 @@
 package model.player;
 
-import model.TicTacToeGame;
+import model.MoveContext;
 
 public class LocalPlayer extends Player implements PlayerInterface {
     public LocalPlayer(String name) {
@@ -8,7 +8,7 @@ public class LocalPlayer extends Player implements PlayerInterface {
     }
 
     @Override
-    public void askForMove(TicTacToeGame game) {
+    public void askForMove(MoveContext context) {
         // TODO: Enable local input when this player is asked for a move.
         // Implementation should be as follows:
         // GameService.getGameSession.UnlockBoardForLocalPlayer(this)
