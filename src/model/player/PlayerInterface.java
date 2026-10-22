@@ -1,6 +1,5 @@
 package model.player;
 
-import model.TicTacToeGame;
 import model.MoveContext;
 
 // This interface should be implemented by each Player subclass.
