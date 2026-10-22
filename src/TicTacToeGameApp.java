@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.GameMode;
-import model.TicTacToeGame;
 import view.TicTacToeGameView;
 import javafx.scene.image.*;
 
@@ -28,11 +27,13 @@ public class TicTacToeGameApp extends Application {
 
     @Override
     public void start(Stage stage) {
+        ticTacToeController = new TicTacToeController();
+        ticTacToeController.initGoToMenu(() -> showStartScreen(stage));
         showStartScreen(stage);
     }
 
-    public void showStartScreen(Stage stage) {
-       
+    private void showStartScreen(Stage stage) {
+
 
         
         
@@ -75,7 +76,6 @@ public class TicTacToeGameApp extends Application {
         
 
         VBox menu = new VBox(
-            
                 20,
                 
                 Localgame,
@@ -83,7 +83,8 @@ public class TicTacToeGameApp extends Application {
                 Settings
                 
         );
-        
+
+      
 
         
 
@@ -92,7 +93,6 @@ public class TicTacToeGameApp extends Application {
         stage.setScene(new Scene(menu, 440, 480));
         stage.setTitle("Game of TicTacToe");
         stage.show();
-        
     }
      public void showSettings(Stage stage) {
        
@@ -396,13 +396,6 @@ public class TicTacToeGameApp extends Application {
     
 
     private void startGame(Stage stage, GameMode gameMode) {
-        
-
-        // Game
-        TicTacToeGame ticTacToeGame =
-                new TicTacToeGame();
-        
-        // View
         TicTacToeGameView ticTacToeGameView =
                 new TicTacToeGameView();
 
@@ -429,13 +422,11 @@ public class TicTacToeGameApp extends Application {
             
                 
         ticTacToeController.initGoToMenu(() -> showGameSelect(stage)); // zorgt dat gotmenu (was eerst leeg) hetzelfde doet als showStartScreen(stage)
-        ticTacToeController.initModel(ticTacToeGame);
         ticTacToeController.initView(ticTacToeGameView);
-        ticTacToeController.initGameMode(gameMode);
+        ticTacToeGameView.initController(ticTacToeController);
 
-        ticTacToeGameView.initController(
-                ticTacToeController
-        );
+        // De controller is verantwoordelijk voor het starten van de game.
+        ticTacToeController.startGame(gameMode);
 
         // Speelveld tonen
         stage.setScene(

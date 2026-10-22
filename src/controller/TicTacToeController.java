@@ -3,11 +3,8 @@ package controller;
 import model.TicTacToeGame;
 import view.TicTacToeGameView;
 import ai.AiPlayer;
-import javafx.stage.Stage;
 import model.Board;
 import model.GameMode;
-
-
 
 public class TicTacToeController {
 
@@ -23,21 +20,45 @@ public class TicTacToeController {
 
     private AiPlayer aiPlayer;
 
-    public void initModel(TicTacToeGame ticTacToeGame) {
-        this.ticTacToeGame = ticTacToeGame;
-    }
-
     public void initView(TicTacToeGameView ticTacToeGameView) {
         this.ticTacToeGameView = ticTacToeGameView;
     }
 
-    public void initGameMode(GameMode gameMode) {
+    public void startGame(GameMode gameMode) {
+        if (ticTacToeGameView == null) {
+            throw new IllegalStateException("View moet eerst gekoppeld worden");
+        }
+
+        // Nieuwe wedstrijd aanmaken
+        ticTacToeGame = new TicTacToeGame();
+
+        // Gekozen spelmodus bewaren
         this.gameMode = gameMode;
 
-        // Speler 0 is de AI zoals we hadden afgesproken
+        // Eventueel AI aan speler 0 koppelen
         if (gameMode == GameMode.PLAYER_VS_AI) {
             aiPlayer = new AiPlayer(Board.PLAYER_0_MARKER);
+        } else {
+            aiPlayer = null;
         }
+
+        // Status actief maken en eerste speler bepalen
+        ticTacToeGame.start();
+
+        // Eerste beurt starten
+        ticTacToeGameView.showMessage(
+                "Player "
+                        + ticTacToeGame.getCurrentPlayer().getMarker()
+                        + " turn"
+        );
+    }
+
+    public TicTacToeGame getGame() {
+        if (ticTacToeGame == null) {
+            throw new IllegalStateException("Er is nog geen game gestart");
+        }
+
+        return ticTacToeGame;
     }
 
     public void handleInputFromUser(int boxNumber) {
@@ -112,6 +133,8 @@ public class TicTacToeController {
         if (!ticTacToeGame.isGameOver()) {
             return false;
         }
+
+        ticTacToeGame.finish();
 
         if (ticTacToeGame.playerXWon()) {
             scoreP1++;

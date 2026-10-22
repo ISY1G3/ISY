@@ -14,6 +14,9 @@ public class TicTacToeGame {
     //Current Player
     private Player currentPlayer; //Bewaart wie aan de beurt is.
 
+    //Game Status
+    private GameStatus gameStatus;
+
     public TicTacToeGame() { //Maakt nieuwe bord, de twee spelers en laat X beginnen
         board = new Board(); 
 
@@ -23,11 +26,43 @@ public class TicTacToeGame {
 
         //Player X eerst
         currentPlayer = playerX;
+
+
+        gameStatus = GameStatus.NOT_STARTED;
     }
 
-    public boolean checkWinner(Player player) { //Controleerd horizontaal, verticaal, diagonaal of iemand gewonnen heeft.
-        char playerMarker = player.getMarker();
-        char board[][] = this.board.getBoard();
+    public void start() {
+        if (gameStatus != GameStatus.NOT_STARTED) {
+            throw new IllegalStateException("Game is al gestart");
+        }
+
+        // X is volgens de huidige spelregel de eerste speler.
+        currentPlayer = playerX;
+        gameStatus = GameStatus.ACTIVE;
+    }
+
+    public void finish() {
+        gameStatus = GameStatus.FINISHED;
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public boolean isActive() {
+        return gameStatus == GameStatus.ACTIVE;
+    }
+
+    public List<Player> getPlayers() {
+        return List.of(playerX, player0);
+    }
+
+    public boolean checkWinner(Player player) {
+        return checkWinner(board.getBoard(), player.getMarker());
+    }
+
+    /** Checks whether the given marker wins on the supplied board state. */
+    public boolean checkWinner(char[][] board, char playerMarker) {
 
         //check horizontaal
         for (int i=0; i<Board.SIZE; i++) {
@@ -118,5 +153,9 @@ public class TicTacToeGame {
             }
         }
         return validMoves;
+    }
+    // dit wordt gebruikt door de AI om het board te vragen van model.Board
+    public char[][] getBoard() {
+        return board.getBoard();
     }
 }
