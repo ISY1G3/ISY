@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Board;
 
+// OOK DEZE IS NIET MEER NODIG GUI ZAL KOMEN ONDER UI.GUI EN DEZE MAG WEG INCL DEZE VIEW FOLDER
 public class TicTacToeGameView extends VBox { //View is een verticale container
 
     private class TicTacToeTile extends Button { //Maakt een tegel en een nummer wordt gegeven 0 t/m 8.
@@ -90,8 +91,6 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             }
         }
 
-
-
          Button homeButton = new Button("Terug");
          homeButton.setPrefWidth(50);
          homeButton.setFocusTraversable(false);
@@ -107,11 +106,6 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
                 );
        
          getChildren().add(home); 
-
-            
-            
-        
-
 
         //Add buttons to gridBox
         for(int i=0; i<Board.SIZE; i++) {
@@ -133,15 +127,6 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
         int j = boxNumber%Board.SIZE;
         buttons[i][j].setMarker(marker);
     }
-    
-    
-           
-                
-       
-
-
-
-    
 
     public void showGameResult(String gameResult) { //Opent game over popup en maakt een nieuw potje klaar
         Alert alert = new Alert(AlertType.INFORMATION);

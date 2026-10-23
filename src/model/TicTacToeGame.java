@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicTacToeGame {
+public class TicTacToeGame implements Game{
     //Board
     private Board board; //Bewaart het 3x3 bord
 
@@ -13,6 +13,9 @@ public class TicTacToeGame {
 
     //Current Player
     private Player currentPlayer; //Bewaart wie aan de beurt is.
+
+    //starting player
+    private Player startingPlayer; //bewaart welke speler moet beginnen
 
     //Game Status
     private GameStatus gameStatus;
@@ -25,26 +28,30 @@ public class TicTacToeGame {
         player0 = new Player(Board.PLAYER_0_MARKER);
 
         //Player X eerst
+        startingPlayer = playerX;
         currentPlayer = playerX;
-
 
         gameStatus = GameStatus.NOT_STARTED;
     }
 
+    @Override
     public void start() {
         if (gameStatus != GameStatus.NOT_STARTED) {
             throw new IllegalStateException("Game is al gestart");
         }
 
-        // X is volgens de huidige spelregel de eerste speler.
-        currentPlayer = playerX;
+        // Begin met de gekozen speler ipv altijd X
+        currentPlayer = startingPlayer;
+
         gameStatus = GameStatus.ACTIVE;
     }
 
+    @Override
     public void finish() {
         gameStatus = GameStatus.FINISHED;
     }
 
+    @Override
     public GameStatus getGameStatus() {
         return gameStatus;
     }
@@ -135,9 +142,13 @@ public class TicTacToeGame {
         currentPlayer = currentPlayer == playerX? player0 : playerX;
     }
 
-    public void placeMarker(int boxNumber) { //Zet het teken van de huidige speler op het gekozen vakje.
-        board.placeMarker(boxNumber, currentPlayer.getMarker());
-        board.print(); //Print bord in terminal voor controle, kan worden verwijderd.
+    // alleen het model verandert het bord en de UI bepaalt hoe het wordt getoond
+    // een ongeldige of al bezette positie verandert niks
+    public boolean placeMarker(int boxNumber) { //Zet het teken van de huidige speler op het gekozen vakje.
+        if (!isActive()){
+            throw new IllegalStateException("er is geen game actief");
+        }
+        return board.placeMarker(boxNumber, currentPlayer.getMarker());
     }
 
     public Player getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.
@@ -157,5 +168,25 @@ public class TicTacToeGame {
     // dit wordt gebruikt door de AI om het board te vragen van model.Board
     public char[][] getBoard() {
         return board.getBoard();
+    }
+
+    // kijkt welk symbool is meegegeven en maakt 1 van de 2 spelers de beginnende speler gebaseert op wat is meegegeven
+    // (standaard playerX)
+    public void setStartingPlayer(char marker){
+        //beginnende speler mag alleen maar veranderen VOOR de start.
+        if (gameStatus != GameStatus.NOT_STARTED){
+            throw new IllegalStateException("game is al gestart");
+        }
+
+        //bepaal welke speler bij welke marker(X 0) hoort
+        if (marker == Board.PLAYER_X_MARKER) {
+            startingPlayer = playerX;
+        }
+        else if (marker == Board.PLAYER_0_MARKER){
+            startingPlayer = player0;
+        }
+        else{
+            throw new IllegalArgumentException("Geen geldige speler marker");
+        }
     }
 }

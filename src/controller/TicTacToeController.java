@@ -1,157 +1,102 @@
 package controller;
 
-import model.TicTacToeGame;
-import view.TicTacToeGameView;
-import ai.AiPlayer;
 import model.Board;
 import model.GameMode;
+import model.TicTacToeGame;
+import service.*;
+import view.TicTacToeGameView;
 
 public class TicTacToeController {
 
     private int scoreP1 = 0;
     private int scoreP2 = 0;
-    //Model
-    private TicTacToeGame ticTacToeGame;
-
-    //View
+    private final GameService gameService = new GameService();
     private TicTacToeGameView ticTacToeGameView;
+    private TicTacToeGame ticTacToeGame;
+    private Runnable goToMenu;
 
-    private GameMode gameMode;
-
-    private AiPlayer aiPlayer;
-
-    public void initView(TicTacToeGameView ticTacToeGameView) {
-        this.ticTacToeGameView = ticTacToeGameView;
+    public void initView(TicTacToeGameView view) {
+        this.ticTacToeGameView = view;
     }
 
-    public void startGame(GameMode gameMode) {
+    public void startGame(GameMode gameMode, char startingMarker) {
         if (ticTacToeGameView == null) {
             throw new IllegalStateException("View moet eerst gekoppeld worden");
         }
+        // de GUI gebruikt X voor speler 1 en 0 voor speler 2
+        int startingPlayer;
+        if (startingMarker == Board.PLAYER_X_MARKER){startingPlayer = 1;}
+        else if (startingMarker == Board.PLAYER_0_MARKER) {startingPlayer = 2;}
+        else throw new IllegalArgumentException("geen geldige beginspeler");
 
-        // Nieuwe wedstrijd aanmaken
-        ticTacToeGame = new TicTacToeGame();
-
-        // Gekozen spelmodus bewaren
-        this.gameMode = gameMode;
-
-        // Eventueel AI aan speler 0 koppelen
-        if (gameMode == GameMode.PLAYER_VS_AI) {
-            aiPlayer = new AiPlayer(Board.PLAYER_0_MARKER);
-        } else {
-            aiPlayer = null;
-        }
-
-        // Status actief maken en eerste speler bepalen
-        ticTacToeGame.start();
-
-        // Eerste beurt starten
-        ticTacToeGameView.showMessage(
-                "Player "
-                        + ticTacToeGame.getCurrentPlayer().getMarker()
-                        + " turn"
-        );
+        //Wanneer je teruggaat naar het menu kan het zijn dat de vorige wedstijd te vroeg gestopt is
+        closeOldSession();
+        gameService.startTicTacToe(gameMode, "Speler 1",
+                gameMode == GameMode.PLAYER_VS_AI? "Computer" : "Speler 2",
+                startingPlayer);
+        refreshBoardAndTurn();          //toont ookk een openingszet van de ai.
     }
 
     public TicTacToeGame getGame() {
-        if (ticTacToeGame == null) {
-            throw new IllegalStateException("Er is nog geen game gestart");
+        GameSession session = gameService.getCurrentSession();
+        if (session == null || !(session.getGame() instanceof TicTacToeGame game)) {
+            throw new IllegalStateException("Er is nog geen TTT-game gestart");
         }
-
-        return ticTacToeGame;
+        return game;
     }
 
     public void handleInputFromUser(int boxNumber) {
-
-        // zet van gewone speler
-        ticTacToeGame.placeMarker(boxNumber);
-
-        ticTacToeGameView.setMarker(
-                boxNumber,
-                ticTacToeGame.getCurrentPlayer().getMarker()
-        );
-
-        // Heeft X gewonnen of is er gelijkspel?
-        if (showGameResultIfNeeded()) {
+        try {
+            if (!gameService.makeMove(boxNumber)) {
+                ticTacToeGameView.showMessage("dit vakje is al bezet of is niet geldig");
+                return;
+            }
+        }
+        catch (IllegalStateException e) {
+            ticTacToeGameView.showMessage(e.getMessage());
             return;
         }
 
-        // wissel naar volgende speler
-        ticTacToeGame.changeTurn();
-
-        ticTacToeGameView.showMessage(
-                "Player "
-                        + ticTacToeGame.getCurrentPlayer().getMarker()
-                        + " turn"
-        );
-
-        // Als we tegen AI spelen en speler 0 (de AI) is aan de beurt dan vragen we de AI een move te doen
-        if (gameMode == GameMode.PLAYER_VS_AI
-                && ticTacToeGame.getCurrentPlayer().getMarker()
-                == Board.PLAYER_0_MARKER) {
-
-            doAiMove();
+        // hier wordt het bord uit de bestaande game afgelezen
+        refreshBoardAndTurn();
+        if (!gameService.getCurrentSession().isActive()) {
+            showGameResult();
         }
     }
 
-    private void doAiMove() {
-
-        int aiMove = aiPlayer.chooseMove(ticTacToeGame);
-        //checkt of de return waarde van de AI -1 is oftewel fout is
-        if (aiMove == -1) {
-            return;
+    private void refreshBoardAndTurn() {
+        TicTacToeGame game = getGame();
+        char[][] board = game.getBoard();
+        for(int row = 0; row < Board.SIZE; row++){
+            for(int col = 0; col < Board.SIZE; col++){
+                char marker = board[row][col];
+                if (marker != '\0') {
+                    ticTacToeGameView.setMarker(row * Board.SIZE + col, marker);
+                }
+            }
         }
-
-        // AI zet plaatsen op bord
-        ticTacToeGame.placeMarker(aiMove);
-
-        // AI zet op scherm laten zien
-        ticTacToeGameView.setMarker(
-                aiMove,
-                ticTacToeGame.getCurrentPlayer().getMarker()
-        );
-
-        // Heeft AI gewonnen / gelijkspel?
-        if (showGameResultIfNeeded()) {
-            return;
+        if (game.isActive()) {
+            ticTacToeGameView.showMessage(
+                    "Player " + game.getCurrentPlayer().getMarker() + " turn");
         }
-
-        // Beurt terug naar X oftewel de gewone speler
-        ticTacToeGame.changeTurn();
-
-        ticTacToeGameView.showMessage(
-                "Player "
-                        + ticTacToeGame.getCurrentPlayer().getMarker()
-                        + " turn"
-        );
     }
 
     //zorgt voor het goede resultaat op het scherm bij winst verlies of draw
-    private boolean showGameResultIfNeeded() {
-        
-
-        if (!ticTacToeGame.isGameOver()) {
-            return false;
-        }
-
-        ticTacToeGame.finish();
-
-        if (ticTacToeGame.playerXWon()) {
+    private void showGameResult() {
+        TicTacToeGame game = getGame();
+        if (game.playerXWon()) {
             scoreP1++;
             ticTacToeGameView.showGameResult("Player X Won!");
-            
         }
-        else if (ticTacToeGame.player0Won()) {
+        else if (game.player0Won()) {
             scoreP2++;
             ticTacToeGameView.showGameResult("Player 0 Won!");
-            
         }
         else {
             ticTacToeGameView.showGameResult("Game Drawn!");
         }
-
-        return true;
     }
+
     public int getScoreP1(int x) { //functie voor het bewaren van scorep1 zodat ik die in Tictactoeview kan aanroepen
         if (x != 0) // kijken of we een score krijgen van storep1 uit Tictactoegameapp
             scoreP1 = x;
@@ -164,20 +109,21 @@ public class TicTacToeController {
         return scoreP2;
     }
 
-
-private Runnable goToMenu;
-
-public void initGoToMenu(Runnable goToMenu) { // goToMenu is eerst niks maar als
-//  TicTacToeController.initGoToMenu(() -> showStartScreen(stage)); wordt aangeroepen dan wordt door this.goToMenu = goToMenu 
-// goToMenu gelijk aan showstartscreen
+    public void initGoToMenu(Runnable goToMenu) { // goToMenu is eerst niks maar als
+    //  TicTacToeController.initGoToMenu(() -> showStartScreen(stage)); wordt aangeroepen dan wordt door this.goToMenu = goToMenu
+    // goToMenu gelijk aan showstartscreen
     this.goToMenu = goToMenu;
-   
+    }
 
-}
+    private void closeOldSession() {
+        if (gameService.getCurrentSession() != null) {
+            gameService.finishCurrentSession();
+            gameService.clearCurrentSession();
+        }
+    }
 
-public void resetGame() {
-    goToMenu.run();
-}
-
+    public void resetGame() {
+        goToMenu.run();
+    }
 }
 
