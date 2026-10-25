@@ -8,8 +8,16 @@ import model.MoveContext;
 public class GameService implements MoveContext {
     private Game currentGame;
 
+    public void startGame() {
+        // TODO: Create the selected game, assign currentGame, then start the first turn.
+        throw new UnsupportedOperationException("Game creation is not implemented yet.");
+    }
+
     public void startTurn() {
-        throw new UnsupportedOperationException("Starting a turn is not implemented yet.");
+        requireCurrentGame();
+        if (!currentGame.isFinished()) {
+            currentGame.getCurrentPlayer().askForMove(this);
+        }
     }
 
     @Override
@@ -24,6 +32,13 @@ public class GameService implements MoveContext {
 
     @Override
     public GameState getGameState() {
-        throw new UnsupportedOperationException("Game state access is not implemented yet.");
+        requireCurrentGame();
+        return currentGame.getState();
+    }
+
+    private void requireCurrentGame() {
+        if (currentGame == null) {
+            throw new IllegalStateException("No game has been started.");
+        }
     }
 }
