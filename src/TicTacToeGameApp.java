@@ -6,8 +6,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Board;
 import model.GameMode;
 import view.TicTacToeGameView;
+
+// DEZE WORDT UITEINDELIJK HELEMAAL VERWIJDERD DE GUI ZAL WORDEN AANGEROEPEN VIA DE UI.GUI FOLDER
 
 public class TicTacToeGameApp extends Application {
     private TicTacToeController ticTacToeController;
@@ -73,7 +76,7 @@ public class TicTacToeGameApp extends Application {
         ticTacToeGameView.initController(ticTacToeController);
 
         // De controller is verantwoordelijk voor het starten van de game.
-        ticTacToeController.startGame(gameMode);
+        ticTacToeController.startGame(gameMode, Board.PLAYER_X_MARKER);
 
         // Speelveld tonen
         stage.setScene(

@@ -1,30 +1,28 @@
 package network;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 
-public class Client implements ServerListener {
-    private final Connection connection = new Connection();
-    private final GameServer server = new GameServer(connection);
-    private ServerListener listener;    // Later veranderen met gamecontroller
-    private String gameType;            // Gekozen spel
+/*  Client Maakt een Connection en GameServer aan en geeft het terug aan de app
+    De rest van de app praat alleen met Client  */
 
-    public Client() {
-        server.setListener(this);
-    }
+public class Client {
+    private final Connection connection = new Connection();         // Socket naar de server
+    private final GameServer server = new GameServer(connection);   // Vertaalt acties naar commando's en berichten naar events voor de listneres
+    private String gameType;                                        // LAATST gekozen spel voor "challenge" zodat je het niet altijd hoeft te geven
 
-    public void setListener(ServerListener listener) {
-        this.listener = listener;
-    }
+    //------Verbinding & Acties naar de server-----//
 
-    // ---- Acties naar de server
+    /*  Maakt een verbinding en begint met luisteren
+        server.start() maakt een nieuwe thread aan en werkt op de achtergrond
+        IOException moet worden afhandeld (door foutmelding in UI bijv) */
 
     public void connect(String host, int port) throws IOException {
         connection.connect(host, port);
         server.start();                   
     }
 
+    //  SpelActies
     public void login(String name)          { server.login(name); }
     public void getGameList()               { server.getGameList(); }
     public void getPlayerList()             { server.getPlayerList(); }
@@ -35,82 +33,46 @@ public class Client implements ServerListener {
     }
 
     public void challenge(String player)    { server.challenge(player, gameType); }
+    public void challenge(String player, String game) { server.challenge(player, game); }
     public void accept(int nr)              { server.acceptChallenge(nr); }
     public void sendMove(int move)          { server.move(move); }
     public void forfeit()                   { server.forfeit(); }
     public void disconnect()                { server.logout(); }
 
-    // ---- Events van de server doorgeven
+    //------Listeners aanmelden------//
 
-    @Override public void onLoginOk() {
-        if (listener != null) listener.onLoginOk();
-    }
-    @Override public void onGameList(List<String> games) {
-        if (listener != null) listener.onGameList(games);
-    }
-    @Override public void onPlayerList(List<String> players) {
-        if (listener != null) listener.onPlayerList(players);
-    }
-    @Override public void onMatch(String opponent, String gameType, String startingPlayer) {
-        if (listener != null) listener.onMatch(opponent, gameType, startingPlayer);
-    }
-    @Override public void onYourTurn() {
-        if (listener != null) listener.onYourTurn();
-    }
-    @Override public void onMove(String player, int move) {
-        if (listener != null) listener.onMove(player, move);
-    }
-    @Override public void onResult(ResultType type, String comment) {
-        if (listener != null) listener.onResult(type, comment);
-    }
-    @Override public void onChallenge(String challenger, String game, int nr) {
-        if (listener != null) listener.onChallenge(challenger, game, nr);
-    }
-    @Override public void onChallengeCancelled(int nr) {
-        if (listener != null) listener.onChallengeCancelled(nr);
-    }
-    @Override public void onError(String reason) {
-        if (listener != null) listener.onError(reason);
-    }
-    @Override public void onDisconnect() {
-        if (listener != null) listener.onDisconnect();
-    }
+    public void addGameListener(GameListener l)                 { server.addGameListener(l); }    public void addLobbyListener(LobbyListener l)           { server.addLobbyListener(l); }
+    public void addConnectionListener(ConnectionListener l) { server.addConnectionListener(l); }
+    
+    //------Testen in Terminal------//
 
-        // ---------- extra: voor testen in de terminal ----------
+    /*  Alleen voor het testen, wordt later niet in app gebruikt
+        sendRaw() stuurt precies wat je typt naar de server */
 
-    /** Challenge met een willekeurig spel, niet alleen het gekozen gametype. */
-    public void challenge(String player, String game) {
-        server.challenge(player, game);
-    }
-
-    /** Stuurt precies wat je typt naar de server. */
-    public void sendRaw(String text) {
-        server.sendRaw(text);
-    }
-
-    public void setDebug(boolean debug) {
-        server.setDebug(debug);
-    }
-
-    public boolean isConnected() {
-        return connection.isConnected();
-    }
+    public void sendRaw(String text)    { server.sendRaw(text); }
+    public void setDebug(boolean debug) { server.setDebug(debug); }
+    public boolean isConnected()        { return connection.isConnected(); }
 
     public static void main(String[] args) throws Exception {
         String host = args.length > 0 ? args[0] : "127.0.0.1";
         int port = args.length > 1 ? Integer.parseInt(args[1]) : 7789;
-
+        
+        // Client opstarten
         Client client = new Client();
-        client.setListener(new PrintListener());
-        client.setDebug(true);               // laat >> en << regels zien
+        PrintListener printer = new PrintListener();
+        client.addGameListener(printer);
+        client.addLobbyListener(printer);
+        client.addConnectionListener(printer);
+        client.setDebug(true);                          // laat >> en << regels zien
         client.connect(host, port);
 
-        System.out.println("Verbonden. Typ een commando, of /exit om te stoppen.");
+
+        System.out.println("Verbonden. Typ een commando, of 'exit' om te stoppen.");
         try (Scanner scanner = new Scanner(System.in)) {
             while (client.isConnected()) {
                 String input = scanner.nextLine().trim();
                 if (input.isEmpty()) continue;
-                if (input.equals("/exit")) break;
+                if (input.equals("exit")) break;
                 client.sendRaw(input);
             }
         }
