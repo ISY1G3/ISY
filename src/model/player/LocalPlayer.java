@@ -2,7 +2,7 @@ package model.player;
 
 import model.MoveContext;
 
-public class LocalPlayer extends Player implements PlayerInterface {
+public class LocalPlayer extends Player {
     public LocalPlayer(String name) {
         super(name);
     }

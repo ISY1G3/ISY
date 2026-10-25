@@ -2,7 +2,7 @@ package model.player;
 
 import model.MoveContext;
 
-public class RemotePlayer extends Player implements PlayerInterface {
+public class RemotePlayer extends Player {
     public RemotePlayer(String name) {
         super(name);
     }

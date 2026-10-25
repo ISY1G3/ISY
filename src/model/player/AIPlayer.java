@@ -2,7 +2,7 @@ package model.player;
 
 import model.MoveContext;
 
-public class AIPlayer extends Player implements PlayerInterface {
+public class AIPlayer extends Player {
     public AIPlayer(String name) {
         super(name);
     }
