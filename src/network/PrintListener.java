@@ -2,13 +2,13 @@ package network;
 
 import java.util.List;
 
-/*Print dingen naar de console
-Later bij de spelflow kan dit worden gebruikt om schermen en spelstatus bij te werken */
+/* Print elk event naar de console, handig om te testen wat de server stuurt.
+   Wordt in Client.main aangemeld bij alle drie de soorten listeners. */
 
-public class PrintListener implements ServerListener {
+public class PrintListener implements GameListener, LobbyListener, ConnectionListener {
     @Override 
     public void onLoginOk() {
-        System.err.println("Login succesful!");
+        System.out.println("Login succesful!");
     }
 
     @Override 
