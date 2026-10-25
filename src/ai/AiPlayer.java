@@ -25,7 +25,7 @@ public class  AiPlayer {
 
     public int chooseMove(TicTacToeGame game) {
         // Is de ai wel aan de beurt?
-        if (game.getCurrentPlayer().getMarker() != aiMarker) { return -1; }
+        if (game.getMarker(game.getCurrentPlayer()) != aiMarker) { return -1; }
         //vraag om het bord van model.TicTacToeGame
         char[][] board = game.getBoard();
 

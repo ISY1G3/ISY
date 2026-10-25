@@ -5,6 +5,7 @@ import view.TicTacToeGameView;
 import ai.AiPlayer;
 import model.Board;
 import model.GameMode;
+import model.player.Player;
 
 public class TicTacToeController {
 
@@ -30,7 +31,7 @@ public class TicTacToeController {
         }
 
         // Nieuwe wedstrijd aanmaken
-        ticTacToeGame = new TicTacToeGame();
+        ticTacToeGame = new TicTacToeGame(gameMode);
 
         // Gekozen spelmodus bewaren
         this.gameMode = gameMode;
@@ -48,7 +49,7 @@ public class TicTacToeController {
         // Eerste beurt starten
         ticTacToeGameView.showMessage(
                 "Player "
-                        + ticTacToeGame.getCurrentPlayer().getMarker()
+                        + ticTacToeGame.getMarker(ticTacToeGame.getCurrentPlayer())
                         + " turn"
         );
     }
@@ -63,12 +64,14 @@ public class TicTacToeController {
 
     public void handleInputFromUser(int boxNumber) {
 
+        Player currentPlayer = ticTacToeGame.getCurrentPlayer();
+
         // zet van gewone speler
         ticTacToeGame.placeMarker(boxNumber);
 
         ticTacToeGameView.setMarker(
                 boxNumber,
-                ticTacToeGame.getCurrentPlayer().getMarker()
+                ticTacToeGame.getMarker(currentPlayer)
         );
 
         // Heeft X gewonnen of is er gelijkspel?
@@ -81,13 +84,13 @@ public class TicTacToeController {
 
         ticTacToeGameView.showMessage(
                 "Player "
-                        + ticTacToeGame.getCurrentPlayer().getMarker()
+                        + ticTacToeGame.getMarker(ticTacToeGame.getCurrentPlayer())
                         + " turn"
         );
 
         // Als we tegen AI spelen en speler 0 (de AI) is aan de beurt dan vragen we de AI een move te doen
         if (gameMode == GameMode.PLAYER_VS_AI
-                && ticTacToeGame.getCurrentPlayer().getMarker()
+                && ticTacToeGame.getMarker(ticTacToeGame.getCurrentPlayer())
                 == Board.PLAYER_0_MARKER) {
 
             doAiMove();
@@ -108,7 +111,7 @@ public class TicTacToeController {
         // AI zet op scherm laten zien
         ticTacToeGameView.setMarker(
                 aiMove,
-                ticTacToeGame.getCurrentPlayer().getMarker()
+                ticTacToeGame.getMarker(ticTacToeGame.getCurrentPlayer())
         );
 
         // Heeft AI gewonnen / gelijkspel?
@@ -121,7 +124,7 @@ public class TicTacToeController {
 
         ticTacToeGameView.showMessage(
                 "Player "
-                        + ticTacToeGame.getCurrentPlayer().getMarker()
+                        + ticTacToeGame.getMarker(ticTacToeGame.getCurrentPlayer())
                         + " turn"
         );
     }
