@@ -5,22 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7aecec63-f5a5-4709-8fbb-f1c426329c56" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/controller/ConfigGameController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/controller/MainApp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/controller/MainMenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/controller/TicTacToeGameController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/fxml/ConfigGameView.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/fxml/MainMenuView.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/gui/fxml/TicTacToeGameView.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/SettingsScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/StartScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/view/TicTacToeGameApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flake.lock" beforeDir="false" afterPath="$PROJECT_DIR$/flake.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flake.nix" beforeDir="false" afterPath="$PROJECT_DIR$/flake.nix" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TicTacToeGameApp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/TicTacToeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/TicTacToeGameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/TicTacToeGameView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="49" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -34,11 +49,77 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.1500773637251697E-115" />
+      <entry key="MS500" value="1.0283605948408395E-23" />
+      <entry key="S2" value="1.8476567926736403E-6" />
+      <entry key="S5" value="0.008291883444460846" />
+      <entry key="S10" value="0.20504679303626785" />
+      <entry key="S30" value="2.188641416684411" />
+      <entry key="S60" value="4.666843851343342" />
+      <entry key="M2" value="8.391341135399024" />
+      <entry key="M5" value="19.301504907115962" />
+      <entry key="M10" value="53.65825274158339" />
+      <entry key="M15" value="96.56538212661823" />
+      <entry key="M30" value="251.21015066819285" />
+      <entry key="H1" value="572.5914521102028" />
+      <entry key="H2" value="997.0240900964832" />
+      <entry key="H4" value="1411.8327572729324" />
+      <entry key="D1" value="2073.0874707536086" />
+      <entry key="W1" value="2249.7199370671096" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0000000018887305" />
+      <entry key="MS500" value="1.0204229074810955" />
+      <entry key="S2" value="1.5881780529702088" />
+      <entry key="S5" value="2.2167514231618766" />
+      <entry key="S10" value="2.558016900306029" />
+      <entry key="S30" value="2.8397392237154637" />
+      <entry key="S60" value="2.918129762528618" />
+      <entry key="M2" value="2.95862091884569" />
+      <entry key="M5" value="2.9895889977779424" />
+      <entry key="M10" value="3.1257346921913984" />
+      <entry key="M15" value="3.385488959810218" />
+      <entry key="M30" value="4.463182105096209" />
+      <entry key="H1" value="8.709429186101978" />
+      <entry key="H2" value="23.63773431380485" />
+      <entry key="H4" value="54.93735326817366" />
+      <entry key="D1" value="139.66996511684636" />
+      <entry key="W1" value="167.69498089350392" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="8.874344092133423E-5" />
+      <entry key="MS500" value="0.1595872767608318" />
+      <entry key="S2" value="1.0455320968623993" />
+      <entry key="S5" value="1.9014221580483912" />
+      <entry key="S10" value="2.565031797683227" />
+      <entry key="S30" value="4.922807677686329" />
+      <entry key="S60" value="7.509987418888913" />
+      <entry key="M2" value="11.30010818433102" />
+      <entry key="M5" value="22.266041878692338" />
+      <entry key="M10" value="56.7699329315001" />
+      <entry key="M15" value="99.9407299681967" />
+      <entry key="M30" value="255.66694845277183" />
+      <entry key="H1" value="581.2945710870019" />
+      <entry key="H2" value="1020.6513058486773" />
+      <entry key="H4" value="1466.7560971683677" />
+      <entry key="D1" value="2212.7510772783626" />
+      <entry key="W1" value="2417.4138214490818" />
+    </decayedShown>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2,
   &quot;fromUser&quot;: false
 }</component>
   <component name="ProjectId" id="3JNHXHnmEey3Q9BbLrMA6lXUQt3" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -47,8 +128,11 @@
   "keyToString": {
     "Application.Main (1).executor": "Run",
     "Application.Main.executor": "Run",
+    "Application.MainApp.executor": "Run",
+    "Application.MainAppAI.executor": "Run",
     "Application.TicTacToe.executor": "Run",
     "Application.TicTacToeGameApp.executor": "Run",
+    "Application.view.TicTacToeGameApp.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
     "Maven.tic-tac-toe [javafx:run].executor": "Run",
     "Maven.tic-tac-toe [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
@@ -57,12 +141,13 @@
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "andreas-BS1",
+    "git-widget-placeholder": "TestSv",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -77,7 +162,7 @@
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.16308594",
     "project.structure.side.proportion": "0.51285046",
-    "settings.editor.selected.configurable": "MavenSettings",
+    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
     "to.speed.mode.migration.done": "true"
   }
 }]]></component>
@@ -87,7 +172,7 @@
       <recent name="C:\Users\jordy\Desktop\REPO\ISY" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.tic-tac-toe [org.openjfx:javafx-maven-plugin:0.0.8:run]">
+  <component name="RunManager">
     <configuration name="Main (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="ISY" />
@@ -155,8 +240,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.TicTacToeGameApp" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.TicTacToeGameApp" />
         <item itemvalue="Application.Main (1)" />
       </list>
     </recent_temporary>
@@ -164,8 +249,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10315.125" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10315.125" />
       </set>
     </attachedChunks>
   </component>

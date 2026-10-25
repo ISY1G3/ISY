@@ -1,4 +1,4 @@
-import java.util.random.RandomGenerator.SplittableGenerator;
+package view;
 
 import controller.TicTacToeController;
 import javafx.application.Application;
@@ -13,14 +13,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.GameMode;
-import view.TicTacToeGameView;
 import javafx.scene.image.*;
 
 public class TicTacToeGameApp extends Application {
-     private int storeP1 = 0;
-     private int storeP2 = 0;
-     private TicTacToeController ticTacToeController;
-     private boolean kfocus = false;
+     private static int storeP1 = 0;
+     private static int storeP2 = 0;
+     private static TicTacToeController ticTacToeController;
+     private static boolean kfocus = false;
 
     @Override
     public void start(Stage stage) {
@@ -29,12 +28,7 @@ public class TicTacToeGameApp extends Application {
         showStartScreen(stage);
     }
 
-    private void showStartScreen(Stage stage) {
-
-
-
-
-
+    private static void showStartScreen(Stage stage) {
         Button Localgame =
                 new Button("Speel local game");
 
@@ -51,11 +45,7 @@ public class TicTacToeGameApp extends Application {
 
 
         Onlinegame.setPrefWidth(200);
-
-
         Onlinegame.setFocusTraversable(kfocus);
-
-
 
         Onlinegame.setOnAction(event -> {
             showGamechoice(stage);
@@ -72,18 +62,7 @@ public class TicTacToeGameApp extends Application {
         Settings.setFocusTraversable(kfocus);
 
 
-        VBox menu = new VBox(
-
-                20,
-
-                Localgame,
-                Onlinegame,
-                Settings
-
-        );
-
-
-
+        VBox menu = new VBox(20, Localgame, Onlinegame, Settings);
 
         menu.setAlignment(Pos.CENTER);
 
@@ -92,7 +71,7 @@ public class TicTacToeGameApp extends Application {
         stage.show();
 
     }
-     public void showSettings(Stage stage) {
+     public static void showSettings(Stage stage) {
 
 
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
@@ -101,16 +80,8 @@ public class TicTacToeGameApp extends Application {
         Button terug = new Button("Terug");
             terug.setOnAction(event -> {
                 showStartScreen(stage);
-
             }
-
         );
-
-
-
-
-
-
 
         Button Keyboardfocus = new Button("Keyboardfocus");
             Keyboardfocus.setOnAction(event -> {
@@ -156,7 +127,7 @@ public class TicTacToeGameApp extends Application {
     }
 
 
-    public void showGamechoice(Stage stage){
+    public static void showGamechoice(Stage stage){
         Label title =
             new Label("Tic Tac Toe");
         Label question =
@@ -201,14 +172,11 @@ public class TicTacToeGameApp extends Application {
 
 
 
-    public void showGameSelect(Stage stage){
+    public static void showGameSelect(Stage stage){
 
         //simpele opmaak van het startscherm van de game je kiest hier wat voor spel je wilt spelen
         Label title = new Label("Tic Tac Toe");
         Label question = new Label("Welke modus wil je spelen?");
-
-
-
 
         ChoiceBox<String> speler1Box = new ChoiceBox<>();
         speler1Box.getItems().addAll("ai", "speler");
@@ -341,7 +309,7 @@ public class TicTacToeGameApp extends Application {
         stage.show();
     }
 
-    private void startGame(Stage stage, GameMode gameMode) {
+    public static void startGame(Stage stage, GameMode gameMode) {
         TicTacToeGameView ticTacToeGameView =
                 new TicTacToeGameView();
 
@@ -363,8 +331,6 @@ public class TicTacToeGameApp extends Application {
             ticTacToeController = new TicTacToeController();
             ticTacToeController.getScoreP1(storeP1);
             ticTacToeController.getScoreP2(storeP2);
-
-
 
             }
 

@@ -15,7 +15,8 @@ import javafx.scene.shape.Circle;
 import model.Board;
 import model.GameMode;
 
-public class TicTacToeGameView extends VBox { //View is een verticale container
+// Door Copilot aangepast: implementeert de view-koppeling voor de gedeelde gamecontroller.
+public class TicTacToeGameView extends VBox implements TicTacToeController.GameView { //View is een verticale container
 
     private class TicTacToeTile extends Button { //Maakt een tegel en een nummer wordt gegeven 0 t/m 8.
         private int boxNumber;
@@ -28,6 +29,7 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             setFocusTraversable(false);
             setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         }
+
 
 
         public void setMarker(char marker) {
@@ -161,4 +163,3 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
     
     
 }
-
