@@ -8,15 +8,15 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Startcontroller {
+public class StartController {
     private TicTacToeController ticTacToeController;
-    private  Settingscontroller settings;
-    private  Gamechoicecontroller gamechoice;
+    private  SettingsController settings;
+    private  GameChoiceController gamechoice;
     
     public void start(Stage stage) {
         ticTacToeController = new TicTacToeController();
-        settings = new Settingscontroller();
-        gamechoice = new Gamechoicecontroller();
+        settings = new SettingsController();
+        gamechoice = new GameChoiceController();
         ticTacToeController.initGoToMenu(() -> showStartScreen(stage));
         showStartScreen(stage);
     }

@@ -15,17 +15,17 @@ import javafx.scene.layout.Priority;
 import model.GameMode;
 import view.TicTacToeGameView;
 
-public class Gamemodecontroller {
+public class GameModeController {
     private TicTacToeController TicTacToeController;
-    private  Settingscontroller settings;
+    private  SettingsController settings;
    
-    private Startcontroller start;
+    private StartController start;
     
 
      public void start(Stage stage) {
         TicTacToeController = new TicTacToeController();
-        start = new Startcontroller();
-        settings = new Settingscontroller();
+        start = new StartController();
+        settings = new SettingsController();
       
         showGameSelect(stage);
     }

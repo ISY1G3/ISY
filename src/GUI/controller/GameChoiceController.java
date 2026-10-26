@@ -7,15 +7,15 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Gamechoicecontroller {
-    private  Gamemodecontroller gameselect;
-    private Startcontroller start;
-    private Settingscontroller settings;
+public class GameChoiceController {
+    private  GameModeController gameselect;
+    private StartController start;
+    private SettingsController settings;
 
     public void start(Stage stage) {
-        gameselect = new Gamemodecontroller();
-        start = new Startcontroller();
-        settings = new Settingscontroller();
+        gameselect = new GameModeController();
+        start = new StartController();
+        settings = new SettingsController();
 
         
         showGamechoice(stage);

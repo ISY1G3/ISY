@@ -11,16 +11,16 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Settingscontroller {
+public class SettingsController {
     private boolean kfocus = false;
     private String taalopties = "nl";
       public boolean Getkfocus() {
         return kfocus;
     }
-    private Startcontroller start;
+    private StartController start;
     public void start(Stage stage) {
         
-        start = new Startcontroller();
+        start = new StartController();
        
 
         

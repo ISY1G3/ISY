@@ -1,7 +1,7 @@
 import java.util.random.RandomGenerator.SplittableGenerator;
 
-import GUI.controller.Gamechoicecontroller;
-import GUI.controller.Startcontroller;
+import GUI.controller.GameChoiceController;
+import GUI.controller.StartController;
 import controller.TicTacToeController;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -26,12 +26,12 @@ public class TicTacToeGameApp extends Application {
      private boolean kfocus = false;
      private String taalopties = "nl";
      private boolean check = false;
-     private Startcontroller start;
+     private StartController start;
      
 
     @Override
     public void start(Stage stage) {
-        start = new Startcontroller();
+        start = new StartController();
         ticTacToeController = new TicTacToeController();
         ticTacToeController.initGoToMenu(() -> showStartScreen(stage));
         start.start(stage);

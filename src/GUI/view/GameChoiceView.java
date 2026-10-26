@@ -1,5 +1,5 @@
 package GUI.view;
 
-public class Gamechoiceview {
+public class GameChoiceView {
     
 }
