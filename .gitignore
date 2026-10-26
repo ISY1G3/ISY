@@ -23,3 +23,6 @@ gameserver.log.*
 
 # Gameserver config
 server.properties
+
+# Copilot bs
+.github/modernize/.github/modernize/
