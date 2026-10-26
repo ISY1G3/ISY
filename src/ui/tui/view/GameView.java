@@ -1,89 +1,48 @@
 package ui.tui.view;
 
 import model.Board;
+import model.GameMode;
 import model.TicTacToeGame;
+import model.player.AIPlayer;
+import online.OnlineGameCoordinator;
 import service.GameSession;
 
 // Toont actuele bord en game info
 // de regels en zetten worden verwerkt in de GameService
+// voor zowel online en offline
 public class GameView extends TuiView {
     private final GameSession session;
-    // deze 3 worden alleen gebruikt voor de ONLINE demo en niet voor de uiteindelijke game
-    private final String demoGameName;
-    private final String demoPlayer1;
-    private final String demoPlayer2;
-    // hergebruikt de al bestaande board view
+    private final OnlineGameCoordinator online;
     private final TicTacToeBoardView boardView = new TicTacToeBoardView();
-
-    //de constructor voor een game
-    public GameView(GameSession session) {
-        this.session = java.util.Objects.requireNonNull(session); // dit voorkomt dat je per ongeluk een lokale GameView zonder een sessie maakt
-
-        this.demoGameName = null;        // gegevens die we halen uit de game sessie
-        this.demoPlayer1 = null;
-        this.demoPlayer2 = null;
+    public GameView(GameSession session) { this(session, null); }
+    public GameView(GameSession session, OnlineGameCoordinator online) {
+        this.session = session; this.online = online;
     }
-
-    // tijdelijk, de online demo heeft nog geen echte server/gamesessie.
-    public GameView(String gameName, String player1, String player2) {
-        this.session = null;    //demo heeft nog geeen echte session
-
-        this.demoGameName = gameName;
-        this.demoPlayer1 = player1;
-        this.demoPlayer2 = player2;
-    }
-
-    @Override
-    public void draw() {
-        //ONLINE demo heeft nog geen sessie
-        if (session == null) {
-            drawHeader(demoGameName,demoPlayer1,demoPlayer2);
-
-            System.out.println("ONLINE DEMO");
-
-            //tijdelijk leeg board alleen voor de weergave, hier wordt verder niks mee gedaan
-            boardView.draw(new char [Board.SIZE][Board.SIZE]);
-
-            System.out.println("Online is nog niet gekoppeld");
-            System.out.println("[0] Back");
-
-            return;
-        }
-
-        // algemene info over deze Session
-        drawHeader(session.getGameName(),session.getPlayer1Name(),session.getPlayer2Name());
-
-        //check eerst welk spel er in de session zit
+    // Bestaande online demo-constructor wordt niet meer gebruikt.
+    @Override public void draw() {
+        System.out.println("\n========== " + session.getGameName() + " ==========");
+        System.out.println(session.getPlayer1Name() + " (X) vs " + session.getPlayer2Name() + " (0)");
         if (!(session.getGame() instanceof TicTacToeGame game)) {
-            System.out.println("Nog geen bordView voor dit spel");
-            System.out.println("[0] Back");
-            return;
+            System.out.println("Nog geen bordview voor dit spel"); return;
         }
-
-        //Haal het bord op en print het
         boardView.draw(game.getBoard());
-
-        //toon de huidige speler
-        if(session.isActive()){
-            char marker = game.getCurrentPlayer().getMarker();
-
-            String playerName = marker == Board.PLAYER_X_MARKER ? session.getPlayer1Name() : session.getPlayer2Name();
-
-            System.out.println("\nAan de beurt: " + playerName + " (" + marker + ")");
+        if (!session.isActive()) { System.out.println("Status: " + session.getStatus()); return; }
+        System.out.println("Aan de beurt: " + game.getCurrentPlayer().getName()
+                + " (" + game.getCurrentMarker() + ")");
+        if (session.getGameMode() == GameMode.ONLINE) {
+            boolean localAi = session.getPlayer1() instanceof AIPlayer
+                    || session.getPlayer2() instanceof AIPlayer;
+            System.out.println("Lokale besturing: " + (localAi ? "AI (automatisch)" : "Mens"));
+            if (online == null) System.out.println("Onlinecoordinator ontbreekt");
+            else if (online.hasGivenUp()) System.out.println("Wachten op uitslag na opgave...");
+            else if (online.isAwaitingConfirmation()) System.out.println("Wachten op serverbevestiging...");
+            else if (online.isYourTurn()) System.out.println(localAi
+                    ? "AI kiest automatisch een zet..." : "Jouw beurt! Kies een vakje [1-9]");
+            else System.out.println("Wachten op server of tegenstander...");
+            System.out.println("[0] Wedstrijd opgeven");
+        } else {
             System.out.println("Kies een vakje [1-9]");
-            System.out.println("[0] Stoppen en terug naar setup");
+            System.out.println("[0] Terug naar lokale setup");
         }
-        else {
-            System.out.println("\nStatus: " + session.getStatus());
-        }
-    }
-
-    // hiermee hoeven we niet voor de TUI en online demo 2 aparte print statements voor de titel e.d.
-    private void drawHeader (String gameName, String player1, String player2) {
-        // print game info
-        System.out.println("\n================================");
-        System.out.println("       " + gameName.toUpperCase() + " GAME");
-        System.out.println("================================");
-        System.out.println(player1 + " (X) vs " + player2 + " (0)");
     }
 }

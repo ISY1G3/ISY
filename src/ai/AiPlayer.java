@@ -1,6 +1,5 @@
 // klopt voor derde demo
 // zou evt nog kunnen maken dat er maar 1 copy wordt gemaakt en dat er maar wordt gesimuleerd op 1 bord maar dat is onnodige moeite voor nu
-// Debug prints staan er nog kan je zien hoveel punten de AI geeft aan elke positie
 //
 // hoe dit werkt is de AI krijgt 1 veilige copy van het echte bord
 // Minmax maakt voor elke mogelijk zet een nieuwe copy van de huidige gesimuleerde bordsituatie
@@ -45,10 +44,10 @@ public class  AiPlayer {
         this.aiMarker = aiMarker;
         this.opponentMarker = aiMarker == Board.PLAYER_X_MARKER ? Board.PLAYER_0_MARKER : Board.PLAYER_X_MARKER;
     }
-
+    // probeert elke geldige zet en geeft die een Minimax-score daaruit wordt de beste zet gekozen
     public int chooseMove(TicTacToeGame game) {
-        // Is de ai wel aan de beurt?
-        if (!game.isActive() || game.getCurrentPlayer().getMarker() != aiMarker) { return -1; }
+        // is de ai wel aan de beurt?
+        if (!game.isActive() || game.getCurrentMarker() != aiMarker) { return -1; }
 
         //vraag om het bord van model.TicTacToeGame
         char[][] board = game.getBoard();
@@ -56,15 +55,10 @@ public class  AiPlayer {
         //vragen om alle mogelijke moves
         List<Integer> validMoves = game.getValidMoves();
 
-        // Zijn geen zetten meer als de lijst van moves leeg is
+        // er zijn geen zetten meer als de lijst van moves leeg is
         if (validMoves.isEmpty()) { return -1;}
 
-        //DEBUG//
-        System.out.println();
-        System.out.println("AI beurt:");
-        System.out.println("AI is speler: " + aiMarker);
-        System.out.println("zetten mogelijk: " + validMoves);
-
+        // we zoeken de hoogste score vanuit het perspectief van de AI
         int bestScore = Integer.MIN_VALUE;
         int bestMove = -1;
 
@@ -78,32 +72,21 @@ public class  AiPlayer {
             // ai gaat zetten proberen
             testBoard[row][column] = aiMarker;
 
-            //DEBUG//
-            System.out.println();
-            System.out.println("AI probeert zet: " + move);
-
-            // Nu doet de opponent een move
+            // dan doet de opponent een move
             int score = minimax(game, testBoard,false);
 
-            //DEBUG//
-            System.out.println("Zet: " + move + " krijgt score: " + score);
-
-            // En als laatst checken of de move die we als laatst hebben geprobeerd beter is dan degene die we hadden tot nu toe
+            // en als laatst checken of de move die we als laatst hebben geprobeerd beter is dan degene die we hadden tot nu toe
+            // stel er zijn dus 3 met de hoogste maar dezelfde score wordt voor nu de eerste gekozen voornamelijk te zien
+            // als de AI begint want hij zal altijd het vakje linksboven kiezen want er is niks beters nadat het eerste vakje 0 heeft gescoord
             if (score > bestScore) {
                 bestScore = score;
                 bestMove = move;
-                //DEBUG
-                System.out.println();
-                System.out.println("Nieuwe beste zet gevonden: " + bestMove + " score: " + bestScore);
             }
         }
-        //DEBUG
-        System.out.println();
-        System.out.println("AI kiest uiteindelijk zet: " + bestMove + " met score " + bestScore);
-        System.out.println();
         return bestMove;
     }
 
+    // Onderzoekt de volgende beurten recursief, de AI maximaliseert de score, en de tegenstander minimaliseert */
     private int minimax(TicTacToeGame game, char[][] board, boolean maximizingPlayer) {
 
         // Kijk eerst of dit bord al afgelopen is dus een win of loss

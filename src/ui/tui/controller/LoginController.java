@@ -4,12 +4,11 @@ import ui.tui.LoginData;
 import ui.tui.TuiNavigator;
 import ui.tui.view.LoginView;
 
-/** Verwerkt login-formuliervelden; echte login komt later via Client/GameService. */
 public class LoginController implements TuiController {
     private final TuiNavigator navigator;
     private final LoginData data;
     private final LoginView view;
-    private int waitingFor = 0; // 1 = server, 2 = bijnaam
+    private int waitingFor;
 
     public LoginController(TuiNavigator navigator, LoginData data, LoginView view) {
         this.navigator = navigator;
@@ -17,30 +16,41 @@ public class LoginController implements TuiController {
         this.view = view;
     }
 
-    @Override
-    public void handleInput(String input) {
+    @Override public void handleInput(String input) {
         if (waitingFor != 0) {
+            int field = waitingFor;
             if (input.equalsIgnoreCase("back")) {
                 waitingFor = 0;
                 navigator.drawCurrentView();
-            } else if (input.isEmpty() || input.length() > 100) {
-                System.out.println("Waarde moet 1 t/m 100 tekens bevatten.");
-                view.askValue(waitingFor == 1 ? "server" : "nickname");
-            } else {
-                if (waitingFor == 1) data.setHostname(input);
-                else data.setNickname(input);
-                waitingFor = 0;
-                navigator.drawCurrentView();
+                return;
             }
+            if (input.isBlank() || input.length() > 100) {
+                System.out.println("Waarde moet 1 t/m 100 tekens bevatten");
+                return;
+            }
+            if (field == 3) {
+                try {
+                    int port = Integer.parseInt(input);
+                    if (port < 1 || port > 65535) throw new NumberFormatException();
+                    data.setPort(port);
+                } catch (NumberFormatException e) {
+                    System.out.println("Poort moet tussen 1 en 65535 liggen");
+                    return;
+                }
+            } else if (field == 1) data.setHostname(input);
+            else data.setNickname(input);
+            waitingFor = 0;
+            navigator.drawCurrentView();
             return;
         }
-
         switch (input) {
-            case "1": waitingFor = 1; view.askValue("server"); break;
-            case "2": waitingFor = 2; view.askValue("nickname"); break;
-            case "3": navigator.showLobby(data.getNickname()); break;
-            case "0": navigator.showMainMenu(); break;
-            default: System.out.println("Ongeldige keuze.");
+            case "1", "2", "3" -> {
+                waitingFor = Integer.parseInt(input);
+                view.askValue(waitingFor == 1 ? "server" : waitingFor == 2 ? "nickname" : "poort");
+            }
+            case "4" -> navigator.getOnline().connect(data.getHostname(), data.getPort(), data.getNickname());
+            case "0" -> navigator.showMainMenu();
+            default -> System.out.println("Ongeldige keuze");
         }
     }
 }

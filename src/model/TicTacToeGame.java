@@ -3,13 +3,22 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Objects;
+
+import model.player.Player;
+import model.player.LocalPlayer;
+
+/**
+ * dit is het Tic-Tac-Toe-spelmodel
+ * dit bewaart het bord, de spelers, de beurt en de status en bepaalt winst/gelijkspel.
+ */
 public class TicTacToeGame implements Game{
     //Board
     private Board board; //Bewaart het 3x3 bord
 
     //Players
-    private Player playerX; //Speler X
-    private Player player0; //Speler 0
+    private final Player playerX; //Speler X
+    private final Player player0; //Speler 0
 
     //Current Player
     private Player currentPlayer; //Bewaart wie aan de beurt is.
@@ -19,21 +28,32 @@ public class TicTacToeGame implements Game{
 
     //Game Status
     private GameStatus gameStatus;
-
+    /**
+     * zonder args maakt deze constructor twee lokale spelers
+     * met argumenten gebruikt de game de gegeven spelers
+     */
     public TicTacToeGame() { //Maakt nieuwe bord, de twee spelers en laat X beginnen
-        board = new Board(); 
-
-        //Create Players
-        playerX = new Player(Board.PLAYER_X_MARKER);
-        player0 = new Player(Board.PLAYER_0_MARKER);
-
-        //Player X eerst
-        startingPlayer = playerX;
-        currentPlayer = playerX;
-
-        gameStatus = GameStatus.NOT_STARTED;
+        this(
+                new LocalPlayer("Speler 1"),
+                new LocalPlayer("Speler 2")
+        );
     }
 
+    public TicTacToeGame(Player playerX, Player player0){
+        this.playerX = Objects.requireNonNull(playerX);
+        this.player0 = Objects.requireNonNull(player0);
+
+        if (playerX == player0) {throw new IllegalArgumentException("een speler kan niet beide posities hebben");}
+        // alleen de TicTacToeGame heeft het echte Board object
+        this.board = new Board();
+
+        //Player X eerst
+        this.startingPlayer = playerX;
+        this.currentPlayer = playerX;
+
+        this.gameStatus = GameStatus.NOT_STARTED;
+    }
+    /** dit zet de game op actief en geef de ingestelde beginspeler de eerste beurt */
     @Override
     public void start() {
         if (gameStatus != GameStatus.NOT_STARTED) {
@@ -45,7 +65,7 @@ public class TicTacToeGame implements Game{
 
         gameStatus = GameStatus.ACTIVE;
     }
-
+    /** marker spel als afgelopen, wanneer wordt bepaalt door de service   */
     @Override
     public void finish() {
         gameStatus = GameStatus.FINISHED;
@@ -63,14 +83,17 @@ public class TicTacToeGame implements Game{
     public List<Player> getPlayers() {
         return List.of(playerX, player0);
     }
-
+    /** controleert de vakjes of er iemand */
     public boolean checkWinner(Player player) {
-        return checkWinner(board.getBoard(), player.getMarker());
+        return checkWinner(board.getBoard(), getMarkerForPlayer(player));
     }
 
     /** Checks whether the given marker wins on the supplied board state. */
     public boolean checkWinner(char[][] board, char playerMarker) {
-
+        //stel de marker is leeg dan betekent dat het lege karakter heeft gewonnen omdat dit in alle 9 vakjes staat
+        if (playerMarker != Board.PLAYER_X_MARKER && playerMarker != Board.PLAYER_0_MARKER) {
+            throw new IllegalArgumentException("Ongeldige speler marker.");
+        }
         //check horizontaal
         for (int i=0; i<Board.SIZE; i++) {
             boolean horizontalWin = true;
@@ -148,7 +171,19 @@ public class TicTacToeGame implements Game{
         if (!isActive()){
             throw new IllegalStateException("er is geen game actief");
         }
-        return board.placeMarker(boxNumber, currentPlayer.getMarker());
+        return board.placeMarker(boxNumber, getCurrentMarker());
+    }
+
+    // geeft de marker van een huidige speler terug
+    public char getCurrentMarker() {return getMarkerForPlayer(currentPlayer);}
+
+    // bepaalt bij welke marker een speler hoort
+    private char getMarkerForPlayer(Player player) {
+
+        //op deze manier vragen we of de huidige player dezelfde is als de instantie die aan playerX gekoppeld is
+        if (player == playerX) {return Board.PLAYER_X_MARKER;}
+        if (player == player0) {return Board.PLAYER_0_MARKER;}
+        throw new IllegalArgumentException("Deze speler doet niet mee aan deze wedstrijd.");
     }
 
     public Player getCurrentPlayer() { //Geeft speler terug die aan de beurt is, zodat controller weet welke teken het moet zetten.

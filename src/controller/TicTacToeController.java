@@ -5,7 +5,7 @@ import model.GameMode;
 import model.TicTacToeGame;
 import service.*;
 import view.TicTacToeGameView;
-
+/** Controller van de bestaande/oude JavaFX-GUI deze vertaalt kliks naar GameService-acties en werkt deJavaFX-view bij */
 public class TicTacToeController {
 
     private int scoreP1 = 0;
@@ -77,7 +77,7 @@ public class TicTacToeController {
         }
         if (game.isActive()) {
             ticTacToeGameView.showMessage(
-                    "Player " + game.getCurrentPlayer().getMarker() + " turn");
+                    "Player " + game.getCurrentMarker() + " turn");
         }
     }
 
