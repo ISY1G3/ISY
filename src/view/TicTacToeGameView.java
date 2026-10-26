@@ -11,9 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import model.Board;
-import model.GameMode;
 
 // Door Copilot aangepast: implementeert de view-koppeling voor de gedeelde gamecontroller.
 public class TicTacToeGameView extends VBox implements TicTacToeController.GameView { //View is een verticale container
@@ -97,8 +95,6 @@ public class TicTacToeGameView extends VBox implements TicTacToeController.GameV
             }
         }
 
-
-
          Button homeButton = new Button("Terug");
          homeButton.setPrefWidth(50);
          homeButton.setFocusTraversable(false);
@@ -114,11 +110,6 @@ public class TicTacToeGameView extends VBox implements TicTacToeController.GameV
                 );
        
          getChildren().add(home); 
-
-            
-            
-        
-
 
         //Add buttons to gridBox
         for(int i=0; i<Board.SIZE; i++) {
@@ -140,15 +131,6 @@ public class TicTacToeGameView extends VBox implements TicTacToeController.GameV
         int j = boxNumber%Board.SIZE;
         buttons[i][j].setMarker(marker);
     }
-    
-    
-           
-                
-       
-
-
-
-    
 
     public void showGameResult(String gameResult) { //Opent game over popup en maakt een nieuw potje klaar
         Alert alert = new Alert(AlertType.INFORMATION);
