@@ -1,0 +1,25 @@
+# Java build output
+bin/
+out/
+target/
+*.class
+
+# Eclipse / Java language-server files
+.classpath
+.project
+.settings/
+
+# Editor config (VS Code)
+.vscode/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Gameserver logs (including rotated/compressed ones)
+gameserver.log
+gameserver.log.*
+*.gz
+
+# Gameserver config
+server.properties

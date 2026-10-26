@@ -67,7 +67,7 @@ public class Client {
         client.connect(host, port);
 
 
-        System.out.println("Verbonden. Typ een commando, of 'exit' om te stoppen.");
+        System.out.println("Connected! Use 'quit' to logout! To see a list of all commands, use 'help'.");
         try (Scanner scanner = new Scanner(System.in)) {
             while (client.isConnected()) {
                 String input = scanner.nextLine().trim();
