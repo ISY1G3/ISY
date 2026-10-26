@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import ui.tui.TuiApplication;
+import view.TicTacToeGameApp;
 
 // De game kan vanaf nu gestart worden via hier. je kan hier kiezen welke interface je wil gebruiken
 // de TUI kant werkt en je kan een local game starten online nog niet maar dat probeer ik nog te fixen voor zondag
