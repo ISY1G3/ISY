@@ -1,60 +1,53 @@
 package ui.tui;
 
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import service.GameService;
 
+/** Laat UI-input en servercallbacks door dezelfde TUI-thread verwerken. */
 public class TuiApplication {
-
-    // er is 1 Scanner voor alle invoer vanuit de terminal
     private final Scanner scanner;
-
-    // Vanuit Main krijgt de TUI dezelfde Scanner doorgegeven.
-    public TuiApplication(Scanner scanner) {
-        this.scanner = java.util.Objects.requireNonNull(scanner);
-    }
-
-    // Bestaande directe TUI-start blijft ook mogelijk.
-    public TuiApplication() {
-        this(new Scanner(System.in));
-    }
-
-    // beheert de huidige game en maakt een nieuwe sessie aan
+    private final BlockingQueue<Runnable> events = new LinkedBlockingQueue<>();
     private final GameService gameService = new GameService();
-
-    // zorgt dat we kunnen navigeren tussen de schermen
-    private final TuiNavigator navigator = new TuiNavigator(gameService);
-
-    // Stuurt invoer van de player naar de goede controller
+    private final TuiNavigator navigator = new TuiNavigator(gameService, events::offer);
     private final TuiInputHandler inputHandler = new TuiInputHandler(navigator);
 
+    public TuiApplication(Scanner scanner) { this.scanner = Objects.requireNonNull(scanner); }
+    public TuiApplication() { this(new Scanner(System.in)); }
+
     public void start() {
-
-        // start de applicatie op main menu1
-        navigator.showMainMenu();
-
-        // Blijf invoer lezen zolang de isRunning true is/we de game aan willen houden
-        while (navigator.isRunning()) {
-
-            System.out.print("> ");
-
-            // check of er nog invoer is
-            if (!scanner.hasNextLine()) {
-                break;
+        Thread reader = new Thread(() -> {
+            try {
+                while (scanner.hasNextLine()) {
+                    String input = scanner.nextLine().trim();
+                    events.offer(() -> inputHandler.handle(input));
+                }
+            } catch (IllegalStateException e) {
+                // Scanner gesloten tijdens afsluiten.
+            } finally {
+                events.offer(navigator::stop);
             }
+        }, "tui-input");
+        reader.setDaemon(true);
+        reader.start();
 
-            // wat wil player doen
-            String input = scanner.nextLine().trim();
-
-            // geef de invoer van player door aan de actieve controller
-            inputHandler.handle(input);
+        navigator.showMainMenu();
+        System.out.print("> ");
+        try {
+            while (navigator.isRunning()) {
+                Runnable event = events.take();
+                try { event.run(); }
+                catch (RuntimeException e) { System.out.println("Fout: " + e.getMessage()); }
+                if (navigator.isRunning()) System.out.print("> ");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            navigator.getOnline().disconnect();
         }
-
         System.out.println("TUI gestopt");
     }
-
-
-    // tijdelijke main voor testen
-    public static void main(String[] args) {
-        new TuiApplication().start();
-    }
+    public static void main(String[] args) { new TuiApplication().start(); }
 }

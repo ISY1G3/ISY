@@ -1,4 +1,8 @@
 package model;
+/**
+ * Slaat het 3x3 bord op
+ * deze klasse controleert vaknummers en of een vak bezet is
+ */
 public class Board {
 
     public static final int SIZE = 3; //Bord is 3x3

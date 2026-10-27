@@ -6,6 +6,9 @@ import model.TicTacToeGame;
 import service.GameService;
 import service.GameSession;
 
+/**
+ * Verbindt beide JavaFX-views met de gedeelde GameService.
+ */
 public class TicTacToeController {
 
     public interface GameView {
@@ -112,7 +115,7 @@ public class TicTacToeController {
         }
 
         if (game.isActive()) {
-            char marker = game.getCurrentPlayer().getMarker();
+            char marker = game.getCurrentMarker();
             String playerName = marker == Board.PLAYER_X_MARKER ? playerXName : player0Name;
             ticTacToeGameView.showMessage("turn: " + playerName + " (" + marker + ")");
         }

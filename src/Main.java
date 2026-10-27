@@ -8,8 +8,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ui.tui.TuiApplication;
 
-// De game kan vanaf nu gestart worden via hier. je kan hier kiezen welke interface je wil gebruiken
-// de TUI kant werkt en je kan een local game starten online nog niet maar dat probeer ik nog te fixen voor zondag
+/**
+ * Startpunt van de app.
+ *
+ * Laat de gebruiker kiezen tussen de terminalinterface, de FXML-interface
+ * en de bestaande handmatig opgebouwde JavaFX-interface.
+ */
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -22,7 +26,8 @@ public class Main extends Application {
             System.out.println("         TIC-TAC-TOE AI");
             System.out.println("================================");
             System.out.println("[1] TUI (terminal)");
-            System.out.println("[2] GUI (tijdelijke JavaFX-versie)");
+            System.out.println("[2] GUI (FXML)");
+            System.out.println("[3] GUI (bestaande JavaFX-versie)");
             System.out.println("[0] Afsluiten");
             System.out.print("> ");
 
@@ -36,20 +41,21 @@ public class Main extends Application {
                     new TuiApplication(scanner).start();
                     return;
                 case "2":
-                    // Later vervangen door de nieuwe JavaFX-app
-                    // voor nu leid dit naar de oude javafx game app maar deze werkt toch niet meer en wordt toch verwijderd later
-                    // deze regel hieronder vervangen we als de gui werkt door iets als GuiApplication.main(args)
                     launch(args);
+                    return;
+                case "3":
+                    view.TicTacToeGameApp.main(args);
                     return;
                 case "0":
                     System.out.println("DOEI");
                     return;
                 default:
-                    System.out.println("Kies: 0, 1 of 2.");
+                    System.out.println("Kies: 0, 1, 2 of 3.");
             }
         }
     }
-    // start de javafx applicatie
+    // Start de FXML JavaFX-applicatie.
+    @Override
     public void start(Stage stage) throws Exception {
         try {
             File file = new File("src/ui/gui/fxml/MainMenuView.fxml");

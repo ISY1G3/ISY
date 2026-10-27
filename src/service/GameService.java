@@ -1,158 +1,194 @@
 package service;
 
 import ai.AiPlayer;
-import model.Game;
-import model.GameMode;
-import model.TicTacToeGame;
-import model.Board;         // constanten van de playerX en player0 marker
+import model.*;
+import model.player.AIPlayer;
+import model.player.LocalPlayer;
+import model.player.Player;
+import model.player.RemotePlayer;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.Objects;
 
-import java.util.concurrent.ThreadLocalRandom;      // random functie ALLEEN gebruikt voor kiezen van een beginspeler wanneer nodig
-
-// heeft functies voor het opzetten en beheren van game session
+/** spelservice voor lokale en online wedstrijden
+ *  kan spelers en sessies maken, valideertzetten en laat het model aanpassen */
 public class GameService {
-    private GameSession currentSession;                 // bewaart de huidige wedstrijd
+    private GameSession currentSession;
 
-    // de startmethode voor de GUI is voor nu bij player vs AI dat speler 2 de AI is
-    public GameSession startTicTacToe(GameMode mode, String player1Name, String player2Name, int startingPlayer) {
-        return startTicTacToe(mode, player1Name, player2Name, startingPlayer, false, mode == GameMode.PLAYER_VS_AI);
+    // start een local pvp of pvAI game de korte variant leidt standaard AI keuzen af uit de modus
+    public synchronized GameSession startTicTacToe(GameMode mode, String name1, String name2, int startingPlayer) {
+        return startTicTacToe(mode, name1, name2, startingPlayer, false, mode == GameMode.PLAYER_VS_AI);
     }
 
-    // Je zal zien dat er 2 startTicTacToe methodes zijn
-    // De bovenste ^  kan worden gebruikt voor de GUI die we nu hebben, wss halen wij deze later helemaal weg maar voor nu is dit nog een soort legacy
-    // De onderste v  Deze wordt gebruikt door de huidige TUI deze alles van de bovenste + je kan duidelijk aangeven welk van de 2 spelers de AI is of uiteindelijk zelfs beide
-    // Voor nu laat ik het zo voor iedergeval de komende demo want ik weet niet of de GUI afkomt voor die tijd.
+    public synchronized GameSession startTicTacToe(GameMode mode, String name1, String name2,
+                                                   int startingPlayer, boolean player1Ai, boolean player2Ai) {
+        ensureNoActiveSession();
+        if (mode == null || mode == GameMode.ONLINE || name1 == null || name1.isBlank()
+                || name2 == null || name2.isBlank())
+            throw new IllegalArgumentException("Ongeldige lokale instellingen");
+        if (player1Ai && player2Ai) throw new IllegalArgumentException("Twee AI spelers worden niet ondersteund");
+        if ((mode == GameMode.PLAYER_VS_AI) != (player1Ai || player2Ai))
+            throw new IllegalArgumentException("Spelmodus en spelertypen komen niet overeen");
 
-    public GameSession startTicTacToe(GameMode mode, String player1Name,
-                                      String player2Name, int startingPlayer,
-                                      boolean player1Ai, boolean player2Ai) {
-        //error handling
-        if(currentSession != null && currentSession.isActive()) {
-            throw new IllegalStateException("wedstrijd is al bezig");
-        }
-        if(mode == null || player1Name == null || player1Name.isBlank() || player2Name == null || player2Name.isBlank()){
-            throw new IllegalArgumentException("niet alle velden zijn goed ingevuld");
-        }
-        if (player1Ai && player2Ai) {
-            throw new IllegalArgumentException("twee AI spelers zijn nog niet ondersteund");
-        }
-        if ((mode == GameMode.PLAYER_VS_AI) != (player1Ai || player2Ai)) {
-            throw new IllegalArgumentException("de spelmodus komt niet overeen met de spelertypes");
-        }
-
-        char startingMarker; // bewaart het char van de speler die begint
-        switch (startingPlayer) { //bepaal wie begint op basis van de invoer
-            case 0:
-                // random kiezen X of 0
-                // wanneer true kiezen we X anders 0                    //hier v staat eigk een verkorte if else statement
-                startingMarker = ThreadLocalRandom.current().nextBoolean() ? Board.PLAYER_X_MARKER : Board.PLAYER_0_MARKER;
-                break;
-            case 1:
-                // speler 1 start
-                startingMarker = Board.PLAYER_X_MARKER;
-                break;
-            case 2:
-                // speler 2 start
-                startingMarker = Board.PLAYER_0_MARKER;
-                break;
-            default:
-                throw new IllegalArgumentException("ongeldige beginspeler");
-        }
-
-        TicTacToeGame game = new TicTacToeGame();
-        game.setStartingPlayer(startingMarker);         // begin speler wordt ingesteld voor de game begint
-        GameSession session = startSession("Tic-Tac-Toe", game, mode, player1Name, player2Name,player1Ai, player2Ai);
-
-        //wanneer de ai start wordt de eerste zet al voor het tonen van het bord gedaan
+        char startingMarker = switch (startingPlayer) {
+            case 0 -> ThreadLocalRandom.current().nextBoolean() ? Board.PLAYER_X_MARKER : Board.PLAYER_0_MARKER;
+            case 1 -> Board.PLAYER_X_MARKER;
+            case 2 -> Board.PLAYER_0_MARKER;
+            default -> throw new IllegalArgumentException("Ongeldige beginspeler");
+        };
+        Player playerX = createPlayer(name1, player1Ai);
+        Player player0 = createPlayer(name2, player2Ai);
+        TicTacToeGame game = new TicTacToeGame(playerX, player0);
+        game.setStartingPlayer(startingMarker);
+        GameSession session = startSession("Tic-Tac-Toe", game, mode, playerX, player0);
         playAiTurnIfNeeded(session);
         return session;
-
     }
 
-    private GameSession startSession(String gameName, Game game, GameMode mode,
-                                     String player1Name, String player2Name,
-                                     boolean player1Ai, boolean player2Ai) {
+    /**
+     * maakt een speler aan op basis van de gekozen besturing
+     *
+     * Bij een menselijke speler maken we een LocalPlayer
+     * Bij een AI maken we een AIPlayer met een MoveStrategy
+     *
+     * De AIPlayer is generiek en weet niet welk spel gespeeld wordt
+     * Daarom koppelen we hier de bestaande Tic-Tac-Toe AI aan de generieke speler
+     *
+     * De gekozen zet word teruggegeven als een TicTacToeMove
+     * Het uitvoeren van de zet gebeurt later via de GameService
+     */
+    private Player createPlayer(String name, boolean isAi) {
+        if (!isAi) return new LocalPlayer(name);
+        return new AIPlayer(name, state -> {
+            if (!(state instanceof TicTacToeTurnState turn))
+                throw new IllegalArgumentException("Geen Tic-Tac-Toe GameState");
+            TicTacToeGame game = turn.game();
+            int index = new AiPlayer(game.getCurrentMarker()).chooseMove(game);
+            return new TicTacToeMove(index);
+        });
+    }
+
+    // Oude aanroep blijft werken: standaard bestuur je deze client zelf.
+    public synchronized GameSession startOnlineTicTacToe(String local, String opponent, String starting) {
+        return startOnlineTicTacToe(local, opponent, starting, false);
+    }
+
+    /** Alleen de lokale kant kiest AI. De tegenstander wordt altijd via de server bestuurd. */
+    public synchronized GameSession startOnlineTicTacToe(
+            String local, String opponent, String starting, boolean localUsesAi) {
+        ensureNoActiveSession();
+        if (local == null || local.isBlank() || opponent == null || opponent.isBlank() || local.equals(opponent)
+                || (!Objects.equals(starting, local) && !Objects.equals(starting, opponent)))
+            throw new IllegalArgumentException("Ongeldige MATCH-gegevens");
+        Player localPlayer = createPlayer(local, localUsesAi);
+        Player remotePlayer = new RemotePlayer(opponent);
+        // Protocolafspraak controleren: PLAYERTOMOVE start met X in dit ontwerp.
+        Player x = starting.equals(local) ? localPlayer : remotePlayer;
+        Player zero = starting.equals(local) ? remotePlayer : localPlayer;
+        TicTacToeGame game = new TicTacToeGame(x, zero);
+        return startSession("Tic-Tac-Toe", game, GameMode.ONLINE, x, zero);
+    }
+
+    private GameSession startSession(String name, Game game, GameMode mode, Player playerX, Player player0) {
         game.start();
-        currentSession = new GameSession(gameName, mode, player1Name, player2Name, game, player1Ai, player2Ai);
+        currentSession = new GameSession(name, mode, playerX, player0, game);
         return currentSession;
     }
 
-    // laat een player een nummer geven/zet doen tussen de 0 en 8 en daarna evt de AI zet*/
-    public boolean makeMove(int boxNumber) {
+    public synchronized boolean makeMove(int number) {
         GameSession session = requireActiveSession();
-        if (!(session.getGame() instanceof TicTacToeGame game)){
-            throw new IllegalStateException("het spel omdersteunt nog geen lokale zetten");
-        }
-        if (isAiTurn(session, game)) {
-            throw new IllegalStateException("De AI is nu aan de beurt");
-        }
-        if (!applyMove(game,boxNumber)) {
-            return false;
-        }
+        if (session.getGameMode() == GameMode.ONLINE) throw new IllegalStateException("Online zetten gaan via de server");
+        if (!(session.getGame() instanceof TicTacToeGame game)) throw new IllegalStateException("Geen Tic-Tac-Toe game");
+        if (game.getCurrentPlayer() instanceof AIPlayer) throw new IllegalStateException("AI is aan de beurt");
+        if (!applyMove(game, number)) return false;
         playAiTurnIfNeeded(session);
         return true;
     }
 
-    private boolean applyMove(TicTacToeGame game, int boxNumber) {
-        if (!game.placeMarker(boxNumber)) {
-            return false;
+    public synchronized void applyConfirmedOnlineMove(String playerName, int number) {
+        GameSession session = requireActiveSession();
+        if (session.getGameMode() != GameMode.ONLINE || !(session.getGame() instanceof TicTacToeGame game))
+            throw new IllegalStateException("Geen online wedstrijd actief");
+        if (playerName == null || !game.getCurrentPlayer().getName().equals(playerName))
+            throw new IllegalStateException("MOVE komt niet van speler aan de beurt");
+        if (!applyMove(game, number)) throw new IllegalStateException("Ongeldige serverzet: " + number);
+    }
+
+    /**
+     * dit laat de lokale AI tijdens een online wedstrijd een zet berekenen
+     *
+     * Anders dan bij offline spelen wordt de zet hier niet gelijk op het bord geplaatst
+     *
+     * De AI berekent via askForMove() een zet en levert deze via MoveContext.submitMove() aan
+     *
+     * Daarna geeft deze methode het gekozen vaknummer terug
+     * OnlineGameCoordinator kan het vaknummer naar de server sturen
+     *
+     * Pas alleen wanneer de server een MOVE-event terugstuurt, wordt de zet op het echte bord toegepast
+     */
+    public synchronized int chooseOnlineAiMove() {
+        GameSession session = requireActiveSession();
+        if (session.getGameMode() != GameMode.ONLINE
+                || !(session.getGame() instanceof TicTacToeGame game)
+                || !(game.getCurrentPlayer() instanceof AIPlayer ai)) {
+            throw new IllegalStateException("Geen lokale online-AI aan de beurt");
         }
-        if(game.isGameOver()) {
-            game.finish();
+
+        final Move[] suggestion = new Move[1];
+        ai.askForMove(new MoveContext() {
+            @Override public GameState getGameState() { return new TicTacToeTurnState(game); }
+            @Override public void submitMove(Move move) {
+                if (suggestion[0] != null) throw new IllegalStateException("Meerdere AI-zetten ontvangen");
+                suggestion[0] = Objects.requireNonNull(move);
+            }
+        });
+
+        if (!(suggestion[0] instanceof TicTacToeMove chosen)
+                || !game.getValidMoves().contains(chosen.index())) {
+            throw new IllegalStateException("AI koos een ongeldige online-zet");
         }
-        else{
-            game.changeTurn();
-        }
+        // Let op: GEEN applyMove. Alleen MOVE van de server wijzigt het bord.
+        return chosen.index();
+    }
+
+    private boolean applyMove(TicTacToeGame game, int number) {
+        if (!game.placeMarker(number)) return false;
+        if (game.isGameOver()) game.finish();
+        else game.changeTurn();
         return true;
     }
-    private void playAiTurnIfNeeded(GameSession session){
-        if (!session.isActive() || !(session.getGame() instanceof TicTacToeGame game) || !isAiTurn(session, game)) {
-            return;
-        }
-        char aiMarker = session.isPlayer1Ai() ? Board.PLAYER_X_MARKER : Board.PLAYER_0_MARKER;
-        int move = new AiPlayer(aiMarker).chooseMove(game);
-        if (!applyMove(game, move)) {
-            throw new IllegalStateException("De ai kan geen geldige zet doen");
-        }
+
+    private void playAiTurnIfNeeded(GameSession session) {
+        if (!session.isActive() || !(session.getGame() instanceof TicTacToeGame game)
+                || !(game.getCurrentPlayer() instanceof AIPlayer ai)) return;
+        MoveContext context = new MoveContext() {
+            @Override public GameState getGameState() { return new TicTacToeTurnState(game); }
+            @Override public void submitMove(Move move) {
+                if (!session.isActive() || game.getCurrentPlayer() != ai)
+                    throw new IllegalStateException("AI is niet aan de beurt");
+                if (!(move instanceof TicTacToeMove m) || !applyMove(game, m.index()))
+                    throw new IllegalStateException("AI gaf ongeldige zet");
+            }
+        };
+        ai.askForMove(context);
     }
 
-    private boolean isAiTurn(GameSession session, TicTacToeGame game) {
-        char marker = game.getCurrentPlayer().getMarker();
-        return marker == Board.PLAYER_X_MARKER ? session.isPlayer1Ai() : session.isPlayer2Ai();
+    private record TicTacToeTurnState(TicTacToeGame game) implements GameState {}
+    private record TicTacToeMove(int index) implements Move {}
+
+    private void ensureNoActiveSession() {
+        if (currentSession != null && currentSession.isActive()) throw new IllegalStateException("Er is al een wedstrijd actief");
     }
-    private GameSession requireActiveSession(){
-        if (currentSession == null || !currentSession.isActive()) {
-            throw new IllegalStateException("er is geen actieve game");
-        }
+    private GameSession requireActiveSession() {
+        if (currentSession == null || !currentSession.isActive()) throw new IllegalStateException("Geen actieve wedstrijd");
         return currentSession;
     }
-
-    // opvragen van de sessie of null als er geen sessie is
-    public GameSession getCurrentSession() {
-        return currentSession;
+    public synchronized GameSession getCurrentSession() { return currentSession; }
+    public synchronized void finishCurrentSession() {
+        if (currentSession == null) throw new IllegalStateException("Geen wedstrijd");
+        if (currentSession.isActive()) currentSession.getGame().finish();
     }
-
-    //nu moeten we een game nog kunnen sluiten dat komt hier
-    public void finishCurrentSession(){
-        //check of er een sessie is
-        if (currentSession == null){
-            throw new IllegalStateException("er bestaat helemaal geen wedstrijd om te eindigen");
-        }
-        // check of de sessie nog actief is en als dat zo is roepen we finish op van de onderliggende game.
-        // bij ons betekent finish dat de gamestatus op FINISHED wordt gezet en het spel stopt
-        if (currentSession.isActive()){
-            currentSession.getGame().finish();
-        }
-    }
-
-    // het zou kunnen dat je nadat je klaar bent met spelen een nieuwe game wil starten
-    // dus moeten we de currentsession wel geleegd hebben
-
-    public void clearCurrentSession(){
-        //checkt of er een sessie is en of deze actief is zo raak je ook niet perongeluk een wedstrijd kwijt
-        if (currentSession != null && currentSession.isActive()){
-            throw new IllegalStateException("De wedstrijd moet eerst gestopt worden");
-        }
-        // verwijdert de verwijzing naar de huidige sessie
+    public synchronized void clearCurrentSession() {
+        if (currentSession != null && currentSession.isActive()) throw new IllegalStateException("Wedstrijd nog actief");
         currentSession = null;
     }
 }
