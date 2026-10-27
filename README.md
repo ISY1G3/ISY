@@ -1,5 +1,38 @@
 # ISY Tic-Tac-Toe
 
+===================== STARTEN OP MEERDERE LAPTOPS =====================
+
+Laptop A = de server. Laptop B, C, ... = alleen clients.
+Zet alle laptops op hetzelfde netwerk (schoolwifi blokkeert dit vaak: gebruik een telefoonhotspot).
+
+--- Laptop A: server ---
+java -jar newgameserver-release-V1.jar                (in de map met de jar, venster open laten)
+ipconfig                                              (zoek IPv4 Address van de wifi-adapter)
+netsh advfirewall firewall add rule name="GameServer" dir=in action=allow protocol=TCP localport=7789 profile=any
+                                                       (PowerShell als administrator)
+Netwerkprofiel van de wifi op "Private" zetten (Windows: Instellingen > Netwerk > Wi-Fi)
+
+--- Laptop B, C: eerst testen ---
+Test-NetConnection <IP van laptop A> -Port 7789       (PowerShell, je wilt TcpTestSucceeded : True)
+
+--- Client starten ---
+Laptop A:       Run Client (geen argumenten, gebruikt 127.0.0.1)
+Laptop B, C:    Run Client met argumenten <IP van laptop A> 7789
+                 in VS Code: .vscode/launch.json > "args": ["<IP van laptop A>", "7789"]
+
+--- Typen in de client ---
+login <naam>                    (elke laptop een eigen naam)
+get gamelist
+subscribe <spel>                (twee clients met hetzelfde spel krijgen automatisch een match)
+move <0-8>                      (alleen als je Your Turn! ziet)
+exit                            (afsluiten)
+
+--- Als het niet werkt ---
+Connection refused  = verkeerd IP, of de server draait niet op dat adres
+Timeout             = netwerk of firewall (hotspot gebruiken of Tailscale)
+IP veranderd na opnieuw verbinden? Doe ipconfig opnieuw op laptop A
+======================================================================
+
 ## Requirements
 
 - JDK 21
