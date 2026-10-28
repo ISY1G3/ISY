@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
 import model.GameMode;
 
 import javafx.scene.control.TextField;
@@ -18,9 +19,6 @@ import java.io.IOException;
 
 import static model.GameMode.PLAYER_VS_AI;
 import static model.GameMode.PLAYER_VS_PLAYER;
-
-
-
 
 public class ConfigGameController {
     private Parent root;
@@ -54,9 +52,11 @@ public class ConfigGameController {
         player1Box.setValue("Player");
         player2Box.setValue("AI");
         startingPlayer.setValue("Player 1");
-
-        player1Name.setText("");
-        player2Name.setText("");
+        //!! De GameService accepteert geen lege namen, het feit dat deze worden gestuurd naar de gameservice is fout
+        //!! deze 2 velden hieronder kunnen we doen als standaard invoer bijv Player 1 en 2.
+        //!! maar wanneer een naam leeg is moet er een fout melding komen
+        player1Name.setText("Player 1");
+        player2Name.setText("Player 2");
 
         // Uitzetten van keyboard focus
         player1Box.setFocusTraversable(false);
@@ -68,33 +68,69 @@ public class ConfigGameController {
 
     }
 
+    // Het voordeel nu is dat de GUI bij een fout op het setupscherm blijft en uitlegt wat de gebruiker moet veranderen
+    // Voor de AI player is er geen naam nodig
+    //toegevoegd dat er een standaard naam is ingevuld
+
     @FXML
     private void playSelectGame(ActionEvent event) throws IOException {
         String player1 = player1Box.getValue();
         String player2 = player2Box.getValue();
-        GameMode ticTacToeMode;
 
-        if ("Player".equals(player1) && "Player".equals(player2)) {
-            ticTacToeMode = PLAYER_VS_PLAYER;
-            // AI vs AI moet nog toegevoegt worden
-        } else if ("AI".equals(player1) && "AI".equals(player2)) {
-            ticTacToeMode = PLAYER_VS_AI;
-        } else {
-            ticTacToeMode = PLAYER_VS_AI;
+        String name1 = player1Name.getText().trim();
+        String name2 = player2Name.getText().trim();
+
+        // De lokale GameService kan nog geen ai tegen ai spelen
+        if ("AI".equals(player1) && "AI".equals(player2)) {
+            showError("AI tegen AI wordt lokaal nog niet ondersteund");
+            return;
+        }
+        // Alleen menselijke spelers moeten een naam invullen.
+        if ("Player".equals(player1) && name1.isEmpty()) {
+            showError("Vul een naam in voor speler 1");
+            return;
+        }
+        if ("Player".equals(player2) && name2.isEmpty()) {
+            showError("Vul een naam in voor speler 2");
+            return;
         }
 
-        File file = new File("src/ui/gui/fxml/TicTacToeGameView.fxml");
+        //bepaalt game modus
+        GameMode mode;
+
+        if ("Player".equals(player1) && "Player".equals(player2)) {
+            mode = PLAYER_VS_PLAYER;
+        }
+        else {
+            mode = PLAYER_VS_AI;
+        }
+
+        // Laad pas na het valideren een gamescherm
+        File file = new File(
+                "src/ui/gui/fxml/TicTacToeGameView.fxml"
+        );
+
         FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
-        root = loader.load();
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Parent gameRoot = loader.load();
 
         TicTacToeGameController controller = loader.getController();
-        controller.startGame(player1, player2, ticTacToeMode,
-                player1Name.getText(), player2Name.getText(), startingPlayer.getValue());
 
-        scene = new Scene(root);
-        stage.setScene(scene);
+        // geef de gekozen instellingen door
+        controller.startGame(player1, player2, mode, name1, name2, startingPlayer.getValue());
+
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        stage.setScene(new Scene(gameRoot));
         stage.show();
+    }
+
+    //De error die je krijgt als je iets fout invoer
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Ongeldige instellingen");
+        alert.setHeaderText("Wedstrijd kan niet starten");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public void openMainMenuView(ActionEvent event) throws IOException {
@@ -107,5 +143,4 @@ public class ConfigGameController {
         stage.setScene(scene);
         stage.show();
     }
-
 }
