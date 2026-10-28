@@ -4,11 +4,11 @@ package ui.tui.view;
 public class TournamentView extends TuiView {
     @Override
     public void draw() {
-        System.out.println("\n================================");
-        System.out.println("          TOURNAMENTS");
-        System.out.println("          [DEMO]");
-        System.out.println("================================");
-        System.out.println("Toernooien en wachtruimtes komen later.");
-        System.out.println("[0] Back to lobby");
+        System.out.println("\n========== TOERNOOIEN ==========");
+        System.out.println("Toernooien worden gestart door een admin");
+        System.out.println("Ingelogde spelers worden automatisch ingedeeld");
+        System.out.println("Zodra de admin een tournooi start,");
+        System.out.println("verschijnt het gamescherm automatisch.");
+        System.out.println("[0] Terug naar lobby");
     }
 }

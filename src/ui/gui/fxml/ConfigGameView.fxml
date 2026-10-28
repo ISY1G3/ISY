@@ -7,16 +7,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
+<!--ook hier <children> weggehaald-->
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.gui.controller.ConfigGameController">
-    <children>
         <Text fx:id="configgame" layoutX="94.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Configure your game" textAlignment="CENTER" wrappingWidth="412.4443359375">
             <font>
                 <Font size="39.0" />
             </font>
         </Text>
       <HBox layoutX="94.0" layoutY="114.0" prefHeight="40.0" prefWidth="412.0">
-         <children>
             <Text fx:id="player1" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1: " textAlignment="CENTER" wrappingWidth="118.4443359375">
                <font>
                   <Font size="24.0" />
@@ -24,10 +22,8 @@
             </Text>
             <ChoiceBox fx:id="player1Box" prefHeight="40.0" prefWidth="77.0" />
              <TextField fx:id="player1Name" prefHeight="50.0" prefWidth="213.0" promptText="name player 1" />
-         </children>
       </HBox>
       <HBox layoutX="94.0" layoutY="170.0" prefHeight="40.0" prefWidth="412.0">
-         <children>
             <Text fx:id="player2" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 2: " textAlignment="CENTER" wrappingWidth="118.4443359375">
                <font>
                   <Font size="24.0" />
@@ -35,19 +31,15 @@
             </Text>
             <ChoiceBox fx:id="player2Box" prefHeight="40.0" prefWidth="77.0" />
             <TextField fx:id="player2Name" prefHeight="50.0" prefWidth="213.0" promptText="name player 2" />
-         </children>
       </HBox>
       <HBox layoutX="104.0" layoutY="228.0" prefHeight="40.0" prefWidth="402.0">
-         <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Starting Player:" wrappingWidth="185.9443359375">
                <font>
                   <Font size="24.0" />
                </font>
             </Text>
             <ChoiceBox fx:id="startingPlayer" prefHeight="40.0" prefWidth="223.0" />
-         </children>
       </HBox>
       <Button fx:id="exitButton" layoutX="27.0" layoutY="324.0" mnemonicParsing="false" onAction="#openMainMenuView" prefHeight="52.0" prefWidth="135.0" text="Back" />
       <Button fx:id="playButton" layoutX="439.0" layoutY="324.0" mnemonicParsing="false" onAction="#playSelectGame" prefHeight="52.0" prefWidth="135.0" text="Play" />
-    </children>
 </AnchorPane>
