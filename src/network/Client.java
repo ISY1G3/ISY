@@ -7,6 +7,9 @@ import java.util.Scanner;
     De rest van de app praat alleen met Client  */
 
 public class Client {
+    public static final String DEFAULT_HOST = "127.0.0.1";
+    public static final int DEFAULT_PORT = 7789;
+
     private final Connection connection = new Connection();         // Socket naar de server
     private final GameServer server = new GameServer(connection);   // Vertaalt acties naar commando's en berichten naar events voor de listneres
     private String gameType;                                        // LAATST gekozen spel voor "challenge" zodat je het niet altijd hoeft te geven
@@ -58,8 +61,8 @@ public class Client {
     public boolean isConnected()        { return connection.isConnected(); }
 
     public static void main(String[] args) throws Exception {
-        String host = args.length > 0 ? args[0] : "127.0.0.1";
-        int port = args.length > 1 ? Integer.parseInt(args[1]) : 7789;
+        String host = args.length > 0 ? args[0] : DEFAULT_HOST;
+        int port = args.length > 1 ? Integer.parseInt(args[1]) : DEFAULT_PORT;
         
         // Client opstarten
         Client client = new Client();

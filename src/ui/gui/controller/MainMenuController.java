@@ -1,6 +1,5 @@
 package ui.gui.controller;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import network.Client;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,30 +17,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert;
 
 
 public class MainMenuController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    private Client client;
-
     @FXML
     private Button tictactoebutton;
     @FXML
     private Button reversibutton;
     @FXML
-    private Button tournamentbutton;
-    @FXML
-    private Button exitbutton;
+    private Button backbutton;
     @FXML
     private Label welcome;
 
     ArrayList<Button> buttons;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        buttons = new ArrayList<>(Arrays.asList(tictactoebutton, reversibutton, tournamentbutton, exitbutton));
+        buttons = new ArrayList<>(Arrays.asList(tictactoebutton, reversibutton, backbutton));
 
         buttons.forEach(button -> {;
             button.setFocusTraversable(false);
@@ -64,27 +57,12 @@ public class MainMenuController implements Initializable {
         stage.show();
     }
 
-    @FXML
-    private void showTournamentInfo() {
-        if (client != null && client.isConnected()) {
-            client.sendMessage("StartTournament");
-        }
+    public void goBackToIntroMenu(ActionEvent event) throws IOException {
+        File file = new File("src/ui/gui/fxml/IntroMenuView.fxml");
+        Parent introMenu = new FXMLLoader(file.toURI().toURL()).load();
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle("Tournament");
-        alert.setHeaderText("Servergestuurde tournaments");
-
-        alert.setContentText(
-                "Tournaments worden gestart door de serverbeheerder.\n\n" +
-                        "Ingelogde online spelers worden automatisch " +
-                        "door de server ingedeeld zolang deze niet in een game zitten.\n\n" +
-                        "Je hoeft hier zelf geen toernooi te starten."
-        );
-        alert.showAndWait();
-    }
-
-    public void closeMenu() {
-        Platform.exit();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(introMenu));
+        stage.show();
     }
 }
