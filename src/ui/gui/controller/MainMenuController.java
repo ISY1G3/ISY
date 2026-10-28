@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import network.Client;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class MainMenuController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private Client client;
 
     @FXML
     private Button tictactoebutton;
@@ -64,6 +66,9 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void showTournamentInfo() {
+        if (client != null && client.isConnected()) {
+            client.sendMessage("StartTournament");
+        }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
@@ -82,9 +87,4 @@ public class MainMenuController implements Initializable {
     public void closeMenu() {
         Platform.exit();
     }
-
-
-
-
-
 }

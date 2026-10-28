@@ -39,6 +39,10 @@ public class Client {
     public void forfeit()                   { server.forfeit(); }
     public void disconnect()                { server.logout(); }
 
+    public void sendMessage(String text) {
+        server.sendMessage(text);
+    }
+
     //------Listeners aanmelden------//
 
     public void addGameListener(GameListener l)                 { server.addGameListener(l); }    public void addLobbyListener(LobbyListener l)           { server.addLobbyListener(l); }

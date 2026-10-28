@@ -8,4 +8,5 @@ public interface GameListener {
     default void onYourTurn() {}
     default void onMove(String player, int move) {}
     default void onResult(ResultType type, String comment) {}
+    default void onMessage(String sender, String text) {}
 }
