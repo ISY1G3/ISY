@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
 
 
 public class MainMenuController implements Initializable {
@@ -59,6 +60,23 @@ public class MainMenuController implements Initializable {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    private void showTournamentInfo() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Tournament");
+        alert.setHeaderText("Servergestuurde tournaments");
+
+        alert.setContentText(
+                "Tournaments worden gestart door de serverbeheerder.\n\n" +
+                        "Ingelogde online spelers worden automatisch " +
+                        "door de server ingedeeld zolang deze niet in een game zitten.\n\n" +
+                        "Je hoeft hier zelf geen toernooi te starten."
+        );
+        alert.showAndWait();
     }
 
     public void closeMenu() {
