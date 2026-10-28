@@ -13,8 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Board;
 
-// OOK DEZE IS NIET MEER NODIG GUI ZAL KOMEN ONDER UI.GUI EN DEZE MAG WEG INCL DEZE VIEW FOLDER
-public class TicTacToeGameView extends VBox { //View is een verticale container
+// Door Copilot aangepast: implementeert de view-koppeling voor de gedeelde gamecontroller.
+public class TicTacToeGameView extends VBox implements TicTacToeController.GameView { //View is een verticale container
 
     private class TicTacToeTile extends Button { //Maakt een tegel en een nummer wordt gegeven 0 t/m 8.
         private int boxNumber;
@@ -27,6 +27,8 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
             setFocusTraversable(false);
             setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         }
+
+
 
         public void setMarker(char marker) {
             setText("" + marker);
@@ -42,8 +44,10 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
     private TicTacToeTile[][] buttons;
     private TicTacToeController ticTacToeController;
     
+    
     public TicTacToeGameView() {
         super(10);
+       
         setup();
     }
 
@@ -141,4 +145,3 @@ public class TicTacToeGameView extends VBox { //View is een verticale container
     
     
 }
-
