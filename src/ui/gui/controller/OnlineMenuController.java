@@ -1,6 +1,5 @@
 package ui.gui.controller;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import network.Client;
-import network.GameListener;
+import ui.gui.GuiOnlineClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,45 +25,56 @@ public class OnlineMenuController implements Initializable {
     @FXML
     private Button tournamentbutton;
     @FXML
+    private Button playerTypeButton;
+    @FXML
     private Button backbutton;
 
-    private Client client;
+    private GuiOnlineClient online;
     private Stage stage;
     private boolean waitingForPlayer;
     private Alert waitingAlert;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        List.of(tictactoebutton, tournamentbutton, backbutton)
+        List.of(tictactoebutton, tournamentbutton, playerTypeButton, backbutton)
                 .forEach(button -> button.setFocusTraversable(false));
     }
 
-    public void setClient(Client client) {
-        this.client = client;
-        client.addGameListener(new GameListener() {
-            @Override
-            public void onMatch(String opponent, String gameType, String startingPlayer) {
-                Platform.runLater(() -> {
-                    if (!waitingForPlayer) {
-                        return;
-                    }
-                    waitingForPlayer = false;
-                    if (waitingAlert != null) {
-                        waitingAlert.close();
-                        waitingAlert = null;
-                    }
-                    openOnlineTicTacGame();
-                });
+    public void setOnline(GuiOnlineClient online) {
+        this.online = online;
+        updatePlayerTypeButton();
+        online.setOnMatchStarted(() -> {
+            waitingForPlayer = false;
+            if (waitingAlert != null) {
+                waitingAlert.close();
+                waitingAlert = null;
             }
+            openOnlineTicTacGame(online.isTournamentMode());
         });
     }
 
     @FXML
+    private void togglePlayerType() {
+        if (online == null) return;
+
+        online.setLocalAi(!online.isLocalAi());
+        updatePlayerTypeButton();
+    }
+
+    private void updatePlayerTypeButton() {
+        if (playerTypeButton == null) return;
+        playerTypeButton.setText(online != null && online.isLocalAi()
+                ? "Player: AI"
+                : "Player: Human");
+    }
+
+    @FXML
     private void playTicTacToe(ActionEvent event) {
-        if (client == null || !client.isConnected()) {
+        if (online == null || online.getClient() == null || !online.getClient().isConnected()) {
             showWarning("You are not connected to a server.");
             return;
         }
+        online.setTournamentMode(false);
         if (waitingForPlayer) {
             return;
         }
@@ -80,7 +89,7 @@ public class OnlineMenuController implements Initializable {
         waitingAlert.show();
 
         try {
-            client.subscribe("tic-tac-toe");
+            online.getClient().subscribe("tic-tac-toe");
         } catch (RuntimeException e) {
             waitingForPlayer = false;
             waitingAlert.close();
@@ -91,9 +100,7 @@ public class OnlineMenuController implements Initializable {
 
     @FXML
     private void showTournamentInfo() {
-        if (client != null && client.isConnected()) {
-            client.sendMessage("StartTournament");
-        }
+        if (online != null) online.setTournamentMode(true);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
@@ -109,19 +116,34 @@ public class OnlineMenuController implements Initializable {
         alert.showAndWait();
     }
 
-    private void openOnlineTicTacGame() {
+    private void openOnlineTicTacGame(boolean tournamentMode) {
+        Stage menuStage = getMenuStage();
+        if (menuStage == null) {
+            showWarning("Could not find the OnlineMenu window.");
+            return;
+        }
+
         try {
             File file = new File("src/ui/gui/fxml/OnlineTicTacGame.fxml");
             FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
             Parent gameView = loader.load();
             OnlineTicTacGameController gameController = loader.getController();
-            gameController.setClient(client);
-            stage.setTitle("OnlineTicTacGame");
-            stage.setScene(new Scene(gameView));
-            stage.show();
+            gameController.setOnline(online);
+            gameController.setTournamentMode(tournamentMode);
+            menuStage.setTitle("OnlineTicTacGame");
+            menuStage.setScene(new Scene(gameView));
+            menuStage.show();
         } catch (IOException e) {
             showWarning("Could not open the online Tic-Tac-Toe screen: " + e.getMessage());
         }
+    }
+
+    private Stage getMenuStage() {
+        if (stage == null && tictactoebutton != null && tictactoebutton.getScene() != null
+                && tictactoebutton.getScene().getWindow() instanceof Stage menuStage) {
+            stage = menuStage;
+        }
+        return stage;
     }
 
     private void showWarning(String message) {
@@ -129,8 +151,9 @@ public class OnlineMenuController implements Initializable {
         alert.setTitle("Online Tic-Tac-Toe");
         alert.setHeaderText("Unable to start the game");
         alert.setContentText(message);
-        if (stage != null) {
-            alert.initOwner(stage);
+        Stage owner = getMenuStage();
+        if (owner != null) {
+            alert.initOwner(owner);
         }
         alert.showAndWait();
     }
@@ -150,9 +173,7 @@ public class OnlineMenuController implements Initializable {
     }
 
     public void disconnect() {
-        if (client != null && client.isConnected()) {
-            client.disconnect();
-        }
-        client = null;
+        if (online != null) online.disconnect();
+        online = null;
     }
 }

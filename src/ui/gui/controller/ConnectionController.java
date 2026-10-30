@@ -14,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import network.Client;
 import network.ConnectionListener;
+import service.GameService;
+import ui.gui.GuiOnlineClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +81,7 @@ public class ConnectionController {
                 Platform.runLater(() -> {
                     if (client == attempt) {
                         try {
-                            openOnlineMenu(attempt);
+                            openOnlineMenu(attempt, username);
                         } catch (IOException e) {
                             client = null;
                             attempt.disconnect();
@@ -147,18 +149,21 @@ public class ConnectionController {
         connectionWindow.close();
     }
 
-    private void openOnlineMenu(Client connectedClient) throws IOException {
+    private void openOnlineMenu(Client connectedClient, String username) throws IOException {
         File file = new File("src/ui/gui/fxml/OnlineMenuView.fxml");
         FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
         Parent onlineMenu = loader.load();
         OnlineMenuController onlineMenuController = loader.getController();
-        onlineMenuController.setClient(connectedClient);
+
+        GuiOnlineClient online = new GuiOnlineClient(new GameService());
+        online.attach(connectedClient, username);
+        onlineMenuController.setOnline(online);
 
         Stage connectionWindow = (Stage) rootPane.getScene().getWindow();
         Stage mainWindow = (Stage) connectionWindow.getOwner();
         mainWindow.setScene(new Scene(onlineMenu));
         mainWindow.setTitle("OnlineMenu");
-        mainWindow.setOnHidden(windowEvent -> onlineMenuController.disconnect());
+        mainWindow.setOnHidden(windowEvent -> online.disconnect());
         mainWindow.show();
 
         // Transfer ownership of the live client to OnlineMenu before closing this popup.
