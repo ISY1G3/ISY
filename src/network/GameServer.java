@@ -85,6 +85,10 @@ public class GameServer {
         connection.close();
     }
 
+    public void sendMessage(String text) {
+        sendCommand("message " + text);
+    }
+
     //-----Berichten van de server-----//
     
     /*  Hele lange if statement I know :)

@@ -58,7 +58,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            File file = new File("src/ui/gui/fxml/MainMenuView.fxml");
+            File file = new File("src/ui/gui/fxml/IntroMenuView.fxml");
             FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
             Parent root = loader.load();
 

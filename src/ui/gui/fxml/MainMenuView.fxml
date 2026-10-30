@@ -21,7 +21,6 @@
       <VBox layoutX="215.0" layoutY="130.0" prefHeight="157.0" prefWidth="171.0" spacing="10.0">
             <Button fx:id="tictactoebutton" onAction="#openConfigGameView" prefHeight="57.0" prefWidth="177.0" text="Tic-Tac-Toe" />
             <Button fx:id="reversibutton" onAction="#openReversiView" prefHeight="57.0" prefWidth="177.0" text="Reversi" />
-            <Button fx:id="tournamentbutton" onAction="#showTournamentInfo" prefHeight="57.0" prefWidth="177.0" text="Tournament" />
       </VBox>
-      <Button fx:id="exitbutton" layoutX="215.0" layoutY="311.0" onAction="#closeMenu" prefHeight="52.0" prefWidth="171.0" text="Exit to Desktop" />
+      <Button fx:id="backbutton" layoutX="215.0" layoutY="311.0" onAction="#goBackToIntroMenu" prefHeight="52.0" prefWidth="171.0" text="Go back" />
 </AnchorPane>

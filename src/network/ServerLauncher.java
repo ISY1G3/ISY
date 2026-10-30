@@ -21,6 +21,7 @@ package network;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Dit start de bestaande gameserver (.jar) automatisch op als los proces.
@@ -29,37 +30,88 @@ import java.io.InputStreamReader;
  *
  * Let op: pas het pad naar de jar hieronder aan naar waar jouw
  * newgameserver-release-V1.jar echt staat.
+ *
+ * Eerst wordt het admin-wachtwoord gereset, daarna start de server.
  */
 public class ServerLauncher {
 
+    private static volatile Process activeProcess;
+
     public static void main(String[] args) throws IOException, InterruptedException {
+
+        // Ctrl+C closes the child server process as well as this launcher.
+        Runtime.getRuntime().addShutdownHook(new Thread(
+                ServerLauncher::stopActiveProcess,
+                "server-launcher-shutdown"));
 
         // Pad naar de jar file - PAS DIT AAN naar jouw eigen locatie
         String jarPath = "src/network/game/newgameserver-release-V1.jar";
 
+        // Stap 1: admin-wachtwoord instellen
+        // java -jar newgameserver-release-V1.jar --set-password admin
+        System.out.println("Admin wachtwoord wordt ingesteld...");
+        int exitCode = runAndPrint("java", "-jar", jarPath, "--set-password", "admin");
+        if (exitCode != 0) {
+            System.out.println("Waarschuwing: --set-password eindigde met code " + exitCode);
+        }
+
+        // Stap 2: de server zelf starten
         // Bouw het commando op zoals je het ook op de command line zou typen:
         // java -jar newgameserver-release-V1.jar
-        ProcessBuilder builder = new ProcessBuilder("java", "-jar", jarPath);
+        System.out.println("Server wordt gestart...");
+        runAndPrint("java", "-jar", jarPath);
+    }
+
+    /**
+     * Start een proces, print alle output ervan met het label [SERVER]
+     * en wacht tot het proces klaar is. Geeft de exit code terug.
+     */
+    private static int runAndPrint(String... command) throws IOException, InterruptedException {
+        ProcessBuilder builder = new ProcessBuilder(command);
 
         // Zorg dat de output van de server (println's van de server zelf)
         // gewoon in onze eigen console verschijnt
         builder.redirectErrorStream(true);
 
-        System.out.println("Server wordt gestart...");
-        Process serverProcess = builder.start();
+        Process process = builder.start();
+        activeProcess = process;
 
-        // Lees en print alles wat de server naar zijn console schrijft,
-        // zodat je in dit venster ziet wanneer de server klaar is met opstarten
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(serverProcess.getInputStream()));
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(process.getInputStream()))) {
+            // Lees en print alle serveruitvoer in deze terminal.
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("[SERVER] " + line);
+            }
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println("[SERVER] " + line);
+            return process.waitFor();
+        } catch (InterruptedException e) {
+            stopProcess(process);
+            Thread.currentThread().interrupt();
+            throw e;
+        } finally {
+            if (activeProcess == process) {
+                activeProcess = null;
+            }
         }
+    }
 
-        // Wacht tot het serverproces stopt (dit blokkeert, net als wanneer
-        // je de server los in een terminal zou draaien)
-        serverProcess.waitFor();
+    private static void stopActiveProcess() {
+        stopProcess(activeProcess);
+    }
+
+    private static void stopProcess(Process process) {
+        if (process == null || !process.isAlive()) return;
+
+        process.destroy();
+        try {
+            if (!process.waitFor(2, TimeUnit.SECONDS)) {
+                process.destroyForcibly();
+                process.waitFor();
+            }
+        } catch (InterruptedException e) {
+            process.destroyForcibly();
+            Thread.currentThread().interrupt();
+        }
     }
 }
