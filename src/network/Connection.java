@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
     connect(host, port)                          Opent de socket naar de gameserver (poort 7789) en maakt de lees- en schrijfstromen aan.
@@ -21,6 +23,7 @@ Ganeserver gebruikt deze om commando's te sturen en serverregels te ontvangen.
  */
 
 public class Connection implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 
     private Socket socket;
     private BufferedReader in;
@@ -33,15 +36,35 @@ public class Connection implements Runnable {
     private static int port = 7789; // port nummer van de server
     
     public void connect(String host, int port) throws IOException{
-        socket = new Socket(host, port);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream())); //  Server -> Client
-        out = new PrintWriter(socket.getOutputStream(), true); // true = autoflush | Client -> Server
-        done = false;
+        try {
+            socket = new Socket(host, port);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream())); //  Server -> Client
+            out = new PrintWriter(socket.getOutputStream(), true); // true = autoflush | Client -> Server
+            done = false;
+            LOGGER.info("Connected to server at " + host + ":" + port);
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Could not connect to server at " + host + ":" + port, e);
+            throw e;
+        }
     }
 
     public void send(String text) {
-        if (out == null) throw new IllegalStateException("Not connected"); // Als je niet verbonden bent krijg je een error.
+        if (!isConnected() || out == null) {
+            IllegalStateException error = new IllegalStateException("Not connected");
+            LOGGER.log(Level.WARNING, "Could not send " + commandName(text) + ": connection is closed", error);
+            throw error;
+        }
         out.println(text);
+        if (out.checkError()) {
+            IOException error = new IOException("PrintWriter reported a send failure");
+            LOGGER.log(Level.WARNING, "Could not send " + commandName(text), error);
+            throw new IllegalStateException("Could not send command", error);
+        }
+    }
+
+    private String commandName(String text) {
+        if (text == null || text.isBlank()) return "unknown command";
+        return text.split("\\s+", 2)[0];
     }
 
     public void startListening(Consumer<String> lineHandler, Runnable onDisconnect) { 
@@ -61,8 +84,10 @@ public class Connection implements Runnable {
 
         try {
             if (socket != null) socket.close();
-                System.out.println("Shutting down...");
-        } catch (IOException ignore) {}
+            LOGGER.info("Connection closed");
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Failed to close server connection", e);
+        }
     }
 
     public boolean isConnected() {
@@ -75,17 +100,22 @@ public class Connection implements Runnable {
             String line;
             while ((line = in.readLine()) != null) {
                 lineHandler.accept(line);
-            } 
+            }
+            if (!done) LOGGER.warning("Server closed the connection");
         } catch (IOException e) {
             if (!done) {
-                System.out.println("Error while running: " + e); // Kijkt of er een foutmelding moet geprint worden
+                LOGGER.log(Level.WARNING, "Connection lost while reading from server", e);
             }
         } catch (RuntimeException e) {
-            System.out.println("Handler error: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Error while handling a server message", e);
         }
 
         if (!done) {
-            onDisconnect.run(); // Bij onverwacht verbroken verbinding, de rest van de programma waarschuwen
+            try {
+                onDisconnect.run(); // Bij onverwacht verbroken verbinding, de rest van de programma waarschuwen
+            } catch (RuntimeException e) {
+                LOGGER.log(Level.SEVERE, "Disconnect listener failed", e);
+            }
         }
         close();
     }

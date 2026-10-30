@@ -13,6 +13,7 @@ public class LobbyData {
     private List<String> games = new ArrayList<>();
     private String ticTacToeServerName;
     private boolean subscribed;
+    private boolean subscriptionPending;
     // De speler achter DEZE client; de andere kant kiest zijn eigen instelling.
     private boolean localAi;
 
@@ -23,6 +24,7 @@ public class LobbyData {
     public List<Challenge> getChallenges() { return List.copyOf(challenges.values()); }
     public String getTicTacToeServerName() { return ticTacToeServerName; }
     public boolean isSubscribedTicTacToe() { return subscribed; }
+    public boolean isSubscriptionPending() { return subscriptionPending; }
     public boolean isLocalAi() { return localAi; }
     public void toggleLocalAi() { localAi = !localAi; }
     public void setPlayers(List<String> list) { players = List.copyOf(list); }
@@ -32,7 +34,11 @@ public class LobbyData {
                 .filter(n -> n.toLowerCase().replaceAll("[^a-z]", "").equals("tictactoe"))
                 .findFirst().orElse(null);
     }
-    public void setSubscribed(boolean value) { subscribed = value; }
+    public void setSubscribed(boolean value) {
+        subscribed = value;
+        if (value) subscriptionPending = false;
+    }
+    public void setSubscriptionPending(boolean value) { subscriptionPending = value; }
     public void addChallenge(String from, String game, int nr) {
         challenges.put(nr, new Challenge(nr, from, game));
     }

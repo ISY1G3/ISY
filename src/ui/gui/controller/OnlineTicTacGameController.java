@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import network.ResultType;
 import ui.gui.GuiOnlineClient;
@@ -33,7 +32,6 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
     @FXML private Button button9;
     @FXML private Button forfeitButton;
     @FXML private Label statusLabel;
-    @FXML private Text gameTitle;
 
     private Button[] cells;
     private GuiOnlineClient online;
@@ -58,10 +56,6 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
     public void setOnline(GuiOnlineClient online) {
         this.online = online;
         online.attachView(this);
-    }
-
-    public void setTournamentMode(boolean tournamentMode) {
-        gameTitle.setText(tournamentMode ? "Tic-Tac-Toe Tournament" : "Tic-Tac-Toe");
     }
 
     private void onCellClicked(int position) {
@@ -94,6 +88,7 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
         } else {
             statusLabel.setText(yourTurn ? "Your turn" : "Waiting for opponent...");
         }
+        forfeitButton.setDisable(online.hasGivenUp());
     }
 
     @Override
@@ -103,6 +98,7 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
             cell.setDisable(true);
         }
         forfeitButton.setText("Back");
+        forfeitButton.setDisable(false);
 
         String message = type.toString();
         if (comment != null && !comment.isBlank()) {
@@ -115,11 +111,14 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
     private void forfeit() {
         if (online == null) return;
 
-        if (gameFinished) {
-            online.clearFinishedMatch();
-        } else {
+        if (!gameFinished) {
             online.forfeit();
+            refresh();
+            return;
         }
+
+        // A server result ends the GameSession before the user can return to the menu.
+        online.clearFinishedMatch();
         online.detachView();
 
         try {

@@ -23,7 +23,7 @@
         <Button fx:id="button8" prefHeight="75.0" prefWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Button fx:id="button9" prefHeight="75.0" prefWidth="75.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
     </GridPane>
-    <Text fx:id="gameTitle" layoutX="150.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0"
+    <Text layoutX="150.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0"
           text="Tic-Tac-Toe" textAlignment="CENTER" wrappingWidth="300.0">
         <font>
             <Font size="39.0" />

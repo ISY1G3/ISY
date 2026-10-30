@@ -15,7 +15,10 @@ public class LobbyView extends TuiView {
         for (LobbyData.Challenge c : data.getChallenges()) {
             System.out.println("  #" + c.number() + " van " + c.challenger() + " (" + c.game() + ")");
         }
-        System.out.println("Tic-Tac-Toe: " + (data.isSubscribedTicTacToe() ? "Aangemeld" : "Niet aangemeld"));
+        String subscriptionStatus = data.isSubscribedTicTacToe()
+                ? "Aangemeld"
+                : data.isSubscriptionPending() ? "Bevestiging afwachten" : "Niet aangemeld";
+        System.out.println("Tic-Tac-Toe: " + subscriptionStatus);
         System.out.println("Besturing op deze client: " + (data.isLocalAi() ? "AI (Minimax)" : "Mens"));
         System.out.println("[1] Vernieuw spelers en games");
         System.out.println("[2] Daag speler uit");
