@@ -35,19 +35,35 @@ public class MainMenuController implements Initializable {
     private Button exitbutton;
     @FXML
     private Label welcome;
+    @FXML 
+    private Button settings;
 
     ArrayList<Button> buttons;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        buttons = new ArrayList<>(Arrays.asList(tictactoebutton, reversibutton, tournamentbutton, exitbutton));
+        buttons = new ArrayList<>(Arrays.asList(
+                tictactoebutton, reversibutton, tournamentbutton, settings, exitbutton));
 
-        buttons.forEach(button -> {;
-            button.setFocusTraversable(false);
+        buttons.forEach(button -> {
+            if (button != null) {
+                button.setFocusTraversable(SettingsController.getKeyboardFocus());
+            }
         });
     }
 
     public void openReversiView() {
         welcome.setText("Reversi is not available. Select a different mode.");
+    }
+
+    public void openSettingsView(ActionEvent event) throws IOException {
+        File file = new File("src/ui/gui/fxml/SettingsView.fxml");
+        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        root = loader.load();
+
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void openConfigGameView(ActionEvent event) throws IOException {

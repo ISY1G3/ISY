@@ -58,14 +58,14 @@ public class ConfigGameController {
         player1Name.setText("");
         player2Name.setText("");
 
-        // Uitzetten van keyboard focus
-        player1Box.setFocusTraversable(false);
-        player2Box.setFocusTraversable(false);
-        startingPlayer.setFocusTraversable(false);
-
-        exitButton.setFocusTraversable(false);
-        playButton.setFocusTraversable(false);
-
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        player1Box.setFocusTraversable(keyboardFocus);
+        player2Box.setFocusTraversable(keyboardFocus);
+        startingPlayer.setFocusTraversable(keyboardFocus);
+        player1Name.setFocusTraversable(keyboardFocus);
+        player2Name.setFocusTraversable(keyboardFocus);
+        exitButton.setFocusTraversable(keyboardFocus);
+        playButton.setFocusTraversable(keyboardFocus);
     }
 
     @FXML
@@ -96,6 +96,7 @@ public class ConfigGameController {
         stage.setScene(scene);
         stage.show();
     }
+
 
     public void openMainMenuView(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();

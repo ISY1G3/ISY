@@ -24,6 +24,7 @@
             <Button fx:id="tictactoebutton" mnemonicParsing="false" onAction="#openConfigGameView" prefHeight="57.0" prefWidth="177.0" text="Tic-Tac-Toe" />
             <Button fx:id="reversibutton" mnemonicParsing="false" onAction="#openReversiView" prefHeight="57.0" prefWidth="177.0" text="Reversi" />
             <Button fx:id="tournamentbutton" mnemonicParsing="false" prefHeight="57.0" prefWidth="177.0" text="Tournament" />
+             <Button fx:id="settings" mnemonicParsing="false" onAction="#openSettingsView" prefHeight="57.0" prefWidth="177.0" text="settings" />
          </children>
       </VBox>
       <Button fx:id="exitbutton" layoutX="215.0" layoutY="311.0" mnemonicParsing="false" onAction="#closeMenu" prefHeight="52.0" prefWidth="171.0" text="Exit to Desktop" />
