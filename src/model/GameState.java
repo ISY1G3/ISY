@@ -1,15 +1,12 @@
 package model;
 
 /**
- * algemene interface voor spelinformatie die een AI-strategie
- * nodig heeft om een zet te bepalen
+ * Algemene interface voor spelgegevens die een
+ * AI-strategie nodig heeft om een zet te bepalen
  *
- * momenteel bevat de Tic-Tac-Toe-implementatie nog een verwijzing
- * naar de bestaande game
- *
- * later wordt dit vervangen door een final
- * snapshot, zodat AI-strats alleen spel gegevens kunnen
- * bekijken en het echte bord niet zal kunnen aanpassen
+ * TicTacToeTurnState is hiervan een implementatie
+ * Die bevat alleen een defensieve kopie van de
+ * benodigde spelgegevens, niet de echte game
  */
 public interface GameState {
 }
