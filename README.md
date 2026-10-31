@@ -23,6 +23,8 @@ mvnw.cmd javafx:run
 
 In VS Code, install the Extension Pack for Java and open this repository. The project imports its dependencies from Maven. The `Main` launch configuration uses the Maven-managed JavaFX dependencies and does not require a local SDK path.
 
+if you want to use the tui application do as the tutorial applies and add "--tui"
+
 ## Build
 
 On macOS and Linux:
