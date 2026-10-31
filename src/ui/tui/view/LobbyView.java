@@ -22,7 +22,6 @@ public class LobbyView extends TuiView {
         System.out.println("[3] Accepteer uitdaging");
         System.out.println("[4] Aanmelden voor Tic-Tac-Toe (kan direct match starten)");
         System.out.println("[5] Wissel besturing: Mens / AI");
-        System.out.println("[6] Toernooien (demo)");
         System.out.println("[0] Uitloggen");
     }
 }
