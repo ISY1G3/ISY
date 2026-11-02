@@ -9,7 +9,7 @@
 <AnchorPane fx:id="rootPane" focusTraversable="true"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ui.gui.controller.IntroMenuController">
     <Text layoutX="150.0" layoutY="105.0" text="IntroMenu" textAlignment="CENTER" wrappingWidth="300.0">
         <font>

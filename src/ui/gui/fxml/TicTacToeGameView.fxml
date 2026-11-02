@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.GridPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.gui.controller.TicTacToeGameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.gui.controller.TicTacToeGameController">
       <!-- <children> is default kan weg volgens intelij . net zoals mnemonicParsing
       flowpane veranderd naar een gridpane vanwege bug met scaling en het zetten van vaste lengte en breete coords is weg veranderd naar index coords -->
       <GridPane layoutX="188.0" layoutY="88.0">
