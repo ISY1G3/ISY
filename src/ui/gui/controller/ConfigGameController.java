@@ -58,14 +58,14 @@ public class ConfigGameController {
         player1Name.setText("Player 1");
         player2Name.setText("Player 2");
 
-        // Uitzetten van keyboard focus
-        player1Box.setFocusTraversable(false);
-        player2Box.setFocusTraversable(false);
-        startingPlayer.setFocusTraversable(false);
-
-        exitButton.setFocusTraversable(false);
-        playButton.setFocusTraversable(false);
-
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        player1Box.setFocusTraversable(keyboardFocus);
+        player2Box.setFocusTraversable(keyboardFocus);
+        startingPlayer.setFocusTraversable(keyboardFocus);
+        player1Name.setFocusTraversable(keyboardFocus);
+        player2Name.setFocusTraversable(keyboardFocus);
+        exitButton.setFocusTraversable(keyboardFocus);
+        playButton.setFocusTraversable(keyboardFocus);
     }
 
     // Het voordeel nu is dat de GUI bij een fout op het setupscherm blijft en uitlegt wat de gebruiker moet veranderen

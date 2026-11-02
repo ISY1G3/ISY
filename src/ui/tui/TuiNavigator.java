@@ -48,7 +48,6 @@ public class TuiNavigator {
         LobbyView view = new LobbyView(data);
         show(view, new LobbyController(this, data, view));
     }
-    public void showSettings() { show(new SettingsView(), new SettingsController(this)); }
     public void showLocalGame(LocalSetupData data) {
         GameSession s = gameService.getCurrentSession();
         if (s == null) throw new IllegalStateException("Geen actieve GameSession");
@@ -116,9 +115,6 @@ public class TuiNavigator {
         showMainMenu();
     }
 
-    public void showTournament(LobbyData data) {
-        show(new TournamentView(), new TournamentController(this, data));
-    }
     public boolean isLobbyVisible() { return currentView instanceof LobbyView; }
     public void redrawIfOnlineGame() { if (currentController instanceof OnlineGameController) drawCurrentView(); }
     public void drawCurrentView() { if (currentView != null) currentView.draw(); }

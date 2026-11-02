@@ -32,6 +32,8 @@ public class ConnectionController {
     private TextField usernameField;
     @FXML
     private Button connectButton;
+    @FXML
+    private Button backButton;
 
     private volatile Client client;
     private volatile boolean disconnectRequested;
@@ -41,7 +43,16 @@ public class ConnectionController {
         // Keep the form fields usable, but start with no field focused.
         hostField.setText(Client.DEFAULT_HOST);
         portField.setText(String.valueOf(Client.DEFAULT_PORT));
-        Platform.runLater(rootPane::requestFocus);
+
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        hostField.setFocusTraversable(keyboardFocus);
+        portField.setFocusTraversable(keyboardFocus);
+        usernameField.setFocusTraversable(keyboardFocus);
+        connectButton.setFocusTraversable(keyboardFocus);
+        backButton.setFocusTraversable(keyboardFocus);
+        rootPane.setFocusTraversable(!keyboardFocus);
+
+        Platform.runLater(keyboardFocus ? hostField::requestFocus : rootPane::requestFocus);
     }
 
     @FXML

@@ -52,10 +52,10 @@ public class TicTacToeGameController implements Initializable {
             int boxNumber = i;
             Button button = buttons.get(i);
             button.setOnAction(event -> gameController.handleInputFromUser(boxNumber));
-            button.setFocusTraversable(false);
         }
-        // autofocus uit Return to Menu button
-        exitbutton.setFocusTraversable(false);
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        buttons.forEach(button -> button.setFocusTraversable(keyboardFocus));
+        exitbutton.setFocusTraversable(keyboardFocus);
     }
 
     public void startGame(String player1, String player2, GameMode gameMode, String player1Name, String player2Name, String startingPlayer) {

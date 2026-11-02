@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,10 +19,18 @@ public class IntroMenuController {
 
     @FXML
     private AnchorPane rootPane;
+    @FXML
+    private Button offlineButton;
+    @FXML
+    private Button onlineButton;
 
     @FXML
     private void initialize() {
-        Platform.runLater(rootPane::requestFocus);
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        offlineButton.setFocusTraversable(keyboardFocus);
+        onlineButton.setFocusTraversable(keyboardFocus);
+        rootPane.setFocusTraversable(!keyboardFocus);
+        Platform.runLater(keyboardFocus ? offlineButton::requestFocus : rootPane::requestFocus);
     }
 
     @FXML

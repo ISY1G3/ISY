@@ -48,7 +48,6 @@ public class LobbyController implements TuiController {
             case "3" -> { awaiting = 3; System.out.println("Welk challenge-nummer accepteer je? (of back)"); }
             case "4" -> navigator.getOnline().subscribeTicTacToe();
             case "5" -> { data.toggleLocalAi(); navigator.drawCurrentView(); }
-            case "6" -> navigator.showTournament(data);
             case "0" -> { navigator.getOnline().disconnect(); navigator.showLogin(); }
             default -> System.out.println("Ongeldige keuze");
         }
