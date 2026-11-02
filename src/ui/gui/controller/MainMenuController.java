@@ -8,17 +8,15 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import ui.gui.FxmlViews;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import javafx.scene.control.Label;
-
-
 public class MainMenuController implements Initializable {
     private Stage stage;
     private Scene scene;
@@ -63,8 +61,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void openConfigGameView(ActionEvent event) throws IOException {
-        File file = new File("src/ui/gui/fxml/ConfigGameView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("ConfigGameView.fxml");
         root = loader.load();
 
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -74,8 +71,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void goBackToIntroMenu(ActionEvent event) throws IOException {
-        File file = new File("src/ui/gui/fxml/IntroMenuView.fxml");
-        Parent introMenu = new FXMLLoader(file.toURI().toURL()).load();
+        Parent introMenu = FxmlViews.loader("IntroMenuView.fxml").load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(introMenu));

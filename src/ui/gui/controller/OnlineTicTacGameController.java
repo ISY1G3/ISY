@@ -11,10 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import network.ResultType;
+import ui.gui.FxmlViews;
 import ui.gui.GuiOnlineClient;
 import ui.gui.OnlineGameView;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -123,8 +123,7 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
         online.detachView();
 
         try {
-            File file = new File("src/ui/gui/fxml/OnlineMenuView.fxml");
-            FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+            FXMLLoader loader = FxmlViews.loader("OnlineMenuView.fxml");
             Parent menuRoot = loader.load();
 
             OnlineMenuController menuController = loader.getController();

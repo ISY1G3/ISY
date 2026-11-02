@@ -12,9 +12,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import model.GameMode;
+import ui.gui.FxmlViews;
 
 import javafx.scene.control.TextField;
-import java.io.File;
 import java.io.IOException;
 
 import static model.GameMode.PLAYER_VS_AI;
@@ -106,11 +106,7 @@ public class ConfigGameController {
         }
 
         // Laad pas na het valideren een gamescherm
-        File file = new File(
-                "src/ui/gui/fxml/TicTacToeGameView.fxml"
-        );
-
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("TicTacToeGameView.fxml");
         Parent gameRoot = loader.load();
 
         TicTacToeGameController controller = loader.getController();
@@ -135,8 +131,7 @@ public class ConfigGameController {
 
     public void openMainMenuView(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        File file = new File("src/ui/gui/fxml/MainMenuView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("MainMenuView.fxml");
         root = loader.load();
 
         scene = new Scene(root);
