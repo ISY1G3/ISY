@@ -1,0 +1,305 @@
+classDiagram
+    direction LR
+
+    namespace DomainCore {
+        class Game {
+            <<interface>>
+            +start() void
+            +finish() void
+            +getGameStatus() GameStatus
+        }
+        class GameState {
+            <<interface>>
+        }
+        class Move {
+            <<interface>>
+        }
+        class MoveContext {
+            <<interface>>
+            +getGameState() GameState
+            +submitMove(Move move) void
+        }
+        class Player {
+            <<abstract>>
+            -String name
+            +getName() String
+            +askForMove(MoveContext context)* void
+        }
+        class LocalPlayer
+        class RemotePlayer
+        class AIPlayer {
+            -MoveStrategy strategy
+        }
+        class MoveStrategy {
+            <<interface>>
+            +chooseMove(GameState state) Move
+        }
+        class GameMode {
+            <<enumeration>>
+            LOCAL_PVP
+            LOCAL_PVAI
+            ONLINE
+        }
+    }
+
+    namespace TicTacToeDomain {
+        class TicTacToeGame {
+            -Board board
+            -Player playerX
+            -Player playerO
+            -Player currentPlayer
+            -GameStatus status
+            +start() void
+            +finish() void
+            +getGameStatus() GameStatus
+            +getCurrentPlayer() Player
+            +getCurrentMarker() char
+            +getValidMoves() List~Integer~
+            +placeMarker(int index) boolean
+            +changeTurn() void
+            +isGameOver() boolean
+            +getBoard() char[][]
+        }
+        class Board {
+            -char[][] cells
+            +place(int index, char marker) void
+            +isEmpty(int index) boolean
+            +snapshot() char[][]
+        }
+        class TicTacToeTurnState {
+            <<immutable snapshot>>
+            +cells() char[][]
+            +currentMarker() char
+            +validMoves() List~Integer~
+        }
+        class TicTacToeMove {
+            <<record>>
+            +index() int
+        }
+        class TicTacToeMinimaxStrategy {
+            +chooseMove(GameState state) Move
+        }
+        class GameStatus {
+            <<enumeration>>
+            NOT_STARTED
+            ACTIVE
+            X_WON
+            O_WON
+            DRAW
+            FORFEITED
+        }
+    }
+
+    namespace Application {
+        class GameService {
+            -GameSession currentSession
+            +startTicTacToe(GameMode mode, String name1, String name2, int startingPlayer, boolean player1Ai, boolean player2Ai) GameSession
+            +startOnlineTicTacToe(String local, String opponent, String startingPlayer, boolean localUsesAi) GameSession
+            +makeMove(int index) boolean
+            +applyConfirmedOnlineMove(String playerName, int index) void
+            +chooseOnlineAiMove() int
+            +finishCurrentSession() void
+            +clearCurrentSession() void
+        }
+        class GameSession {
+            -String gameName
+            -GameMode mode
+            -Game game
+            -Player localPlayer
+            -Player remotePlayer
+            +getGame() Game
+            +getPlayer1() Player
+            +getPlayer2() Player
+            +isActive() boolean
+        }
+        class OnlineGameCoordinator {
+            -ServerClient client
+            -GameService games
+            -OnlineMatchState state
+            +onMatch(MatchInfo match) void
+            +onYourTurn() void
+            +requestMove(int index) boolean
+            +onMove(String player, int index) void
+            +onResult(ResultType result, String comment) void
+            +forfeit() void
+        }
+        class OnlineMatchState {
+            <<immutable snapshot>>
+            +boolean yourTurn
+            +boolean awaitingConfirmation
+            +ResultType result
+            +String comment
+        }
+        class LobbyService {
+            -ServerClient client
+            -LobbyState state
+            +connect(LoginRequest login) void
+            +refresh() void
+            +subscribe(String game) void
+            +challenge(String opponent) void
+            +acceptChallenge(int number) void
+            +disconnect() void
+        }
+        class LobbyState {
+            <<immutable snapshot>>
+            +String nickname
+            +List~String~ games
+            +List~String~ players
+            +List~Challenge~ challenges
+            +boolean connected
+        }
+    }
+
+    namespace NetworkInfrastructure {
+        class ServerClient {
+            <<interface>>
+            +connect(String host, int port) void
+            +login(String nickname) void
+            +requestGames() void
+            +requestPlayers() void
+            +subscribe(String game) void
+            +challenge(String opponent, String game) void
+            +acceptChallenge(int number) void
+            +sendMove(int move) void
+            +forfeit() void
+            +disconnect() void
+        }
+        class NetworkClient {
+            -ServerProtocol protocol
+            -Connection connection
+        }
+        class ServerProtocol {
+            -Connection connection
+            +sendCommand(String command) void
+            +handleLine(String line) void
+        }
+        class Connection {
+            -Socket socket
+            +connect(String host, int port) void
+            +send(String line) void
+            +close() void
+        }
+        class ConnectionEvents {
+            <<interface>>
+            +onConnectionChanged(ConnectionState state) void
+        }
+        class LobbyEvents {
+            <<interface>>
+            +onLobbyChanged(LobbyEvent event) void
+        }
+        class GameEvents {
+            <<interface>>
+            +onGameChanged(GameEvent event) void
+        }
+    }
+
+    namespace TuiPresentation {
+        class TuiApplication {
+            -BlockingQueue~Runnable~ events
+            -TuiNavigator navigator
+            +start() void
+        }
+        class TuiNavigator {
+            -TuiView currentView
+            -TuiController currentController
+            +showMainMenu() void
+            +showLocalSetup() void
+            +showLogin() void
+            +showLobby() void
+            +showGame() void
+            +showResult() void
+        }
+        class TuiController {
+            <<interface>>
+            +handleInput(String input) void
+        }
+        class TuiView {
+            <<interface>>
+            +draw() void
+        }
+        class LocalGameController
+        class OnlineGameController
+        class LobbyController
+        class LoginController
+        class ResultController
+        class OnlineResultController
+    }
+
+    namespace GuiPresentation {
+        class GuiApplication {
+            +start(Stage stage) void
+        }
+        class SceneNavigator {
+            +showMainMenu() void
+            +showGameSetup() void
+            +showGame() void
+            +showResult() void
+        }
+        class MainMenuController
+        class GameSetupController
+        class GuiGameController
+        class GuiResultController
+    }
+
+    Player <|-- LocalPlayer
+    Player <|-- RemotePlayer
+    Player <|-- AIPlayer
+    AIPlayer --> MoveStrategy
+    Player ..> MoveContext
+    MoveStrategy ..> GameState
+    MoveStrategy ..> Move
+
+    Game <|.. TicTacToeGame
+    TicTacToeGame *-- Board
+    TicTacToeGame o-- "2" Player
+    TicTacToeGame --> GameStatus
+    TicTacToeTurnState ..|> GameState
+    TicTacToeMove ..|> Move
+    TicTacToeMinimaxStrategy ..|> MoveStrategy
+    TicTacToeMinimaxStrategy ..> TicTacToeTurnState
+
+    GameService *-- GameSession
+    GameService ..> TicTacToeGame : coordinates explicitly
+    GameService ..> TicTacToeTurnState : creates for AI
+    GameService ..> TicTacToeMove : validates and applies
+    GameService ..> MoveContext : creates for AI turns
+    GameService ..> TicTacToeMinimaxStrategy
+    GameSession o-- Game
+    GameSession --> GameMode
+    OnlineGameCoordinator --> GameService
+    OnlineGameCoordinator --> ServerClient
+    OnlineGameCoordinator --> OnlineMatchState
+    LobbyService --> ServerClient
+    LobbyService --> LobbyState
+
+    ServerClient <|.. NetworkClient
+    NetworkClient *-- Connection
+    NetworkClient *-- ServerProtocol
+    NetworkClient o-- ConnectionEvents
+    NetworkClient o-- LobbyEvents
+    NetworkClient o-- GameEvents
+    ServerProtocol ..> ConnectionEvents
+    ServerProtocol ..> LobbyEvents
+    ServerProtocol ..> GameEvents
+    LobbyService ..|> ConnectionEvents
+    LobbyService ..|> LobbyEvents
+    OnlineGameCoordinator ..|> GameEvents
+
+    TuiApplication *-- TuiNavigator
+    TuiNavigator --> TuiController
+    TuiNavigator --> TuiView
+    LocalGameController --> GameService
+    OnlineGameController --> OnlineGameCoordinator
+    LobbyController --> LobbyService
+    LoginController --> LobbyService
+    ResultController --> GameService
+    OnlineResultController --> OnlineGameCoordinator
+
+    GuiApplication *-- SceneNavigator
+    SceneNavigator ..> MainMenuController
+    SceneNavigator ..> GameSetupController
+    SceneNavigator ..> GuiGameController
+    SceneNavigator ..> GuiResultController
+    GameSetupController --> GameService
+    GuiGameController --> GameService
+    GuiResultController --> GameService

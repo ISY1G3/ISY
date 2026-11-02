@@ -1,0 +1,629 @@
+classDiagram
+    direction LR
+
+    namespace EntryPoints {
+        class Main {
+            +main(String[] args)$ void
+            +start(Stage stage) void
+        }
+        class ServerLauncher {
+            +main(String[] args)$ void
+        }
+    }
+
+    namespace Model {
+        class Game {
+            <<interface>>
+            +start() void
+            +finish() void
+            +getGameStatus() GameStatus
+        }
+        class GameState {
+            <<interface>>
+        }
+        class Move {
+            <<interface>>
+        }
+        class MoveContext {
+            <<interface>>
+            +getGameState() GameState
+            +submitMove(Move move) void
+        }
+        class Board {
+            +SIZE int$
+            +PLAYER_X_MARKER char$
+            +PLAYER_0_MARKER char$
+            +EMPTY_MARKER char$
+            -char[][] board
+            +isBoardFull() boolean
+            +getBoard() char[][]
+            +isValidBoxNumber(int boxNumber) boolean
+            +isBoxNumberEmpty(int boxNumber) boolean
+            +placeMarker(int boxNumber, char marker) boolean
+        }
+        class TicTacToeGame {
+            -Board board
+            -Player playerX
+            -Player player0
+            -Player currentPlayer
+            -Player startingPlayer
+            -GameStatus gameStatus
+            +start() void
+            +finish() void
+            +getGameStatus() GameStatus
+            +isActive() boolean
+            +getPlayers() List~Player~
+            +checkWinner(Player player) boolean
+            +checkWinner(char[][] board, char marker) boolean
+            +playerXWon() boolean
+            +player0Won() boolean
+            +isGameOver() boolean
+            +changeTurn() void
+            +placeMarker(int boxNumber) boolean
+            +getCurrentMarker() char
+            +getCurrentPlayer() Player
+            +getValidMoves() List~Integer~
+            +getBoard() char[][]
+            +setStartingPlayer(char marker) void
+        }
+        class GameMode {
+            <<enumeration>>
+            PLAYER_VS_PLAYER
+            PLAYER_VS_AI
+            ONLINE
+        }
+        class GameStatus {
+            <<enumeration>>
+            NOT_STARTED
+            ACTIVE
+            FINISHED
+        }
+    }
+
+    namespace Players {
+        class Player {
+            <<abstract>>
+            -String name
+            +getName() String
+            +askForMove(MoveContext context)* void
+        }
+        class LocalPlayer {
+            +askForMove(MoveContext context) void
+        }
+        class RemotePlayer {
+            +askForMove(MoveContext context) void
+        }
+        class ModelAIPlayer["AIPlayer"] {
+            -MoveStrategy strategy
+            +askForMove(MoveContext context) void
+        }
+        class MoveStrategy {
+            <<interface>>
+            +chooseMove(GameState state) Move
+        }
+    }
+
+    namespace Services {
+        class GameService {
+            -GameSession currentSession
+            +startTicTacToe(GameMode mode, String name1, String name2, int startingPlayer) GameSession
+            +startTicTacToe(GameMode mode, String name1, String name2, int startingPlayer, boolean player1Ai, boolean player2Ai) GameSession
+            +startOnlineTicTacToe(String local, String opponent, String starting) GameSession
+            +startOnlineTicTacToe(String local, String opponent, String starting, boolean localUsesAi) GameSession
+            +makeMove(int number) boolean
+            +applyConfirmedOnlineMove(String playerName, int number) void
+            +chooseOnlineAiMove() int
+            +getCurrentSession() GameSession
+            +finishCurrentSession() void
+            +clearCurrentSession() void
+        }
+        class GameSession {
+            -String gameName
+            -GameMode gameMode
+            -Player player1
+            -Player player2
+            -Game game
+            +getGameName() String
+            +getGameMode() GameMode
+            +getGame() Game
+            +getPlayer1() Player
+            +getPlayer2() Player
+            +isPlayer1Ai() boolean
+            +isPlayer2Ai() boolean
+            +getStatus() GameStatus
+            +isActive() boolean
+        }
+        class TicTacToeTurnState {
+            <<private record>>
+            +game() TicTacToeGame
+        }
+        class TicTacToeMove {
+            <<private record>>
+            +index() int
+        }
+        class AiMoveEngine["ai.AiPlayer"] {
+            -char aiMarker
+            -char opponentMarker
+            +chooseMove(TicTacToeGame game) int
+            -minimax(TicTacToeGame game, char[][] board, boolean maximizing) int
+        }
+    }
+
+    namespace SharedDesktopController {
+        class TicTacToeController {
+            -int scoreP1
+            -int scoreP2
+            -GameService gameService
+            -GameView ticTacToeGameView
+            -Runnable goToMenu
+            -String playerXName
+            -String player0Name
+            +initView(GameView view) void
+            +startGame(GameMode mode) void
+            +startGame(GameMode mode, char startingMarker) void
+            +startGame(GameMode mode, char startingMarker, char aiMarker, String playerXName, String player0Name) void
+            +getGame() TicTacToeGame
+            +handleInputFromUser(int boxNumber) void
+            +resetGame() void
+        }
+        class GameView {
+            <<interface>>
+            +showMessage(String message) void
+            +setMarker(int boxNumber, char marker) void
+            +showGameResult(String result) void
+        }
+    }
+
+    namespace Network {
+        class Connection {
+            -Socket socket
+            -BufferedReader in
+            -PrintWriter out
+            -boolean done
+            -Consumer~String~ lineHandler
+            -Runnable onDisconnect
+            +connect(String host, int port) void
+            +send(String text) void
+            +startListening(Consumer lineHandler, Runnable onDisconnect) void
+            +close() void
+            +isConnected() boolean
+            +run() void
+        }
+        class GameServer {
+            -Connection connection
+            -List~GameListener~ gameListeners
+            -List~LobbyListener~ lobbyListeners
+            -List~ConnectionListener~ connectionListeners
+            -String lastCommand
+            -boolean debug
+            +start() void
+            +login(String name) void
+            +getGameList() void
+            +getPlayerList() void
+            +subscribe(String gameType) void
+            +move(int move) void
+            +forfeit() void
+            +acceptChallenge(int number) void
+            +challenge(String player, String game) void
+            +logout() void
+        }
+        class Client {
+            -Connection connection
+            -GameServer server
+            -String gameType
+            +connect(String host, int port) void
+            +login(String name) void
+            +getGameList() void
+            +getPlayerList() void
+            +subscribe(String game) void
+            +challenge(String player) void
+            +challenge(String player, String game) void
+            +accept(int number) void
+            +sendMove(int move) void
+            +forfeit() void
+            +disconnect() void
+        }
+        class GameListener {
+            <<interface>>
+            +onMatch(String opponent, String gameType, String startingPlayer) void
+            +onYourTurn() void
+            +onMove(String player, int move) void
+            +onResult(ResultType type, String comment) void
+        }
+        class LobbyListener {
+            <<interface>>
+            +onGameList(List~String~ games) void
+            +onPlayerList(List~String~ players) void
+            +onChallenge(String challenger, String game, int number) void
+            +onChallengeCancelled(int number) void
+        }
+        class ConnectionListener {
+            <<interface>>
+            +onLoginOk() void
+            +onError(String reason) void
+            +onDisconnect() void
+        }
+        class ServerListener {
+            <<interface>>
+            +onLoginOk() void
+            +onGameList(List~String~ games) void
+            +onPlayerList(List~String~ players) void
+            +onMatch(String opponent, String gameType, String startingPlayer) void
+            +onYourTurn() void
+            +onMove(String player, int move) void
+            +onResult(ResultType type, String comment) void
+            +onChallenge(String challenger, String game, int number) void
+            +onChallengeCancelled(int number) void
+            +onError(String reason) void
+            +onDisconnect() void
+        }
+        class PrintListener {
+            +onLoginOk() void
+            +onGameList(List~String~ games) void
+            +onPlayerList(List~String~ players) void
+            +onMatch(String opponent, String gameType, String startingPlayer) void
+            +onYourTurn() void
+            +onMove(String player, int move) void
+            +onResult(ResultType type, String comment) void
+            +onChallenge(String challenger, String game, int number) void
+            +onChallengeCancelled(int number) void
+            +onError(String reason) void
+            +onDisconnect() void
+        }
+        class ResultType {
+            <<enumeration>>
+            WIN
+            LOSS
+            DRAW
+        }
+    }
+
+    namespace Online {
+        class OnlineGameCoordinator {
+            -Client client
+            -GameService service
+            -String localNickname
+            -boolean yourTurn
+            -boolean awaitingConfirmation
+            -boolean gaveUp
+            -ResultType result
+            -String comment
+            +onMatch(String opponent, String gameType, String startingPlayer, boolean localUsesAi) void
+            +onYourTurn() void
+            +requestLocalMove(int boxNumber) boolean
+            +onMove(String playerName, int boxNumber) void
+            +onResult(ResultType type, String comment) void
+            +onCommandRejected() void
+            +forfeit() void
+        }
+    }
+
+    namespace FxmlGui {
+        class GuiMainMenuController["MainMenuController"] {
+            -Stage stage
+            -Scene scene
+            -Parent root
+            +initialize(URL url, ResourceBundle resources) void
+            +openReversiView() void
+            +openConfigGameView(ActionEvent event) void
+            +closeMenu() void
+        }
+        class ConfigGameController {
+            -Parent root
+            -Scene scene
+            -Stage stage
+            -ChoiceBox player1Box
+            -ChoiceBox player2Box
+            -ChoiceBox startingPlayer
+            -TextField player1Name
+            -TextField player2Name
+            +initialize() void
+            -playSelectGame(ActionEvent event) void
+            +openMainMenuView(ActionEvent event) void
+        }
+        class TicTacToeGameController {
+            -List~Button~ buttons
+            -TicTacToeController gameController
+            +initialize(URL url, ResourceBundle resources) void
+            +startGame(String player1, String player2, GameMode mode, String player1Name, String player2Name, String startingPlayer) void
+            +openMainMenuView(ActionEvent event) void
+        }
+    }
+
+    namespace LegacyJavaFxGui {
+        class TicTacToeGameApp {
+            +start(Stage stage) void
+            +Getkfocus() boolean
+            +showGamechoice(Stage stage)$ void
+            +showGameSelect(Stage stage)$ void
+            +startGame(Stage stage, GameMode mode)$ void
+            +main(String[] args)$ void
+        }
+        class TicTacToeGameView {
+            -Label labelMessage
+            -TicTacToeTile[][] buttons
+            -TicTacToeController ticTacToeController
+            +initController(TicTacToeController controller) void
+            +showMessage(String message) void
+            +setMarker(int boxNumber, char marker) void
+            +showGameResult(String result) void
+        }
+        class TicTacToeTile {
+            -int boxNumber
+        }
+        class SettingsScreen {
+            -boolean kfocus
+            +showStartScreen(Stage stage) void
+        }
+        class StartScreen
+    }
+
+    namespace TuiCore {
+        class TuiApplication {
+            -Scanner scanner
+            -BlockingQueue~Runnable~ events
+            -GameService gameService
+            -TuiNavigator navigator
+            -TuiInputHandler inputHandler
+            +start() void
+            +main(String[] args)$ void
+        }
+        class TuiNavigator {
+            -TuiView currentView
+            -TuiController currentController
+            -boolean running
+            -LoginData loginData
+            -GameService gameService
+            -TuiOnlineClient online
+            +showMainMenu() void
+            +showGameSelect() void
+            +showLocalSetup(LocalSetupData data) void
+            +showLogin() void
+            +showLobby(LobbyData data) void
+            +showSettings() void
+            +showLocalGame(LocalSetupData data) void
+            +showLocalResult(LocalSetupData data) void
+            +showOnlineGame() void
+            +showOnlineResult(ResultType type, String comment) void
+            +showTournament(LobbyData data) void
+            +returnToMainMenu(boolean confirmedAbandon) void
+            +stop() void
+        }
+        class TuiInputHandler {
+            -TuiNavigator navigator
+            -boolean confirmingExit
+            -TuiController confirmationScreen
+            +handle(String input) void
+        }
+        class TuiOnlineClient {
+            -TuiNavigator navigator
+            -GameService service
+            -Consumer~Runnable~ uiDispatcher
+            -Client client
+            -OnlineGameCoordinator match
+            -LobbyData lobby
+            -boolean loginPending
+            +connect(String host, int port, String nickname) void
+            +refreshLobby() void
+            +subscribeTicTacToe() void
+            +challenge(String opponent) void
+            +acceptChallenge(int number) void
+            +requestLocalMove(int position) boolean
+            +forfeit() void
+            +disconnect() void
+        }
+        class LoginData {
+            -String hostname
+            -int port
+            -String nickname
+        }
+        class LobbyData {
+            -String nickname
+            -Map~Integer,Challenge~ challenges
+            -List~String~ players
+            -List~String~ games
+            -String ticTacToeServerName
+            -boolean subscribed
+            -boolean localAi
+        }
+        class Challenge {
+            <<record>>
+            +number() int
+            +challenger() String
+            +game() String
+        }
+        class LocalSetupData {
+            -String gameName
+            -String player1Name
+            -String player2Name
+            -boolean player1Ai
+            -boolean player2Ai
+            -int startingPlayer
+        }
+    }
+
+    namespace TuiControllers {
+        class TuiController {
+            <<interface>>
+            +handleInput(String input) void
+            +inputHint() String
+        }
+        class TuiMainMenuController["MainMenuController"]
+        class GameSelectController
+        class LocalSetupController
+        class LocalGameController
+        class LoginController
+        class LobbyController
+        class OnlineGameController
+        class OnlineResultController
+        class ResultController
+        class SettingsController
+        class TournamentController
+    }
+
+    namespace TuiViews {
+        class TuiView {
+            <<abstract>>
+            +draw()* void
+        }
+        class MainMenuView
+        class GameSelectView
+        class LocalSetupView {
+            -LocalSetupData data
+        }
+        class GameView {
+            -GameSession session
+            -OnlineGameCoordinator online
+            -TicTacToeBoardView boardView
+        }
+        class LoginView {
+            -LoginData data
+        }
+        class LobbyView {
+            -LobbyData data
+        }
+        class OnlineResultView {
+            -GameSession session
+            -ResultType result
+            -String comment
+        }
+        class ResultView {
+            -GameSession session
+            -TicTacToeBoardView boardView
+        }
+        class SettingsView
+        class TournamentView
+        class TicTacToeBoardView {
+            +draw(char[][] board) void
+        }
+    }
+
+    Game <|.. TicTacToeGame
+    TicTacToeGame *-- Board
+    TicTacToeGame *-- "2" Player
+    TicTacToeGame --> GameStatus
+    Player <|-- LocalPlayer
+    Player <|-- RemotePlayer
+    Player <|-- ModelAIPlayer
+    Player ..> MoveContext
+    ModelAIPlayer --> MoveStrategy
+    MoveStrategy ..> GameState
+    MoveStrategy ..> Move
+
+    GameService *-- GameSession
+    GameService ..> TicTacToeGame : creates and drives
+    GameService ..> AiMoveEngine : minimax adapter
+    GameService ..> ModelAIPlayer : creates
+    GameService ..> LocalPlayer : creates
+    GameService ..> RemotePlayer : creates
+    GameSession o-- Game
+    GameSession o-- "2" Player
+    GameSession --> GameMode
+    TicTacToeTurnState ..|> GameState
+    TicTacToeTurnState --> TicTacToeGame
+    TicTacToeMove ..|> Move
+    AiMoveEngine ..> TicTacToeGame
+
+    TicTacToeController --> GameService
+    TicTacToeController --> GameView
+    TicTacToeController ..> TicTacToeGame
+    GameView <|.. TicTacToeGameView
+    TicTacToeGameView --> TicTacToeController
+    TicTacToeGameView *-- "9" TicTacToeTile
+
+    Client *-- Connection
+    Client *-- GameServer
+    GameServer --> Connection
+    GameServer o-- "0..*" GameListener
+    GameServer o-- "0..*" LobbyListener
+    GameServer o-- "0..*" ConnectionListener
+    GameListener --> ResultType
+    PrintListener ..|> GameListener
+    PrintListener ..|> LobbyListener
+    PrintListener ..|> ConnectionListener
+
+    OnlineGameCoordinator --> Client
+    OnlineGameCoordinator --> GameService
+    OnlineGameCoordinator --> GameSession
+    OnlineGameCoordinator --> ResultType
+
+    Main --> TuiApplication : option 1
+    Main ..> GuiMainMenuController : option 2 via FXML
+    Main --> TicTacToeGameApp : option 3
+    GuiMainMenuController ..> ConfigGameController : loads FXML
+    ConfigGameController ..> TicTacToeGameController : configures
+    TicTacToeGameController --> TicTacToeController
+    TicTacToeGameController ..> GameView : anonymous adapter
+    TicTacToeGameApp --> TicTacToeController
+    TicTacToeGameApp --> TicTacToeGameView
+    SettingsScreen ..> TicTacToeGameApp
+
+    TuiApplication *-- TuiNavigator
+    TuiApplication *-- TuiInputHandler
+    TuiApplication --> GameService
+    TuiNavigator --> TuiView : current
+    TuiNavigator --> TuiController : current
+    TuiNavigator *-- TuiOnlineClient
+    TuiNavigator --> GameService
+    TuiNavigator *-- LoginData
+    TuiInputHandler --> TuiNavigator
+    TuiInputHandler --> TuiController
+    TuiOnlineClient --> Client
+    TuiOnlineClient --> OnlineGameCoordinator
+    TuiOnlineClient --> GameService
+    TuiOnlineClient --> LobbyData
+    LobbyData *-- "0..*" Challenge
+
+    TuiController <|.. TuiMainMenuController
+    TuiController <|.. GameSelectController
+    TuiController <|.. LocalSetupController
+    TuiController <|.. LocalGameController
+    TuiController <|.. LoginController
+    TuiController <|.. LobbyController
+    TuiController <|.. OnlineGameController
+    TuiController <|.. OnlineResultController
+    TuiController <|.. ResultController
+    TuiController <|.. SettingsController
+    TuiController <|.. TournamentController
+
+    TuiMainMenuController --> TuiNavigator
+    GameSelectController --> TuiNavigator
+    LocalSetupController --> TuiNavigator
+    LocalSetupController --> LocalSetupData
+    LocalSetupController --> GameService
+    LocalGameController --> TuiNavigator
+    LocalGameController --> LocalSetupData
+    LocalGameController --> GameService
+    LoginController --> TuiNavigator
+    LoginController --> LoginData
+    LobbyController --> TuiNavigator
+    LobbyController --> LobbyData
+    OnlineGameController --> TuiNavigator
+    OnlineResultController --> TuiNavigator
+    ResultController --> TuiNavigator
+    ResultController --> LocalSetupData
+    ResultController --> GameService
+    SettingsController --> TuiNavigator
+    TournamentController --> TuiNavigator
+    TournamentController --> LobbyData
+
+    TuiView <|-- MainMenuView
+    TuiView <|-- GameSelectView
+    TuiView <|-- LocalSetupView
+    TuiView <|-- GameView
+    TuiView <|-- LoginView
+    TuiView <|-- LobbyView
+    TuiView <|-- OnlineResultView
+    TuiView <|-- ResultView
+    TuiView <|-- SettingsView
+    TuiView <|-- TournamentView
+    LocalSetupView --> LocalSetupData
+    GameView --> GameSession
+    GameView --> OnlineGameCoordinator
+    GameView *-- TicTacToeBoardView
+    LoginView --> LoginData
+    LobbyView --> LobbyData
+    OnlineResultView --> GameSession
+    OnlineResultView --> ResultType
+    ResultView --> GameSession
+    ResultView *-- TicTacToeBoardView
