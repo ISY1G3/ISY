@@ -1,6 +1,5 @@
 package ui.gui.controller;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,15 +23,12 @@ public class MainMenuController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
-
     @FXML
     private Button tictactoebutton;
     @FXML
     private Button reversibutton;
     @FXML
-    private Button tournamentbutton;
-    @FXML
-    private Button exitbutton;
+    private Button backbutton;
     @FXML
     private Label welcome;
     @FXML 
@@ -41,8 +37,12 @@ public class MainMenuController implements Initializable {
     ArrayList<Button> buttons;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+<<<<<<< HEAD
         buttons = new ArrayList<>(Arrays.asList(
                 tictactoebutton, reversibutton, tournamentbutton, settings, exitbutton));
+=======
+        buttons = new ArrayList<>(Arrays.asList(tictactoebutton, reversibutton, backbutton));
+>>>>>>> origin/main
 
         buttons.forEach(button -> {
             if (button != null) {
@@ -77,12 +77,12 @@ public class MainMenuController implements Initializable {
         stage.show();
     }
 
-    public void closeMenu() {
-        Platform.exit();
+    public void goBackToIntroMenu(ActionEvent event) throws IOException {
+        File file = new File("src/ui/gui/fxml/IntroMenuView.fxml");
+        Parent introMenu = new FXMLLoader(file.toURI().toURL()).load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(introMenu));
+        stage.show();
     }
-
-
-
-
-
 }

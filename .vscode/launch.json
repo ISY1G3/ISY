@@ -45,9 +45,9 @@
         },
         {
             "type": "java",
-            "name": "Main",
+            "name": "Run GUI",
             "request": "launch",
-            "mainClass": "Main"
-        }
+            "mainClass": "Main",
+            "vmArgs": "--module-path C:/javafx-sdk-27.0.1/lib --add-modules javafx.controls,javafx.fxml"        }
     ]
 }

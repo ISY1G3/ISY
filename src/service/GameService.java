@@ -1,6 +1,6 @@
 package service;
 
-import ai.AiPlayer;
+import ai.TicTacToeMinimaxStrategy;
 import model.*;
 import model.player.AIPlayer;
 import model.player.LocalPlayer;
@@ -45,26 +45,26 @@ public class GameService {
     }
 
     /**
-     * maakt een speler aan op basis van de gekozen besturing
+     * maakt een lokale speler of AI-speler aan
      *
-     * Bij een menselijke speler maken we een LocalPlayer
-     * Bij een AI maken we een AIPlayer met een MoveStrategy
-     *
-     * De AIPlayer is generiek en weet niet welk spel gespeeld wordt
-     * Daarom koppelen we hier de bestaande Tic-Tac-Toe AI aan de generieke speler
-     *
-     * De gekozen zet word teruggegeven als een TicTacToeMove
-     * Het uitvoeren van de zet gebeurt later via de GameService
+     * De AIPlayer krijgt een Tic-Tac-Toe-strategie
+     * De strategie berekent de zet
+     * de GameService verwerkt de zet
      */
     private Player createPlayer(String name, boolean isAi) {
-        if (!isAi) return new LocalPlayer(name);
-        return new AIPlayer(name, state -> {
-            if (!(state instanceof TicTacToeTurnState turn))
-                throw new IllegalArgumentException("Geen Tic-Tac-Toe GameState");
-            TicTacToeGame game = turn.game();
-            int index = new AiPlayer(game.getCurrentMarker()).chooseMove(game);
-            return new TicTacToeMove(index);
-        });
+
+        if (!isAi) {return new LocalPlayer(name);}
+
+        return new AIPlayer(name, new TicTacToeMinimaxStrategy());
+    }
+
+    /**
+     * maakt een defensieve speltoestand voor de AI
+     * de strategie krijgt geen verwijzing naar de echte game
+     * en krijg alleen een kopie van wat de AI echt nodig heeft om een zet te berekenen
+     */
+    private TicTacToeTurnState snapshotOf(TicTacToeGame game) {
+        return new TicTacToeTurnState(game.getBoard(), game.getCurrentMarker(), game.getValidMoves());
     }
 
     // Oude aanroep blijft werken: standaard bestuur je deze client zelf.
@@ -135,7 +135,7 @@ public class GameService {
 
         final Move[] suggestion = new Move[1];
         ai.askForMove(new MoveContext() {
-            @Override public GameState getGameState() { return new TicTacToeTurnState(game); }
+            @Override public GameState getGameState() { return snapshotOf(game); }
             @Override public void submitMove(Move move) {
                 if (suggestion[0] != null) throw new IllegalStateException("Meerdere AI-zetten ontvangen");
                 suggestion[0] = Objects.requireNonNull(move);
@@ -161,7 +161,7 @@ public class GameService {
         if (!session.isActive() || !(session.getGame() instanceof TicTacToeGame game)
                 || !(game.getCurrentPlayer() instanceof AIPlayer ai)) return;
         MoveContext context = new MoveContext() {
-            @Override public GameState getGameState() { return new TicTacToeTurnState(game); }
+            @Override public GameState getGameState() { return snapshotOf(game); }
             @Override public void submitMove(Move move) {
                 if (!session.isActive() || game.getCurrentPlayer() != ai)
                     throw new IllegalStateException("AI is niet aan de beurt");
@@ -171,9 +171,6 @@ public class GameService {
         };
         ai.askForMove(context);
     }
-
-    private record TicTacToeTurnState(TicTacToeGame game) implements GameState {}
-    private record TicTacToeMove(int index) implements Move {}
 
     private void ensureNoActiveSession() {
         if (currentSession != null && currentSession.isActive()) throw new IllegalStateException("Er is al een wedstrijd actief");

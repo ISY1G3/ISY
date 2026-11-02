@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="rootPane" focusTraversable="true"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ui.gui.controller.ConnectionController">
+    <Text layoutX="150.0" layoutY="85.0" text="Connection" textAlignment="CENTER" wrappingWidth="300.0">
+        <font>
+            <Font size="39.0" />
+        </font>
+    </Text>
+    <VBox layoutX="125.0" layoutY="125.0" prefWidth="350.0" spacing="14.0">
+        <HBox alignment="CENTER_LEFT" spacing="16.0">
+            <Label prefWidth="90.0" text="Host:" />
+            <TextField fx:id="hostField" promptText="Server address" prefWidth="244.0" />
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="16.0">
+            <Label prefWidth="90.0" text="Port:" />
+            <TextField fx:id="portField" promptText="Server port" prefWidth="244.0" />
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="16.0">
+            <Label prefWidth="90.0" text="Username:" />
+            <TextField fx:id="usernameField" promptText="Your username" prefWidth="244.0" />
+        </HBox>
+    </VBox>
+    <Button fx:id="connectButton" layoutX="210.0" layoutY="275.0"
+            onAction="#connect" prefHeight="45.0" prefWidth="180.0" text="Connect" />
+    <Button layoutX="210.0" layoutY="330.0"
+            onAction="#goBack" prefHeight="40.0" prefWidth="180.0" text="Back" />
+</AnchorPane>
