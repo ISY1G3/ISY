@@ -124,8 +124,6 @@ public class ConfigGameController {
         stage.show();
     }
 
-<<<<<<< HEAD
-=======
     //De error die je krijgt als je iets fout invoer
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -134,7 +132,6 @@ public class ConfigGameController {
         alert.setContentText(message);
         alert.showAndWait();
     }
->>>>>>> origin/main
 
     public void openMainMenuView(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();

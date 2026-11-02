@@ -37,12 +37,8 @@ public class MainMenuController implements Initializable {
     ArrayList<Button> buttons;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
-<<<<<<< HEAD
         buttons = new ArrayList<>(Arrays.asList(
-                tictactoebutton, reversibutton, tournamentbutton, settings, exitbutton));
-=======
-        buttons = new ArrayList<>(Arrays.asList(tictactoebutton, reversibutton, backbutton));
->>>>>>> origin/main
+                tictactoebutton, reversibutton, settings, backbutton));
 
         buttons.forEach(button -> {
             if (button != null) {

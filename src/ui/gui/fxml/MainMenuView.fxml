@@ -18,18 +18,12 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <VBox layoutX="215.0" layoutY="130.0" prefHeight="157.0" prefWidth="171.0" spacing="10.0">
-<<<<<<< HEAD
+      <VBox layoutX="215.0" layoutY="130.0" prefHeight="191.0" prefWidth="177.0" spacing="10.0">
          <children>
             <Button fx:id="tictactoebutton" mnemonicParsing="false" onAction="#openConfigGameView" prefHeight="57.0" prefWidth="177.0" text="Tic-Tac-Toe" />
             <Button fx:id="reversibutton" mnemonicParsing="false" onAction="#openReversiView" prefHeight="57.0" prefWidth="177.0" text="Reversi" />
-            <Button fx:id="tournamentbutton" mnemonicParsing="false" prefHeight="57.0" prefWidth="177.0" text="Tournament" />
-             <Button fx:id="settings" mnemonicParsing="false" onAction="#openSettingsView" prefHeight="57.0" prefWidth="177.0" text="settings" />
+            <Button fx:id="settings" mnemonicParsing="false" onAction="#openSettingsView" prefHeight="57.0" prefWidth="177.0" text="Settings" />
          </children>
-=======
-            <Button fx:id="tictactoebutton" onAction="#openConfigGameView" prefHeight="57.0" prefWidth="177.0" text="Tic-Tac-Toe" />
-            <Button fx:id="reversibutton" onAction="#openReversiView" prefHeight="57.0" prefWidth="177.0" text="Reversi" />
->>>>>>> origin/main
       </VBox>
-      <Button fx:id="backbutton" layoutX="215.0" layoutY="311.0" onAction="#goBackToIntroMenu" prefHeight="52.0" prefWidth="171.0" text="Go back" />
+      <Button fx:id="backbutton" layoutX="215.0" layoutY="337.0" onAction="#goBackToIntroMenu" prefHeight="52.0" prefWidth="177.0" text="Go back" />
 </AnchorPane>
