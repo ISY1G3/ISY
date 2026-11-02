@@ -11,8 +11,8 @@ import ui.tui.TuiApplication;
 /**
  * Startpunt van de app.
  *
- * Laat de gebruiker kiezen tussen de terminalinterface, de FXML-interface
- * en de bestaande handmatig opgebouwde JavaFX-interface.
+ * Laat de gebruiker kiezen tussen de terminalinterface en de ondersteunde
+ * FXML-interface.
  */
 public class Main extends Application {
 
@@ -27,7 +27,6 @@ public class Main extends Application {
             System.out.println("================================");
             System.out.println("[1] TUI (terminal)");
             System.out.println("[2] GUI (FXML)");
-            System.out.println("[3] GUI (bestaande JavaFX-versie)");
             System.out.println("[0] Afsluiten");
             System.out.print("> ");
 
@@ -43,14 +42,11 @@ public class Main extends Application {
                 case "2":
                     launch(args);
                     return;
-                case "3":
-                    view.TicTacToeGameApp.main(args);
-                    return;
                 case "0":
                     System.out.println("DOEI");
                     return;
                 default:
-                    System.out.println("Kies: 0, 1, 2 of 3.");
+                    System.out.println("Kies: 0, 1 of 2.");
             }
         }
     }
