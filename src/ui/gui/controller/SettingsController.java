@@ -9,8 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import ui.gui.FxmlViews;
 
-import java.io.File;
 import java.io.IOException;
 
 public class SettingsController {
@@ -33,8 +33,7 @@ public class SettingsController {
 
     public void openMainMenuView(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        File file = new File("src/ui/gui/fxml/MainMenuView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("MainMenuView.fxml");
         root = loader.load();
 
         scene = new Scene(root);

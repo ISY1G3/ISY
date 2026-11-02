@@ -50,8 +50,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void openSettingsView(ActionEvent event) throws IOException {
-        File file = new File("src/ui/gui/fxml/SettingsView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("SettingsView.fxml");
         root = loader.load();
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
