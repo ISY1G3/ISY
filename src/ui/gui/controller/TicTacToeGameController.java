@@ -13,8 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.GameMode;
+import ui.gui.FxmlViews;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,10 +52,10 @@ public class TicTacToeGameController implements Initializable {
             int boxNumber = i;
             Button button = buttons.get(i);
             button.setOnAction(event -> gameController.handleInputFromUser(boxNumber));
-            button.setFocusTraversable(false);
         }
-        // autofocus uit Return to Menu button
-        exitbutton.setFocusTraversable(false);
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        buttons.forEach(button -> button.setFocusTraversable(keyboardFocus));
+        exitbutton.setFocusTraversable(keyboardFocus);
     }
 
     public void startGame(String player1, String player2, GameMode gameMode, String player1Name, String player2Name, String startingPlayer) {
@@ -91,8 +91,7 @@ public class TicTacToeGameController implements Initializable {
     
     public void openMainMenuView(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = new File("src/ui/gui/fxml/MainMenuView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("MainMenuView.fxml");
         Parent root = loader.load();
 
         Scene scene = new Scene(root);

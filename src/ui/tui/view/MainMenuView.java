@@ -12,7 +12,6 @@ public class MainMenuView extends TuiView {
 
                 [1] Play Local Game
                 [2] Play Online Game
-                [3] Settings
                 [0] Exit
                 """);
     }

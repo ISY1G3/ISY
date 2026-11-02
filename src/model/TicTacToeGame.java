@@ -88,8 +88,8 @@ public class TicTacToeGame implements Game{
         return checkWinner(board.getBoard(), getMarkerForPlayer(player));
     }
 
-    /** Checks whether the given marker wins on the supplied board state. */
-    public boolean checkWinner(char[][] board, char playerMarker) {
+    /** Checkt of gegeven marker wint op de gegeven bordstate */
+    public static boolean checkWinner(char[][] board, char playerMarker) {
         //stel de marker is leeg dan betekent dat het lege karakter heeft gewonnen omdat dit in alle 9 vakjes staat
         if (playerMarker != Board.PLAYER_X_MARKER && playerMarker != Board.PLAYER_0_MARKER) {
             throw new IllegalArgumentException("Ongeldige speler marker.");

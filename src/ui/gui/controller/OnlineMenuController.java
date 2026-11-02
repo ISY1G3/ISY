@@ -10,9 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import ui.gui.FxmlViews;
 import ui.gui.GuiOnlineClient;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -36,8 +36,9 @@ public class OnlineMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
         List.of(tictactoebutton, tournamentbutton, playerTypeButton, backbutton)
-                .forEach(button -> button.setFocusTraversable(false));
+                .forEach(button -> button.setFocusTraversable(keyboardFocus));
     }
 
     public void setOnline(GuiOnlineClient online) {
@@ -142,8 +143,7 @@ public class OnlineMenuController implements Initializable {
         }
 
         try {
-            File file = new File("src/ui/gui/fxml/OnlineTicTacGame.fxml");
-            FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+            FXMLLoader loader = FxmlViews.loader("OnlineTicTacGame.fxml");
             Parent gameView = loader.load();
             OnlineTicTacGameController gameController = loader.getController();
             gameController.setOnline(online);
@@ -228,8 +228,7 @@ public class OnlineMenuController implements Initializable {
     }
 
     private void showIntroMenu(Stage targetStage) throws IOException {
-        File file = new File("src/ui/gui/fxml/IntroMenuView.fxml");
-        Parent introMenu = new FXMLLoader(file.toURI().toURL()).load();
+        Parent introMenu = FxmlViews.loader("IntroMenuView.fxml").load();
         targetStage.setOnHidden(null);
         targetStage.setTitle("IntroMenu");
         targetStage.setScene(new Scene(introMenu));

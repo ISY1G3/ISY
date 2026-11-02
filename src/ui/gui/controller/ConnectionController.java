@@ -15,9 +15,9 @@ import javafx.stage.Stage;
 import network.Client;
 import network.ConnectionListener;
 import service.GameService;
+import ui.gui.FxmlViews;
 import ui.gui.GuiOnlineClient;
 
-import java.io.File;
 import java.io.IOException;
 
 public class ConnectionController {
@@ -32,6 +32,8 @@ public class ConnectionController {
     private TextField usernameField;
     @FXML
     private Button connectButton;
+    @FXML
+    private Button backButton;
 
     private volatile Client client;
     private volatile boolean disconnectRequested;
@@ -41,7 +43,16 @@ public class ConnectionController {
         // Keep the form fields usable, but start with no field focused.
         hostField.setText(Client.DEFAULT_HOST);
         portField.setText(String.valueOf(Client.DEFAULT_PORT));
-        Platform.runLater(rootPane::requestFocus);
+
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
+        hostField.setFocusTraversable(keyboardFocus);
+        portField.setFocusTraversable(keyboardFocus);
+        usernameField.setFocusTraversable(keyboardFocus);
+        connectButton.setFocusTraversable(keyboardFocus);
+        backButton.setFocusTraversable(keyboardFocus);
+        rootPane.setFocusTraversable(!keyboardFocus);
+
+        Platform.runLater(keyboardFocus ? hostField::requestFocus : rootPane::requestFocus);
     }
 
     @FXML
@@ -150,8 +161,7 @@ public class ConnectionController {
     }
 
     private void openOnlineMenu(Client connectedClient, String username) throws IOException {
-        File file = new File("src/ui/gui/fxml/OnlineMenuView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("OnlineMenuView.fxml");
         Parent onlineMenu = loader.load();
         OnlineMenuController onlineMenuController = loader.getController();
 

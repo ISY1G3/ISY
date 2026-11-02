@@ -10,10 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import network.ResultType;
+import ui.gui.FxmlViews;
 import ui.gui.GuiOnlineClient;
 import ui.gui.OnlineGameView;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -39,6 +39,7 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
         cells = new Button[] {
                 button1, button2, button3,
                 button4, button5, button6,
@@ -47,10 +48,10 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
 
         for (int i = 0; i < cells.length; i++) {
             int position = i;
-            cells[i].setFocusTraversable(false);
+            cells[i].setFocusTraversable(keyboardFocus);
             cells[i].setOnAction(event -> onCellClicked(position));
         }
-        forfeitButton.setFocusTraversable(false);
+        forfeitButton.setFocusTraversable(keyboardFocus);
     }
 
     public void setOnline(GuiOnlineClient online) {
@@ -122,8 +123,7 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
         online.detachView();
 
         try {
-            File file = new File("src/ui/gui/fxml/OnlineMenuView.fxml");
-            FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+            FXMLLoader loader = FxmlViews.loader("OnlineMenuView.fxml");
             Parent menuRoot = loader.load();
 
             OnlineMenuController menuController = loader.getController();

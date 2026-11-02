@@ -10,7 +10,7 @@
 <!-- Dit is nog WIP -->
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ui.gui.controller.OnlineTicTacGameController">
     <GridPane layoutX="188.0" layoutY="88.0">
         <Button fx:id="button1" prefHeight="75.0" prefWidth="75.0" GridPane.columnIndex="0" GridPane.rowIndex="0" />

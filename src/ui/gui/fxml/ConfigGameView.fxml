@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <!--ook hier <children> weggehaald-->
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.gui.controller.ConfigGameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.gui.controller.ConfigGameController">
         <Text fx:id="configgame" layoutX="94.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Configure your game" textAlignment="CENTER" wrappingWidth="412.4443359375">
             <font>
                 <Font size="39.0" />

@@ -12,9 +12,8 @@ public class MainMenuController implements TuiController {
         switch (input) {
             case "1": navigator.showGameSelect(); break;
             case "2": navigator.showLogin(); break;
-            case "3": navigator.showSettings(); break;
             case "0": navigator.stop(); break;
-            default: System.out.println("Ongeldige keuze. Kies 0, 1, 2 of 3.");
+            default: System.out.println("Ongeldige keuze. Kies 0, 1 of 2.");
         }
     }
 }
