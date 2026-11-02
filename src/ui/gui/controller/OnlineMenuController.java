@@ -31,7 +31,7 @@ public class OnlineMenuController implements Initializable {
 
     private GuiOnlineClient online;
     private Stage stage;
-    private boolean waitingForPlayer;
+    private boolean matchmaking;
     private Alert waitingAlert;
 
     @Override
@@ -45,13 +45,28 @@ public class OnlineMenuController implements Initializable {
         this.online = online;
         updatePlayerTypeButton();
         online.setOnMatchStarted(() -> {
-            waitingForPlayer = false;
+            matchmaking = false;
             if (waitingAlert != null) {
                 waitingAlert.close();
                 waitingAlert = null;
             }
-            openOnlineTicTacGame(online.isTournamentMode());
+            openOnlineTicTacGame();
         });
+        online.setOnServerError(reason -> {
+            if (waitingAlert != null) {
+                waitingAlert.close();
+                waitingAlert = null;
+            }
+            matchmaking = false;
+            showServerWarning(reason);
+        });
+        online.setOnSubscriptionConfirmed(() -> {
+            if (waitingAlert != null) {
+                waitingAlert.setHeaderText("Waiting for player");
+                waitingAlert.setContentText("Subscription confirmed. Waiting for another player to join...");
+            }
+        });
+        online.setOnDisconnected(this::handleServerDisconnect);
     }
 
     @FXML
@@ -75,24 +90,29 @@ public class OnlineMenuController implements Initializable {
             showWarning("You are not connected to a server.");
             return;
         }
-        online.setTournamentMode(false);
-        if (waitingForPlayer) {
+        if (matchmaking) {
+            showStillMatchmaking();
             return;
         }
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        waitingForPlayer = true;
+        matchmaking = true;
         waitingAlert = new Alert(Alert.AlertType.INFORMATION);
         waitingAlert.setTitle("Tic-Tac-Toe");
-        waitingAlert.setHeaderText("Waiting for player");
-        waitingAlert.setContentText("Waiting for another player to join...");
+        waitingAlert.setHeaderText("Requesting subscription");
+        waitingAlert.setContentText("Sending subscription request...");
         waitingAlert.initOwner(stage);
         waitingAlert.show();
 
         try {
-            online.getClient().subscribe("tic-tac-toe");
+            if (!online.subscribeTicTacToe()) {
+                waitingAlert.close();
+                waitingAlert = null;
+                matchmaking = false;
+                showWarning("You are already subscribed or a subscription is pending.");
+            }
         } catch (RuntimeException e) {
-            waitingForPlayer = false;
+            matchmaking = false;
             waitingAlert.close();
             waitingAlert = null;
             showWarning("Could not subscribe to Tic-Tac-Toe: " + e.getMessage());
@@ -101,8 +121,6 @@ public class OnlineMenuController implements Initializable {
 
     @FXML
     private void showTournamentInfo() {
-        if (online != null) online.setTournamentMode(true);
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         alert.setTitle("Tournament");
@@ -117,7 +135,7 @@ public class OnlineMenuController implements Initializable {
         alert.showAndWait();
     }
 
-    private void openOnlineTicTacGame(boolean tournamentMode) {
+    private void openOnlineTicTacGame() {
         Stage menuStage = getMenuStage();
         if (menuStage == null) {
             showWarning("Could not find the OnlineMenu window.");
@@ -129,7 +147,6 @@ public class OnlineMenuController implements Initializable {
             Parent gameView = loader.load();
             OnlineTicTacGameController gameController = loader.getController();
             gameController.setOnline(online);
-            gameController.setTournamentMode(tournamentMode);
             menuStage.setTitle("OnlineTicTacGame");
             menuStage.setScene(new Scene(gameView));
             menuStage.show();
@@ -158,17 +175,64 @@ public class OnlineMenuController implements Initializable {
         alert.showAndWait();
     }
 
+    private void showServerWarning(String reason) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Server warning");
+        alert.setHeaderText("The server returned an error");
+        alert.setContentText(reason == null || reason.isBlank() ? "Unknown server error." : reason);
+        Stage owner = getMenuStage();
+        if (owner != null) alert.initOwner(owner);
+        alert.showAndWait();
+    }
+
+    private void showStillMatchmaking() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Tic-Tac-Toe");
+        alert.setHeaderText("Still matchmaking");
+        alert.setContentText("Your subscription is still active. The server will start the game " +
+                "when another player is found.");
+        Stage owner = getMenuStage();
+        if (owner != null) alert.initOwner(owner);
+        alert.showAndWait();
+    }
+
+    private void handleServerDisconnect(String reason) {
+        matchmaking = false;
+        if (waitingAlert != null) {
+            waitingAlert.close();
+            waitingAlert = null;
+        }
+
+        Stage menuStage = getMenuStage();
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Connection lost");
+        alert.setHeaderText("Disconnected from the server");
+        alert.setContentText(reason);
+        if (menuStage != null) alert.initOwner(menuStage);
+        alert.showAndWait();
+
+        if (menuStage != null) {
+            try {
+                showIntroMenu(menuStage);
+            } catch (IOException e) {
+                showWarning("Could not return to the intro screen: " + e.getMessage());
+            }
+        }
+    }
+
     @FXML
     private void goBackToIntroMenu(ActionEvent event) throws IOException {
         disconnect();
-
-        Parent introMenu = FxmlViews.loader("IntroMenuView.fxml").load();
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setOnHidden(null);
-        stage.setTitle("IntroMenu");
-        stage.setScene(new Scene(introMenu));
-        stage.show();
+        showIntroMenu(stage);
+    }
+
+    private void showIntroMenu(Stage targetStage) throws IOException {
+        Parent introMenu = FxmlViews.loader("IntroMenuView.fxml").load();
+        targetStage.setOnHidden(null);
+        targetStage.setTitle("IntroMenu");
+        targetStage.setScene(new Scene(introMenu));
+        targetStage.show();
     }
 
     public void disconnect() {

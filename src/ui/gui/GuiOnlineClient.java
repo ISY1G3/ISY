@@ -10,6 +10,7 @@ import service.GameService;
 import service.GameSession;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public final class GuiOnlineClient {
     private final GameService service;
@@ -19,7 +20,12 @@ public final class GuiOnlineClient {
     private Runnable onMatchStarted;
     private String nickname;
     private boolean localAi;
-    private boolean tournamentMode;
+    private Consumer<String> onServerError;
+    private Consumer<String> onDisconnected;
+    private Runnable onSubscriptionConfirmed;
+    private String pendingSubscription;
+    private boolean subscriptionPending;
+    private boolean subscribedTicTacToe;
 
     public GuiOnlineClient(GameService service) {
         this.service = Objects.requireNonNull(service);
@@ -28,9 +34,24 @@ public final class GuiOnlineClient {
     public Client getClient() { return client; }
     public boolean isLocalAi() { return localAi; }
     public void setLocalAi(boolean localAi) { this.localAi = localAi; }
-    public boolean isTournamentMode() { return tournamentMode; }
-    public void setTournamentMode(boolean tournamentMode) { this.tournamentMode = tournamentMode; }
     public void setOnMatchStarted(Runnable action) {this.onMatchStarted = action;}
+    public void setOnServerError(Consumer<String> action) { this.onServerError = action; }
+    public void setOnDisconnected(Consumer<String> action) { this.onDisconnected = action; }
+    public void setOnSubscriptionConfirmed(Runnable action) { this.onSubscriptionConfirmed = action; }
+
+    public boolean subscribeTicTacToe() {
+        if (client == null || !client.isConnected() || subscriptionPending || subscribedTicTacToe) return false;
+        pendingSubscription = "subscribe tic-tac-toe";
+        subscriptionPending = true;
+        try {
+            client.subscribe("tic-tac-toe");
+            return true;
+        } catch (RuntimeException e) {
+            pendingSubscription = null;
+            subscriptionPending = false;
+            throw e;
+        }
+    }
 
     public void attachView(OnlineGameView view) {
         this.view = view;
@@ -97,13 +118,24 @@ public final class GuiOnlineClient {
 
         attempt.addConnectionListener(new ConnectionListener() {
             @Override
-            public void onError(String reason) {
+            public void onCommandOk(String command) {
                 ui(attempt, () -> {
-                    if (match != null && match.isAwaitingConfirmation()) {
-                        match.onCommandRejected();
-                        refreshView();
-                    }
+                    if (!command.equals(pendingSubscription)) return;
+                    pendingSubscription = null;
+                    subscriptionPending = false;
+                    subscribedTicTacToe = true;
+                    if (onSubscriptionConfirmed != null) onSubscriptionConfirmed.run();
                 });
+            }
+
+            @Override
+            public void onCommandError(String command, String reason) {
+                handleServerError(attempt, command, reason);
+            }
+
+            @Override
+            public void onError(String reason) {
+                handleServerError(attempt, null, reason);
             }
 
             @Override
@@ -113,6 +145,10 @@ public final class GuiOnlineClient {
                     client = null;
                     match = null;
                     view = null;
+                    pendingSubscription = null;
+                    subscriptionPending = false;
+                    subscribedTicTacToe = false;
+                    if (onDisconnected != null) onDisconnected.accept("The connection to the server was lost.");
                 });
             }
         });
@@ -167,6 +203,9 @@ public final class GuiOnlineClient {
     public void disconnect() {
         Client oldClient = client;
         client = null;
+        pendingSubscription = null;
+        subscriptionPending = false;
+        subscribedTicTacToe = false;
 
         if (oldClient != null && oldClient.isConnected()) {
             oldClient.disconnect();
@@ -187,6 +226,25 @@ public final class GuiOnlineClient {
 
     private void refreshView() {
         if (view != null) view.refresh();
+    }
+
+    private void handleServerError(Client source, String command, String reason) {
+        ui(source, () -> {
+            if (command != null && command.equals(pendingSubscription)) {
+                pendingSubscription = null;
+                subscriptionPending = false;
+            }
+            if (onServerError != null) onServerError.accept(reason);
+            if (match != null && match.isAwaitingConfirmation()
+                    && (command == null || command.startsWith("move "))) {
+                match.onCommandRejected();
+                refreshView();
+            }
+            if (match != null && "forfeit".equals(command)) {
+                match.onForfeitRejected();
+                refreshView();
+            }
+        });
     }
 
     private void ui(Client source, Runnable action) {

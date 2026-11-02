@@ -19,6 +19,7 @@ public final class OnlineGameCoordinator {
     private boolean yourTurn;                       // komt alleen uit de serverevent YOURTURN, en niet uit het lokale deel
     private boolean awaitingConfirmation;           // een verzonden move betekent niet dat deze is goedgekeurt maar dit voorkomt dubbele aanvragen
     private boolean gaveUp;
+    private boolean yourTurnBeforeForfeit;
     private ResultType result;
     private String comment;
 
@@ -125,11 +126,19 @@ public final class OnlineGameCoordinator {
             yourTurn = true;
         }
     }
+    /** Maakt een afgewezen forfeit opnieuw mogelijk en herstelt de lokale beurtstatus. */
+    public void onForfeitRejected() {
+        if (gaveUp) {
+            gaveUp = false;
+            yourTurn = yourTurnBeforeForfeit;
+        }
+    }
     /** stuurt dat iemand opgeeft naar de server en blokkeert nieuwe zetten tot de uitslag */
     public void forfeit() {
         GameSession session = service.getCurrentSession();
         if (session == null || !session.isActive() || session.getGameMode() != GameMode.ONLINE || gaveUp) return;
         client.forfeit();
+        yourTurnBeforeForfeit = yourTurn;
         gaveUp = true;
         yourTurn = false;
     }

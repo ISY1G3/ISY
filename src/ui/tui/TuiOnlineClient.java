@@ -19,6 +19,7 @@ public final class TuiOnlineClient {
     private OnlineGameCoordinator match;
     private LobbyData lobby;
     private boolean loginPending;
+    private String pendingSubscription;
 
     public TuiOnlineClient(TuiNavigator navigator, GameService service, Consumer<Runnable> dispatcher) {
         this.navigator = Objects.requireNonNull(navigator);
@@ -48,13 +49,21 @@ public final class TuiOnlineClient {
                 navigator.showLobby();
                 refreshLobby();
             }); }
-            @Override public void onError(String reason) { dispatch(attempt, () -> {
-                System.out.println("Serverfout: " + reason);
-                if (loginPending) {
-                    disconnect();
-                    navigator.showLogin();
-                } else if (match != null) match.onCommandRejected();
+            @Override public void onCommandOk(String command) { dispatch(attempt, () -> {
+                if (!command.equals(pendingSubscription)) return;
+                pendingSubscription = null;
+                if (lobby != null) {
+                    lobby.setSubscriptionPending(false);
+                    lobby.setSubscribed(true);
+                    redrawLobbyIfVisible();
+                }
             }); }
+            @Override public void onCommandError(String command, String reason) {
+                handleServerError(attempt, command, reason);
+            }
+            @Override public void onError(String reason) {
+                handleServerError(attempt, null, reason);
+            }
             @Override public void onDisconnect() { dispatch(attempt, () -> {
                 System.out.println("Verbinding met server verbroken");
                 GameSession s = service.getCurrentSession();
@@ -66,6 +75,7 @@ public final class TuiOnlineClient {
                 match = null;
                 lobby = null;
                 loginPending = false;
+                pendingSubscription = null;
                 navigator.showLogin();
             }); }
         });
@@ -130,6 +140,23 @@ public final class TuiOnlineClient {
         uiDispatcher.accept(() -> { if (client == source) action.run(); });
     }
 
+    private void handleServerError(Client source, String command, String reason) {
+        dispatch(source, () -> {
+            System.out.println("Waarschuwing van server: " + reason);
+            if (loginPending) {
+                disconnect();
+                navigator.showLogin();
+            } else if (command != null && command.equals(pendingSubscription)) {
+                pendingSubscription = null;
+                if (lobby != null) {
+                    lobby.setSubscriptionPending(false);
+                    redrawLobbyIfVisible();
+                }
+            } else if (match != null && (command == null || command.startsWith("move "))) {
+                match.onCommandRejected();
+            }
+        });
+    }
     private void redrawLobbyIfVisible() {
         if (navigator.isLobbyVisible()) navigator.drawCurrentView();
     }
@@ -140,11 +167,18 @@ public final class TuiOnlineClient {
         System.out.println("Spelerslijst en games opgevraagd");
     }
     public void subscribeTicTacToe() {
-        if (!isConnected() || lobby.isSubscribedTicTacToe()) return;
+        if (!isConnected() || lobby.isSubscribedTicTacToe() || pendingSubscription != null) return;
         String game = lobby.getTicTacToeServerName();
         if (game == null) { System.out.println("Tic-Tac-Toe is niet gevonden in de gamelijst"); return; }
-        client.subscribe(game);
-        lobby.setSubscribed(true);
+        pendingSubscription = "subscribe " + game;
+        lobby.setSubscriptionPending(true);
+        try {
+            client.subscribe(game);
+        } catch (RuntimeException e) {
+            pendingSubscription = null;
+            lobby.setSubscriptionPending(false);
+            System.out.println("Aanmelden versturen mislukt: " + e.getMessage());
+        }
         redrawLobbyIfVisible();
     }
     public void challenge(String opponent) {
@@ -169,6 +203,7 @@ public final class TuiOnlineClient {
         Client old = client;
         client = null; // Achtergebleven callbacks van deze client worden genegeerd.
         loginPending = false;
+        pendingSubscription = null;
         if (old != null) {
             try { if (old.isConnected()) old.disconnect(); } catch (RuntimeException ignored) {}
         }

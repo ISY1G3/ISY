@@ -1,10 +1,14 @@
 package network;
 
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*  
     GameServer zet acties om naar commando's (login, move, etc.)
@@ -16,14 +20,17 @@ import java.util.function.Consumer;
 */
 
 public class GameServer {
+    private static final Logger LOGGER = Logger.getLogger(GameServer.class.getName());
+
     private final Connection connection;
 
     //  Lijsten met Listeners; gewone arrayList kan exceptions geven
     private final List<GameListener> gameListeners = new CopyOnWriteArrayList<>();
     private final List<LobbyListener> lobbyListeners = new CopyOnWriteArrayList<>();
     private final List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<>();
-    private String lastCommand = "";
+    private final Deque<String> pendingCommands = new ArrayDeque<>();
     private boolean debug;
+    private long protocolSequence;
 
     public GameServer (Connection connection) {
         this.connection = connection;
@@ -59,10 +66,37 @@ public class GameServer {
 
     //-----Commando's naar de server-----//
 
-    private void sendCommand(String command) {
-        lastCommand = command;
-        if (debug) System.out.println(">> " + command);
-        connection.send(command);
+    private synchronized void sendCommand(String command) {
+        pendingCommands.addLast(command);
+        try {
+            logProtocol(Level.INFO, ">>", commandForLog(command));
+            connection.send(command);
+        } catch (RuntimeException e) {
+            pendingCommands.removeLastOccurrence(command);
+            throw e;
+        }
+    }
+
+    private synchronized String takePendingCommand() {
+        return pendingCommands.pollFirst();
+    }
+
+    private synchronized void logProtocol(Level level, String direction, String message) {
+        String threadInfo = debug ? " [thread=" + Thread.currentThread().getName() + "]" : "";
+        LOGGER.log(level, "#{0} {1} {2}{3}",
+                new Object[]{++protocolSequence, direction, message, threadInfo});
+    }
+
+    private String commandForLog(String command) {
+        if (command == null) return "<unknown command>";
+        if (command.startsWith("login ")) return "login <redacted>";
+        if (command.startsWith("message ")) return "message <redacted>";
+        return command;
+    }
+
+    private String serverMessageForLog(String message) {
+        if (message.startsWith("SVR GAME MESSAGE")) return "SVR GAME MESSAGE <redacted>";
+        return message;
     }
 
     void sendRaw(String text)                 { sendCommand(text); }
@@ -81,8 +115,13 @@ public class GameServer {
     }
     
     public void logout() {
-        sendCommand("logout");
-        connection.close();
+        try {
+            if (connection.isConnected()) sendCommand("logout");
+        } catch (RuntimeException e) {
+            LOGGER.log(Level.FINE, "Could not send logout; closing the connection anyway", e);
+        } finally {
+            connection.close();
+        }
     }
 
     public void sendMessage(String text) {
@@ -97,28 +136,42 @@ public class GameServer {
         SRV game... gaat naar handlegamemessage, lege regels worden genegeerd */
 
     void handleLine(String line) {
-        if (debug) System.out.println("<< " + line);
         if (line == null || line.isBlank()) return;
 
         try {
             if (line.equals("OK")) {
-                if (lastCommand.startsWith("login")) {
+                logProtocol(Level.INFO, "<<", line);
+                String command = takePendingCommand();
+                if (command != null && command.startsWith("login ")) {
                     fireConnection(l -> l.onLoginOk());
+                } else if (command != null) {
+                    fireConnection(l -> l.onCommandOk(command));
                 }
             } else if (line.startsWith("ERR")) {
                 String reason = line.substring(3).trim();
-                fireConnection(l -> l.onError(reason));
+                String command = takePendingCommand();
+                String commandName = command == null || command.isBlank()
+                        ? "unknown command"
+                        : command.split("\\s+", 2)[0];
+                String loggedReason = reason.isBlank() ? "No reason provided" : reason;
+                logProtocol(Level.WARNING, "<<", "ERR for " + commandName + ": " + loggedReason);
+                fireConnection(l -> l.onCommandError(command, reason));
             } else if (line.startsWith("SVR GAMELIST")) {
+                logProtocol(Level.INFO, "<<", serverMessageForLog(line));
                 List<String> games = parseList(line);
                 fireLobby(l -> l.onGameList(games));
             } else if (line.startsWith("SVR PLAYERLIST")) {
+                logProtocol(Level.INFO, "<<", serverMessageForLog(line));
                 List<String> players = parseList(line);
                 fireLobby(l -> l.onPlayerList(players));
             } else if (line.startsWith("SVR GAME ")) {
+                logProtocol(Level.INFO, "<<", serverMessageForLog(line));
                 handleGameMessage(line.substring("SVR GAME ".length()));
+            } else {
+                logProtocol(Level.INFO, "<<", serverMessageForLog(line));
             }
         } catch (RuntimeException e) {
-            System.out.println("Kon regel niet verwerken: " + line + " (" + e + ")");
+            LOGGER.log(Level.SEVERE, "Failed to process server message: " + line, e);
         }
     }
 
