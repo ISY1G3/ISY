@@ -17,7 +17,7 @@
         </font>
     </Text>
     <VBox layoutX="210.0" layoutY="155.0" prefWidth="180.0" spacing="12.0">
-        <Button onAction="#playOffline" prefHeight="57.0" prefWidth="180.0" text="Play Offline" />
-        <Button onAction="#playOnline" prefHeight="57.0" prefWidth="180.0" text="Play Online" />
+        <Button fx:id="offlineButton" onAction="#playOffline" prefHeight="57.0" prefWidth="180.0" text="Play Offline" />
+        <Button fx:id="onlineButton" onAction="#playOnline" prefHeight="57.0" prefWidth="180.0" text="Play Online" />
     </VBox>
 </AnchorPane>

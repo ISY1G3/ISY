@@ -41,6 +41,7 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
         cells = new Button[] {
                 button1, button2, button3,
                 button4, button5, button6,
@@ -49,10 +50,10 @@ public class OnlineTicTacGameController implements Initializable, OnlineGameView
 
         for (int i = 0; i < cells.length; i++) {
             int position = i;
-            cells[i].setFocusTraversable(false);
+            cells[i].setFocusTraversable(keyboardFocus);
             cells[i].setOnAction(event -> onCellClicked(position));
         }
-        forfeitButton.setFocusTraversable(false);
+        forfeitButton.setFocusTraversable(keyboardFocus);
     }
 
     public void setOnline(GuiOnlineClient online) {

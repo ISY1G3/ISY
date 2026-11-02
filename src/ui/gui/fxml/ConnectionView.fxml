@@ -35,6 +35,6 @@
     </VBox>
     <Button fx:id="connectButton" layoutX="210.0" layoutY="275.0"
             onAction="#connect" prefHeight="45.0" prefWidth="180.0" text="Connect" />
-    <Button layoutX="210.0" layoutY="330.0"
+    <Button fx:id="backButton" layoutX="210.0" layoutY="330.0"
             onAction="#goBack" prefHeight="40.0" prefWidth="180.0" text="Back" />
 </AnchorPane>

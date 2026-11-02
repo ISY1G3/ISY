@@ -36,8 +36,9 @@ public class OnlineMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        boolean keyboardFocus = SettingsController.getKeyboardFocus();
         List.of(tictactoebutton, tournamentbutton, playerTypeButton, backbutton)
-                .forEach(button -> button.setFocusTraversable(false));
+                .forEach(button -> button.setFocusTraversable(keyboardFocus));
     }
 
     public void setOnline(GuiOnlineClient online) {
