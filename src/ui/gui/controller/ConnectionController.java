@@ -15,9 +15,9 @@ import javafx.stage.Stage;
 import network.Client;
 import network.ConnectionListener;
 import service.GameService;
+import ui.gui.FxmlViews;
 import ui.gui.GuiOnlineClient;
 
-import java.io.File;
 import java.io.IOException;
 
 public class ConnectionController {
@@ -150,8 +150,7 @@ public class ConnectionController {
     }
 
     private void openOnlineMenu(Client connectedClient, String username) throws IOException {
-        File file = new File("src/ui/gui/fxml/OnlineMenuView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("OnlineMenuView.fxml");
         Parent onlineMenu = loader.load();
         OnlineMenuController onlineMenuController = loader.getController();
 

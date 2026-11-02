@@ -1,18 +1,17 @@
-import java.io.File;
 import java.util.Scanner;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.gui.FxmlViews;
 import ui.tui.TuiApplication;
 
 /**
  * Startpunt van de app.
  *
- * Laat de gebruiker kiezen tussen de terminalinterface, de FXML-interface
- * en de bestaande handmatig opgebouwde JavaFX-interface.
+ * Laat de gebruiker kiezen tussen de terminalinterface en de ondersteunde
+ * FXML-interface.
  */
 public class Main extends Application {
 
@@ -30,9 +29,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            File file = new File("src/ui/gui/fxml/IntroMenuView.fxml");
-            FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
-            Parent root = loader.load();
+            Parent root = FxmlViews.loader("IntroMenuView.fxml").load();
 
             Scene gameSelect = new Scene(root);
             stage.setScene(gameSelect);

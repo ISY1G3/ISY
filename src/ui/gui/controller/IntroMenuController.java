@@ -10,8 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ui.gui.FxmlViews;
 
-import java.io.File;
 import java.io.IOException;
 
 public class IntroMenuController {
@@ -26,8 +26,7 @@ public class IntroMenuController {
 
     @FXML
     private void playOffline(ActionEvent event) throws IOException {
-        File file = new File("src/ui/gui/fxml/MainMenuView.fxml");
-        Parent root = new FXMLLoader(file.toURI().toURL()).load();
+        Parent root = FxmlViews.loader("MainMenuView.fxml").load();
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
@@ -36,8 +35,7 @@ public class IntroMenuController {
 
     @FXML
     private void playOnline(ActionEvent event) throws IOException {
-        File file = new File("src/ui/gui/fxml/ConnectionView.fxml");
-        FXMLLoader loader = new FXMLLoader(file.toURI().toURL());
+        FXMLLoader loader = FxmlViews.loader("ConnectionView.fxml");
         Parent root = loader.load();
         ConnectionController controller = loader.getController();
 
