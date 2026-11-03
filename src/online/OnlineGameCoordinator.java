@@ -35,6 +35,16 @@ public final class OnlineGameCoordinator {
     public void onMatch(String opponent, String gameType, String startingPlayer, boolean localUsesAi) {
         if (gameType == null || !gameType.toLowerCase(Locale.ROOT).replaceAll("[^a-z]", "")
                 .equals("tictactoe")) throw new IllegalArgumentException("Spel nog niet ondersteund: " + gameType);
+        // Een nieuwe MATCH van de server is leidend. Bij tournament-overgangen
+        // kan de vorige online sessie lokaal nog actief zijn (bijvoorbeeld als
+        // de einduitslag niet bij deze client is aangekomen). Ruim die op zodat
+        // de nieuwe wedstrijd niet wordt geblokkeerd door ensureNoActiveSession.
+        GameSession previousSession = service.getCurrentSession();
+        if (previousSession != null && previousSession.getGameMode() == GameMode.ONLINE) {
+            if (previousSession.isActive()) service.finishCurrentSession();
+            service.clearCurrentSession();
+        }
+
         // maakt een lokale representatie van de MATCH, met een RemotePlayer voor de andere client
         service.startOnlineTicTacToe(localNickname, opponent, startingPlayer, localUsesAi);
         yourTurn = false;
