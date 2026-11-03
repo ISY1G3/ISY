@@ -32,9 +32,6 @@ public class Connection implements Runnable {
     private Consumer<String> lineHandler;
     private Runnable onDisconnect;
 
-    private static String host = "127.0.0.1"; // localhost address
-    private static int port = 7789; // port nummer van de server
-    
     public void connect(String host, int port) throws IOException{
         try {
             socket = new Socket(host, port);
@@ -122,6 +119,8 @@ public class Connection implements Runnable {
 
     public static void main(String[] args) throws Exception{
         Connection connection = new Connection();
+        String host = args.length > 0 ? args[0] : Client.DEFAULT_HOST;
+        int port = args.length > 1 ? Integer.parseInt(args[1]) : Client.DEFAULT_PORT;
         connection.connect(host, port);
 
         connection.startListening(

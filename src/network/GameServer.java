@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*  
-    GameServer zet acties om naar commando's (login, move, etc.)
+    GameServer zet acties om naar commando's (login, choose, etc.)
     De berichten die van de server komen worden naar de listeners gestuurd.
 
     Dit is eigenlijk de enige klaase die dit protocol kent.
@@ -106,7 +106,7 @@ public class GameServer {
     public void getGameList()               {sendCommand("get gamelist");}
     public void getPlayerList()             {sendCommand("get playerlist");}
     public void subscribe(String gameType)  {sendCommand("subscribe " + gameType);} 
-    public void move(int move)              {sendCommand("move " + move);}
+    public void choose(int position)        {sendCommand("choose " + position);}
     public void forfeit()                   {sendCommand("forfeit");}
     public void acceptChallenge(int number) {sendCommand("challenge accept " + number);}
 

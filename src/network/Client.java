@@ -7,7 +7,7 @@ import java.util.Scanner;
     De rest van de app praat alleen met Client  */
 
 public class Client {
-    public static final String DEFAULT_HOST = "127.0.0.1";
+    public static final String DEFAULT_HOST = "172.201.112.199";
     public static final int DEFAULT_PORT = 7789;
 
     private final Connection connection = new Connection();         // Socket naar de server
@@ -38,7 +38,7 @@ public class Client {
     public void challenge(String player)    { server.challenge(player, gameType); }
     public void challenge(String player, String game) { server.challenge(player, game); }
     public void accept(int nr)              { server.acceptChallenge(nr); }
-    public void sendMove(int move)          { server.move(move); }
+    public void sendMove(int move)          { server.choose(move); }
     public void forfeit()                   { server.forfeit(); }
     public void disconnect()                { server.logout(); }
 

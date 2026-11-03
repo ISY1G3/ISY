@@ -236,7 +236,7 @@ public final class GuiOnlineClient {
             }
             if (onServerError != null) onServerError.accept(reason);
             if (match != null && match.isAwaitingConfirmation()
-                    && (command == null || command.startsWith("move "))) {
+                    && (command == null || command.startsWith("choose "))) {
                 match.onCommandRejected();
                 refreshView();
             }

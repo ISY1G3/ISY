@@ -1,6 +1,15 @@
 # ISY Tic-Tac-Toe
 
-===================== STARTEN OP MEERDERE LAPTOPS =====================
+===================== VERBINDEN MET DE GAMESERVER =====================
+
+De online client gebruikt standaard de gameserver op `172.201.112.199:7789`.
+Je kunt host en poort nog aanpassen in het verbindingsscherm of via de TUI-login.
+
+Gebruik je lokaal een eigen server, start die dan hieronder en vul `127.0.0.1`
+in als host. De tournamentknop toont informatie; een serverbeheerder start het
+toernooi. Ingelogde spelers op die server worden door de server ingedeeld.
+
+===================== LOKAAL TESTEN OP MEERDERE LAPTOPS =====================
 
 Laptop A = de server. Laptop B, C, ... = alleen clients.
 Zet alle laptops op hetzelfde netwerk (schoolwifi blokkeert dit vaak: gebruik een telefoonhotspot).
@@ -16,7 +25,7 @@ Netwerkprofiel van de wifi op "Private" zetten (Windows: Instellingen > Netwerk 
 Test-NetConnection <IP van laptop A> -Port 7789       (PowerShell, je wilt TcpTestSucceeded : True)
 
 --- Client starten ---
-Laptop A:       Run Client (geen argumenten, gebruikt 127.0.0.1)
+Laptop A:       Run Client met argumenten 127.0.0.1 7789
 Laptop B, C:    Run Client met argumenten <IP van laptop A> 7789
                  in VS Code: .vscode/launch.json > "args": ["<IP van laptop A>", "7789"]
 
@@ -24,7 +33,7 @@ Laptop B, C:    Run Client met argumenten <IP van laptop A> 7789
 login <naam>                    (elke laptop een eigen naam)
 get gamelist
 subscribe <spel>                (twee clients met hetzelfde spel krijgen automatisch een match)
-move <0-8>                      (alleen als je Your Turn! ziet)
+choose <0-8>                    (alleen als je Your Turn! ziet)
 exit                            (afsluiten)
 
 --- Als het niet werkt ---

@@ -1,8 +1,10 @@
 package ui.tui;
 
+import network.Client;
+
 public class LoginData {
-    private String hostname = "127.0.0.1";
-    private int port = 7789;
+    private String hostname = Client.DEFAULT_HOST;
+    private int port = Client.DEFAULT_PORT;
     private String nickname = "Speler";
     public String getHostname() { return hostname; }
     public int getPort() { return port; }

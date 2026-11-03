@@ -152,7 +152,7 @@ public final class TuiOnlineClient {
                     lobby.setSubscriptionPending(false);
                     redrawLobbyIfVisible();
                 }
-            } else if (match != null && (command == null || command.startsWith("move "))) {
+            } else if (match != null && (command == null || command.startsWith("choose "))) {
                 match.onCommandRejected();
             }
         });
